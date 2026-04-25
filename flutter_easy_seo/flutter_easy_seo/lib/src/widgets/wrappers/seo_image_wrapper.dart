@@ -21,7 +21,7 @@ class SEOImageWrapper extends StatelessWidget implements SEOSelfClosingWrapper {
   @override
   Widget build(BuildContext context) => child;
 
-  String onEnter({String? resolvedSrc}) {
+  String getTag({String? resolvedSrc}) {
     final imageSrc = resolvedSrc ?? src;
     final buffer = StringBuffer('<img');
     if (imageSrc != null) buffer.write(' src="$imageSrc"');

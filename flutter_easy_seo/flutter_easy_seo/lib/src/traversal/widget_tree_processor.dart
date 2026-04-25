@@ -27,43 +27,69 @@ class SEOWidgetTreeProcessor {
     if (typeName == 'SEOTextWrapper') return _handleSEOTextWrapper(widget as SEOTextWrapper, element);
     if (typeName == 'SEOImageWrapper') return _handleSEOImageWrapper(widget as SEOImageWrapper, element);
     if (typeName == 'SEOSelfClosingWrapper') return _handleSEOSelfClosingWrapper(widget as SEOSelfClosingWrapper, element);
+    if (typeName == 'SEONavWrapper') return _handleSEONavWrapper(widget as SEONavWrapper, element);
+    if (typeName == 'SEONavLinkWrapper') return _handleSEONavLinkWrapper(widget as SEONavLinkWrapper, element);
     if (_isSEOWrapper(typeName)) return _handleSEOWrapper(widget as SEOWrapper, element);
     return false;
   }
 
   bool _isSEOWrapper(String typeName) {
     const wrappers = [
-      'SEOContainerWrapper', 'SEOListWrapper', 'SEONavigationWrapper',
+      'SEOContainerWrapper', 'SEOListWrapper',
       'SEOHeaderWrapper', 'SEOAsideWrapper', 'SEOMainWrapper',
       'SEOArticleWrapper', 'SEOSectionWrapper', 'SEOTimeWrapper',
       'SEOFigureWrapper', 'SEOFormWrapper', 'SEOCustomWrapper',
+      'SEONavWrapper', 'SEONavLinkWrapper',
     ];
     return wrappers.contains(typeName);
   }
 
+  bool _isNavigationWidget(String typeName) {
+    const navWidgets = [
+      'NavigationRail', 'NavigationBar', 'BottomNavigationBar',
+      'NavigationDestination', 'NavigationDrawer',
+    ];
+    return navWidgets.contains(typeName);
+  }
+
+  bool _handleSEONavWrapper(SEONavWrapper wrapper, Element element) {
+    _output.write(wrapper.getOpenTag());
+    _traverseChildren(element);
+    _output.write(wrapper.getCloseTag());
+    return true;
+  }
+
+  bool _handleSEONavLinkWrapper(SEONavLinkWrapper wrapper, Element element) {
+    _output.write(wrapper.getOpenTag());
+    final text = _extractTextFromChild(wrapper.child);
+    _output.write(text);
+    _output.write(wrapper.getCloseTag());
+    return true;
+  }
+
   bool _handleSEOTextWrapper(SEOTextWrapper wrapper, Element element) {
     final text = _extractTextFromChild(wrapper.child);
-    _output.write(wrapper.onEnter());
+    _output.write(wrapper.getOpenTag());
     _output.write(text);
-    _output.write(wrapper.onExit());
+    _output.write(wrapper.getCloseTag());
     return true;
   }
 
   bool _handleSEOImageWrapper(SEOImageWrapper wrapper, Element element) {
     final imgSrc = _extractImageSrcFromChild(wrapper.child);
-    _output.write(wrapper.onEnter(resolvedSrc: imgSrc));
+    _output.write(wrapper.getTag(resolvedSrc: imgSrc));
     return true;
   }
 
   bool _handleSEOSelfClosingWrapper(SEOSelfClosingWrapper wrapper, Element element) {
-    _output.write(wrapper.onEnter());
+    _output.write(wrapper.getTag());
     return true;
   }
 
   bool _handleSEOWrapper(SEOWrapper wrapper, Element element) {
-    _output.write(wrapper.onEnter());
+    _output.write(wrapper.getOpenTag());
     _traverseChildren(element);
-    _output.write(wrapper.onExit());
+    _output.write(wrapper.getCloseTag());
     return true;
   }
 

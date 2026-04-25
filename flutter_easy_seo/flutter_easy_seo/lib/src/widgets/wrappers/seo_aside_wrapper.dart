@@ -16,7 +16,7 @@ class SEOAsideWrapper extends StatelessWidget implements SEOWrapper {
   Widget build(BuildContext context) => child;
 
   @override
-  String onEnter() {
+  String getOpenTag() {
     final buffer = StringBuffer('<aside');
     if (className != null) buffer.write(' class="$className"');
     if (attributes != null) {
@@ -29,5 +29,5 @@ class SEOAsideWrapper extends StatelessWidget implements SEOWrapper {
   }
 
   @override
-  String onExit() => '</aside>';
+  String getCloseTag() => '</aside>';
 }

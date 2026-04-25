@@ -18,7 +18,7 @@ class SEOTimeWrapper extends StatelessWidget implements SEOWrapper {
   Widget build(BuildContext context) => child;
 
   @override
-  String onEnter() {
+  String getOpenTag() {
     final buffer = StringBuffer('<time datetime="${dateTime.toIso8601String()}"');
     if (className != null) buffer.write(' class="$className"');
     if (attributes != null) {
@@ -31,5 +31,5 @@ class SEOTimeWrapper extends StatelessWidget implements SEOWrapper {
   }
 
   @override
-  String onExit() => '</time>';
+  String getCloseTag() => '</time>';
 }

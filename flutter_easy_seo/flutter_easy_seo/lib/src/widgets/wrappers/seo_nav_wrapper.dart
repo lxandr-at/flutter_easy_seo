@@ -1,13 +1,15 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEONavigationWrapper extends StatelessWidget implements SEOWrapper {
+class SEONavWrapper extends StatelessWidget implements SEOWrapper {
   final Widget child;
+  final String? label;
   final String? className;
   final Map<String, String>? attributes;
 
-  const SEONavigationWrapper({
+  const SEONavWrapper({
     Key? key,
     required this.child,
+    this.label,
     this.className,
     this.attributes,
   }) : super(key: key);
@@ -16,18 +18,25 @@ class SEONavigationWrapper extends StatelessWidget implements SEOWrapper {
   Widget build(BuildContext context) => child;
 
   @override
-  String onEnter() {
-    final buffer = StringBuffer('<nav');
+  String getOpenTag() {
+    final buffer = StringBuffer();
+    
+    buffer.write('<nav');
+    if (label != null) buffer.write(' aria-label="$label"');
+
     if (className != null) buffer.write(' class="$className"');
     if (attributes != null) {
       for (final entry in attributes!.entries) {
         buffer.write(' ${entry.key}="${entry.value}"');
       }
     }
-    buffer.write('>');
+    buffer.write('><ul>');
+
     return buffer.toString();
   }
 
   @override
-  String onExit() => '</nav>';
+  String getCloseTag() {
+    return '</nav>';
+  }
 }

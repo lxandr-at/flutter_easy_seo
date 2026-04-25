@@ -55,10 +55,12 @@ extension ImageSEO on Image {
 /// Extension for NavigationRail widgets to add SEO capabilities
 extension NavigationRailSEO on NavigationRail {
   Widget seo({
+    String? label,
     String? className,
     Map<String, String>? attributes,
   }) {
-    return SEONavigationWrapper(
+    return SEONavWrapper(
+      label: label,
       className: className,
       attributes: attributes,
       child: this,
@@ -69,10 +71,12 @@ extension NavigationRailSEO on NavigationRail {
 /// Extension for BottomNavigationBar widgets to add SEO capabilities
 extension BottomNavigationBarSEO on BottomNavigationBar {
   Widget seo({
+    String? label,
     String? className,
     Map<String, String>? attributes,
   }) {
-    return SEONavigationWrapper(
+    return SEONavWrapper(
+      label: label,
       className: className,
       attributes: attributes,
       child: this,
@@ -167,6 +171,58 @@ extension CustomSEO on Widget {
     return SEOCustomWrapper(
       builder: builder,
       tag: tag,
+      className: className,
+      attributes: attributes,
+      child: this,
+    );
+  }
+}
+
+/// Extension for Column widgets to mark as navigation container
+extension ColumnNavSEO on Column {
+  Widget seoNav({String? label, String? className, Map<String, String>? attributes}) {
+    return SEONavWrapper(
+      label: label,
+      className: className,
+      attributes: attributes,
+      child: this,
+    );
+  }
+}
+
+/// Extension for Row widgets to mark as navigation container
+extension RowNavSEO on Row {
+  Widget seoNav({String? label, String? className, Map<String, String>? attributes}) {
+    return SEONavWrapper(
+      label: label,
+      className: className,
+      attributes: attributes,
+      child: this,
+    );
+  }
+}
+
+/// Extension for Flex widgets to mark as navigation container
+extension FlexNavSEO on Flex {
+  Widget seoNav({String? label, String? className, Map<String, String>? attributes}) {
+    return SEONavWrapper(
+      label: label,
+      className: className,
+      attributes: attributes,
+      child: this,
+    );
+  }
+}
+
+/// Extension for any widget to create a navigation link
+extension NavLinkSEO on Widget {
+  Widget seoNavLink({
+    required String path,
+    String? className,
+    Map<String, String>? attributes,
+  }) {
+    return SEONavLinkWrapper(
+      path: path,
       className: className,
       attributes: attributes,
       child: this,

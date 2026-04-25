@@ -20,7 +20,7 @@ class SEOContainerWrapper extends StatelessWidget implements SEOWrapper {
   Widget build(BuildContext context) => child;
 
   @override
-  String onEnter() {
+  String getOpenTag() {
     final buffer = StringBuffer('<${tag}');
     if (className != null) buffer.write(' class="$className"');
     if (attributes != null) {
@@ -33,5 +33,5 @@ class SEOContainerWrapper extends StatelessWidget implements SEOWrapper {
   }
 
   @override
-  String onExit() => '</${tag}>';
+  String getCloseTag() => '</${tag}>';
 }

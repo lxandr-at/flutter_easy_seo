@@ -1,12 +1,12 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 abstract class SEOWrapper {
-  String onEnter();
-  String onExit();
+  String getOpenTag();
+  String getCloseTag();
 }
 
 abstract class SEOSelfClosingWrapper {
-  String onEnter();
+  String getTag();
 }
 
 class SEOTextWrapper extends StatelessWidget implements SEOWrapper {
@@ -27,7 +27,7 @@ class SEOTextWrapper extends StatelessWidget implements SEOWrapper {
   Widget build(BuildContext context) => child;
 
   @override
-  String onEnter() {
+  String getOpenTag() {
     final tagName = tag ?? 'p';
     final buffer = StringBuffer('<${tagName}');
     if (className != null) buffer.write(' class="$className"');
@@ -41,5 +41,5 @@ class SEOTextWrapper extends StatelessWidget implements SEOWrapper {
   }
 
   @override
-  String onExit() => '</${tag ?? 'p'}>';
+  String getCloseTag() => '</${tag ?? 'p'}>';
 }

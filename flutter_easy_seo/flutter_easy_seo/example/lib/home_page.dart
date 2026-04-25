@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
                 label: Text('Services'),
               ),
             ],
-          ).seo(),
+          ).seo(label: 'Main Navigation'),
           const VerticalDivider(width: 1, thickness: 1),
           Expanded(
             child: SingleChildScrollView(
@@ -153,6 +153,32 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                   ).seo(tag: 'section'),
+
+                  const SizedBox(height: 32),
+
+                  // Footer with Custom Navigation Links
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Quick Links').seo(tag: 'h4'),
+                        const SizedBox(height: 12),
+                        Column(
+                          children: [
+                            const Text('Home').seoNavLink(path: '/'),
+                            const Text('Services').seoNavLink(path: '/services'),
+                            const Text('Contact').seoNavLink(path: '/contact'),
+                            const Text('About').seoNavLink(path: '/about'),
+                          ],
+                        ).seoNav(label: 'Footer Navigation'),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
