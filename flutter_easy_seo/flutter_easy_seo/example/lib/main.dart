@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -8,6 +9,12 @@ import 'services_page.dart';
 
 void main() {
   usePathUrlStrategy();
+  WidgetsFlutterBinding.ensureInitialized();
+  EasySEOConfig.init(
+    enableFileOutput: false, // Generate files on every walk
+    enableLiveOutput: kDebugMode, // Only inject to DOM during debugging
+    baseUrl: "https://mysite.com",
+  );
   runApp(const MyApp());
 }
 

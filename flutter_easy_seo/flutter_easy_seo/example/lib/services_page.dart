@@ -60,11 +60,11 @@ class ServicesPage extends StatelessWidget {
                       children: [
                         const Text(
                           'Our Services',
-                        ).seo(tag: 'h1'),
+                        ).seo(textType: SEOTextType.h1),
                         const SizedBox(height: 12),
                         const Text(
                           'Discover our comprehensive suite of services designed to help your business grow.',
-                        ).seo(tag: 'p'),
+                        ).seo(textType: SEOTextType.p),
                       ],
                     ),
                   ).seo(tag: 'section'),
@@ -85,7 +85,7 @@ class ServicesPage extends StatelessWidget {
                   const SizedBox(height: 32),
                   
                   // Service Details
-                  const Text('What We Offer').seo(tag: 'h2'),
+                  const Text('What We Offer').seo(textType: SEOTextType.h2),
                   const SizedBox(height: 24),
                   
                   // Service 1
@@ -102,14 +102,14 @@ class ServicesPage extends StatelessWidget {
                           children: [
                             Icon(Icons.analytics, color: Colors.blue.shade600, size: 32),
                             const SizedBox(width: 12),
-                            Expanded(child: const Text('Data Analytics').seo(tag: 'h3')),
+                            Expanded(child: const Text('Data Analytics').seo(textType: SEOTextType.h3)),
                           ],
                         ),
                         const SizedBox(height: 12),
                         const Text(
                           'Transform raw data into actionable insights with our advanced analytics platform. '
                           'Real-time dashboards, custom reports, and machine learning powered predictions.',
-                        ).seo(tag: 'p'),
+                        ).seo(textType: SEOTextType.p),
                         const SizedBox(height: 12),
                         const Wrap(
                           spacing: 8,
@@ -139,14 +139,14 @@ class ServicesPage extends StatelessWidget {
                           children: [
                             Icon(Icons.cloud_sync, color: Colors.green.shade600, size: 32),
                             const SizedBox(width: 12),
-                            Expanded(child: const Text('Cloud Infrastructure').seo(tag: 'h3')),
+                            Expanded(child: const Text('Cloud Infrastructure').seo(textType: SEOTextType.h3)),
                           ],
                         ),
                         const SizedBox(height: 12),
                         const Text(
                           'Scalable cloud solutions that grow with your business. From startup to enterprise, '
                           'we provide the infrastructure you need to succeed.',
-                        ).seo(tag: 'p'),
+                        ).seo(textType: SEOTextType.p),
                         const SizedBox(height: 12),
                         const Wrap(
                           spacing: 8,
@@ -176,14 +176,14 @@ class ServicesPage extends StatelessWidget {
                           children: [
                             Icon(Icons.security, color: Colors.orange.shade600, size: 32),
                             const SizedBox(width: 12),
-                            Expanded(child: const Text('Security & Compliance').seo(tag: 'h3')),
+                            Expanded(child: const Text('Security & Compliance').seo(textType: SEOTextType.h3)),
                           ],
                         ),
                         const SizedBox(height: 12),
                         const Text(
                           'Enterprise-grade security with SOC2, GDPR, and HIPAA compliance. '
                           'Protect your data with bank-level encryption and 24/7 monitoring.',
-                        ).seo(tag: 'p'),
+                        ).seo(textType: SEOTextType.p),
                         const SizedBox(height: 12),
                         const Wrap(
                           spacing: 8,
@@ -209,11 +209,11 @@ class ServicesPage extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        const Text('Need a Custom Solution?').seo(tag: 'h3'),
+                        const Text('Need a Custom Solution?').seo(textType: SEOTextType.h3),
                         const SizedBox(height: 12),
                         const Text(
                           'Our team of experts can help design a solution tailored to your specific needs.',
-                        ).seo(tag: 'p'),
+                        ).seo(textType: SEOTextType.p),
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () => context.go('/'),

@@ -3,17 +3,25 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 /// Extension for Text widgets to add SEO capabilities
 extension TextSEO on Text {
   Widget seo({
-    String? tag,
+    SEOTextType textType = SEOTextType.p,
     String? className,
     Map<String, String>? attributes,
   }) {
     return SEOTextWrapper(
-      tag: tag,
+      textType: textType,
       className: className,
       attributes: attributes,
       child: this,
     );
   }
+
+  Widget get seoH1 => seo(textType: SEOTextType.h1);
+  Widget get seoH2 => seo(textType: SEOTextType.h2);
+  Widget get seoH3 => seo(textType: SEOTextType.h3);
+  Widget get seoH4 => seo(textType: SEOTextType.h4);
+  Widget get seoH5 => seo(textType: SEOTextType.h5);
+  Widget get seoH6 => seo(textType: SEOTextType.h6);
+  Widget get seoP => seo();
 }
 
 /// Extension for Container widgets to add SEO capabilities
@@ -22,13 +30,11 @@ extension ContainerSEO on Container {
     String tag = 'div',
     String? className,
     Map<String, String>? attributes,
-    bool isSection = false,
   }) {
     return SEOContainerWrapper(
       tag: tag,
       className: className,
       attributes: attributes,
-      isSection: isSection,
       child: this,
     );
   }

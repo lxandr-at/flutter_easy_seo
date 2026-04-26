@@ -6,7 +6,7 @@ class EasySEO extends StatefulWidget {
   final String? title;
   final String? description;
   final Map<String, String>? additionalTags;
-  final Function(String html, String route)? onGenerate;
+  final Function(String html)? onGenerate;
 
   const EasySEO({
     Key? key,
@@ -24,12 +24,14 @@ class EasySEO extends StatefulWidget {
 
 class _EasySEOState extends State<EasySEO> {
   final _processor = SEOWidgetTreeProcessor();
-  late final FileSystemHandler _fileHandler;
+  late final EasySEOFileOutput _fileHandler;
+  late final EasySEOLiveOutput _liveHandler;
 
   @override
   void initState() {
     super.initState();
-    _fileHandler = FileSystemHandler();
+    _fileHandler = EasySEOFileOutput();
+    _liveHandler = EasySEOLiveOutput();
     if (widget.enabled) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _generateHTML();
@@ -40,8 +42,6 @@ class _EasySEOState extends State<EasySEO> {
   void _generateHTML() {
     if (!widget.enabled) return;
     
-    final route = getCurrentWebRoute();
-
     final rootElement = _findRootElement();
     if (rootElement == null) {
       return;
@@ -56,16 +56,26 @@ class _EasySEOState extends State<EasySEO> {
       additionalTags: widget.additionalTags,
     );
 
-    final html = SEOHtmlDocumentGenerator.generateFullDocument(
-      bodyContent: bodyContent,
-      metadata: metadata,
-    );
+    final metadataStr = SEOHtmlDocumentGenerator.generateMetadata(metadata: metadata);
 
-    _fileHandler.saveHTMLFile(html);
-
-    if (widget.onGenerate != null) {
-      widget.onGenerate!(html, route);
+    if (EasySEOConfig.enableLiveOutput.value) {
+      _liveHandler.injectToHead(metadataStr);
+      _liveHandler.injectToBody(bodyContent);
     }
+
+    if (EasySEOConfig.enableFileOutput.value || widget.onGenerate != null) {
+      final html = SEOHtmlDocumentGenerator.generateFullDocument(
+        bodyContent: bodyContent,
+        metadata: metadataStr,
+      );
+      if (EasySEOConfig.enableFileOutput.value) {
+        _fileHandler.saveHTMLFile(html);
+      }
+      if (widget.onGenerate != null) {
+        widget.onGenerate!(html);
+      }
+    }
+
   }
 
   Element? _findRootElement() {

@@ -77,7 +77,8 @@ class SEOWidgetTreeProcessor {
 
   bool _handleSEOImageWrapper(SEOImageWrapper wrapper, Element element) {
     final imgSrc = _extractImageSrcFromChild(wrapper.child);
-    _output.write(wrapper.getTag(resolvedSrc: imgSrc));
+    _output.write(wrapper.getOpenTag(overrideAttributes: {if (imgSrc != null) 'src': imgSrc}));
+    _output.write(wrapper.getCloseTag());
     return true;
   }
 
@@ -151,9 +152,49 @@ class SEOPageMetadata {
 
 /// Generates complete HTML document from widget tree content and metadata
 class SEOHtmlDocumentGenerator {
+  static String generateMetadata({
+    SEOPageMetadata? metadata,
+  }) {
+    final buffer = StringBuffer();
+
+    // Title
+    if (metadata?.title != null) {
+      buffer.writeln('  <title>${metadata!.title}</title>');
+    } else {
+      buffer.writeln('  <title></title>');
+    }
+
+    // Description
+    if (metadata?.description != null) {
+      buffer.writeln('  <meta name="description" content="${metadata!.description}">');
+    }
+
+    // Canonical URL
+    if (metadata?.canonicalUrl != null) {
+      buffer.writeln('  <link rel="canonical" href="${metadata!.canonicalUrl}">');
+    }
+
+    // Additional meta tags
+    if (metadata?.additionalTags != null) {
+      for (final entry in metadata!.additionalTags!.entries) {
+        buffer.writeln('  <meta name="${entry.key}" content="${entry.value}">');
+      }
+    }
+
+    // Custom head tags
+    if (metadata?.headTags != null) {
+      for (final tag in metadata!.headTags!) {
+        final attrs = tag.attributes.entries.map((e) => '${e.key}="${e.value}"').join(' ');
+        buffer.writeln('  <${tag.tagName} $attrs>');
+      }
+    }
+
+    return buffer.toString();
+  }
+
   static String generateFullDocument({
     required String bodyContent,
-    SEOPageMetadata? metadata,
+    String? metadata,
   }) {
     final buffer = StringBuffer();
     
@@ -162,39 +203,11 @@ class SEOHtmlDocumentGenerator {
     buffer.writeln('<head>');
     buffer.writeln('  <meta charset="UTF-8">');
     buffer.writeln('  <meta name="viewport" content="width=device-width, initial-scale=1.0">');
-    
-    // Title
-    if (metadata?.title != null) {
-      buffer.writeln('  <title>${metadata!.title}</title>');
-    } else {
-      buffer.writeln('  <title></title>');
+
+    if (metadata != null) {
+      buffer.writeln(metadata);
     }
-    
-    // Description
-    if (metadata?.description != null) {
-      buffer.writeln('  <meta name="description" content="${metadata!.description}">');
-    }
-    
-    // Canonical URL
-    if (metadata?.canonicalUrl != null) {
-      buffer.writeln('  <link rel="canonical" href="${metadata!.canonicalUrl}">');
-    }
-    
-    // Additional meta tags
-    if (metadata?.additionalTags != null) {
-      for (final entry in metadata!.additionalTags!.entries) {
-        buffer.writeln('  <meta name="${entry.key}" content="${entry.value}">');
-      }
-    }
-    
-    // Custom head tags
-    if (metadata?.headTags != null) {
-      for (final tag in metadata!.headTags!) {
-        final attrs = tag.attributes.entries.map((e) => '${e.key}="${e.value}"').join(' ');
-        buffer.writeln('  <${tag.tagName} $attrs>');
-      }
-    }
-    
+
     buffer.writeln('</head>');
     buffer.writeln('<body>');
     buffer.write(bodyContent);

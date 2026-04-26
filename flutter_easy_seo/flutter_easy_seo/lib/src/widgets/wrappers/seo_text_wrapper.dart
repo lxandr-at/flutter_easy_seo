@@ -1,45 +1,18 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-abstract class SEOWrapper {
-  String getOpenTag();
-  String getCloseTag();
-}
+enum SEOTextType { h1, h2, h3, h4, h5, h6, p }
 
-abstract class SEOSelfClosingWrapper {
-  String getTag();
-}
-
-class SEOTextWrapper extends StatelessWidget implements SEOWrapper {
-  final Widget child;
-  final String? tag;
-  final String? className;
-  final Map<String, String>? attributes;
-
+class SEOTextWrapper extends BaseSEOWrapper {
   const SEOTextWrapper({
-    Key? key,
-    required this.child,
-    this.tag,
-    this.className,
-    this.attributes,
-  }) : super(key: key);
+    super.key,
+    required super.child,
+    this.textType = SEOTextType.p,
+    super.className,
+    super.attributes,
+  });
+
+  final SEOTextType textType;
 
   @override
-  Widget build(BuildContext context) => child;
-
-  @override
-  String getOpenTag() {
-    final tagName = tag ?? 'p';
-    final buffer = StringBuffer('<${tagName}');
-    if (className != null) buffer.write(' class="$className"');
-    if (attributes != null) {
-      for (final entry in attributes!.entries) {
-        buffer.write(' ${entry.key}="${entry.value}"');
-      }
-    }
-    buffer.write('>');
-    return buffer.toString();
-  }
-
-  @override
-  String getCloseTag() => '</${tag ?? 'p'}>';
+  String get tagName => textType.name;
 }

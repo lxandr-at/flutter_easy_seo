@@ -1,42 +1,22 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEONavWrapper extends StatelessWidget implements SEOWrapper {
-  final Widget child;
+class SEONavWrapper extends BaseSEOWrapper  {
   final String? label;
-  final String? className;
-  final Map<String, String>? attributes;
 
   const SEONavWrapper({
-    Key? key,
-    required this.child,
+    super.key,
+    required super.child,
+    super.className,
+    super.attributes,
     this.label,
-    this.className,
-    this.attributes,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) => child;
+  String get tagName => "nav";
 
   @override
-  String getOpenTag() {
-    final buffer = StringBuffer();
-    
-    buffer.write('<nav');
-    if (label != null) buffer.write(' aria-label="$label"');
-
-    if (className != null) buffer.write(' class="$className"');
-    if (attributes != null) {
-      for (final entry in attributes!.entries) {
-        buffer.write(' ${entry.key}="${entry.value}"');
-      }
-    }
-    buffer.write('><ul>');
-
-    return buffer.toString();
-  }
+  String get appendBeforeContent => "<ul>";
 
   @override
-  String getCloseTag() {
-    return '</nav>';
-  }
+  String get appendAfterContent => "</ul>";
 }

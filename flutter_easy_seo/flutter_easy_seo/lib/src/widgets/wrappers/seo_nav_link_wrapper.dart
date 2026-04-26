@@ -1,35 +1,25 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEONavLinkWrapper extends StatelessWidget implements SEOWrapper {
-  final Widget child;
+class SEONavLinkWrapper extends BaseSEOWrapper {
   final String path;
-  final String? className;
-  final Map<String, String>? attributes;
 
   const SEONavLinkWrapper({
-    Key? key,
-    required this.child,
+    super.key,
+    required super.child,
+    super.className,
+    super.attributes,
     required this.path,
-    this.className,
-    this.attributes,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) => child;
+  String get tagName => "a";
 
   @override
-  String getOpenTag() {
-    final buffer = StringBuffer('<a href="$path"');
-    if (className != null) buffer.write(' class="$className"');
-    if (attributes != null) {
-      for (final entry in attributes!.entries) {
-        buffer.write(' ${entry.key}="${entry.value}"');
-      }
-    }
-    buffer.write('>');
-    return buffer.toString();
-  }
+  String get appendBeforeTag => "<li>";
 
   @override
-  String getCloseTag() => '</a>';
+  String get appendAfterTag => "</li>";
+
+  @override
+  Map<String, String> get additionalAttributes => {'href': path};
 }

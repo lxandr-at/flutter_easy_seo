@@ -8,6 +8,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('SaaS Platform').seoH1,
+      ),
       body: Row(
         children: [
           NavigationRail(
@@ -20,16 +23,16 @@ class HomePage extends StatelessWidget {
               }
             },
             labelType: NavigationRailLabelType.all,
-            destinations: const [
+            destinations: [
               NavigationRailDestination(
-                icon: Icon(Icons.home_outlined),
-                selectedIcon: Icon(Icons.home),
-                label: Text('Home'),
+                icon: const Icon(Icons.home_outlined),
+                selectedIcon: const Icon(Icons.home),
+                label: const Text('Home').seoNavLink(path: "/"),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.business_outlined),
-                selectedIcon: Icon(Icons.business),
-                label: Text('Services'),
+                icon: const Icon(Icons.business_outlined),
+                selectedIcon: const Icon(Icons.business),
+                label: const Text('Services').seoNavLink(path: "/services"),
               ),
             ],
           ).seo(label: 'Main Navigation'),
@@ -58,14 +61,12 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Welcome to Our Platform',
-                        ).seo(tag: 'h1'),
+                        const Text('Welcome to Our Platform').seoH2,
                         const SizedBox(height: 16),
                         const Text(
                           'Transform your business with our cutting-edge solutions. '
                           'We provide enterprise-grade tools for modern teams.',
-                        ).seo(tag: 'p'),
+                        ).seoP,
                         const SizedBox(height: 24),
                         ElevatedButton(
                           onPressed: () => context.go('/services'),
@@ -97,7 +98,7 @@ class HomePage extends StatelessWidget {
                   const SizedBox(height: 32),
                   
                   // Features Section
-                  const Text('Our Features').seo(tag: 'h2'),
+                  const Text('Our Features').seo(textType: SEOTextType.h2),
                   const SizedBox(height: 16),
                   
                   // Feature Cards Grid
@@ -125,6 +126,7 @@ class HomePage extends StatelessWidget {
                         title: '24/7 Support',
                         description: 'Expert help whenever you need it.',
                       ),
+                      EasySEOConfigWidget()
                     ],
                   ),
                   
@@ -140,11 +142,11 @@ class HomePage extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        const Text('Ready to get started?').seo(tag: 'h3'),
+                        const Text('Ready to get started?').seo(textType: SEOTextType.h3),
                         const SizedBox(height: 12),
                         const Text(
                           'Join thousands of companies using our platform.',
-                        ).seo(tag: 'p'),
+                        ).seo(textType: SEOTextType.p),
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () => context.go('/services'),
@@ -166,7 +168,7 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Quick Links').seo(tag: 'h4'),
+                        const Text('Quick Links').seo(textType: SEOTextType.h4),
                         const SizedBox(height: 12),
                         Column(
                           children: [
@@ -214,7 +216,7 @@ class _FeatureCard extends StatelessWidget {
         children: [
           Icon(icon, size: 40, color: Colors.blue.shade600),
           const SizedBox(height: 12),
-          Text(title).seo(tag: 'h3'),
+          Text(title).seo(textType: SEOTextType.h3),
           const SizedBox(height: 8),
           Text(description),
         ],

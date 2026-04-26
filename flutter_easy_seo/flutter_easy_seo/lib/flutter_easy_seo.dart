@@ -1,15 +1,18 @@
 library flutter_easy_seo;
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:web/web.dart' as web;
-import 'src/helper/platform_helper_stub.dart'
-  if (dart.library.js_interop) 'src/helper/platform_helper_web.dart';
+
+// Import the "facade" which handles the platform switching
+import 'src/output/easy_seo_file_output_facade.dart';
+import 'src/output/easy_seo_live_output_facade.dart';
 
 part 'src/extensions/all_extensions.dart';
 part 'src/models/seo_metadata_models.dart';
 part 'src/traversal/widget_tree_processor.dart';
+part 'src/easy_seo_config.dart';
 part 'src/widgets/easy_seo.dart';
+part 'src/widgets/config/easy_seo_config_widget.dart';
+part 'src/widgets/wrappers/seo_base_wrapper.dart';
 part 'src/widgets/wrappers/seo_text_wrapper.dart';
 part 'src/widgets/wrappers/seo_container_wrapper.dart';
 part 'src/widgets/wrappers/seo_article_wrapper.dart';
@@ -25,4 +28,3 @@ part 'src/widgets/wrappers/seo_form_wrapper.dart';
 part 'src/widgets/wrappers/seo_figure_wrapper.dart';
 part 'src/widgets/wrappers/seo_custom_wrapper.dart';
 part 'src/widgets/wrappers/seo_nav_link_wrapper.dart';
-part 'src/output/file_system_handler.dart';

@@ -1,33 +1,13 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEOSectionWrapper extends StatelessWidget implements SEOWrapper {
-  final Widget child;
-  final String? className;
-  final Map<String, String>? attributes;
-
+class SEOSectionWrapper extends BaseSEOWrapper {
   const SEOSectionWrapper({
-    Key? key,
-    required this.child,
-    this.className,
-    this.attributes,
-  }) : super(key: key);
+    super.key,
+    required super.child,
+    super.className,
+    super.attributes,
+  });
 
   @override
-  Widget build(BuildContext context) => child;
-
-  @override
-  String getOpenTag() {
-    final buffer = StringBuffer('<section');
-    if (className != null) buffer.write(' class="$className"');
-    if (attributes != null) {
-      for (final entry in attributes!.entries) {
-        buffer.write(' ${entry.key}="${entry.value}"');
-      }
-    }
-    buffer.write('>');
-    return buffer.toString();
-  }
-
-  @override
-  String getCloseTag() => '</section>';
+  String get tagName => 'section';
 }

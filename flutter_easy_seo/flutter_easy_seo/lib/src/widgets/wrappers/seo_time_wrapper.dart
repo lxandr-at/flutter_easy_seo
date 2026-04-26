@@ -1,25 +1,22 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEOTimeWrapper extends StatelessWidget implements SEOWrapper {
-  final Widget child;
-  final String? className;
-  final Map<String, String>? attributes;
-  final DateTime dateTime;
-
+class SEOTimeWrapper extends BaseSEOWrapper {
   const SEOTimeWrapper({
-    Key? key,
-    required this.child,
-    this.className,
-    this.attributes,
-    required this.dateTime,
-  }) : super(key: key);
+    super.key,
+    required Widget child,
+    String? className,
+    Map<String, String>? attributes,
+    required DateTime dateTime,
+  }) : _dateTime = dateTime, super(child: child, className: className, attributes: attributes);
+
+  final DateTime _dateTime;
 
   @override
-  Widget build(BuildContext context) => child;
+  String get tagName => 'time';
 
   @override
-  String getOpenTag() {
-    final buffer = StringBuffer('<time datetime="${dateTime.toIso8601String()}"');
+  String getOpenTag({Map<String, String> overrideAttributes = const {}}) {
+    final buffer = StringBuffer('<time datetime="${_dateTime.toIso8601String()}"');
     if (className != null) buffer.write(' class="$className"');
     if (attributes != null) {
       for (final entry in attributes!.entries) {
@@ -29,7 +26,4 @@ class SEOTimeWrapper extends StatelessWidget implements SEOWrapper {
     buffer.write('>');
     return buffer.toString();
   }
-
-  @override
-  String getCloseTag() => '</time>';
 }
