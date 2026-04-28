@@ -135,63 +135,22 @@ class SEOWidgetTreeProcessor {
 
 /// Page metadata extracted from EasySEO widget
 class SEOPageMetadata {
-  final String? title;
-  final String? description;
-  final List<SEOTag>? headTags;
-  final Map<String, String>? additionalTags;
-  final String? canonicalUrl;
+  final List<EasySEOHeadTag> headTags;
 
-  SEOPageMetadata({
-    this.title,
-    this.description,
-    this.headTags,
-    this.additionalTags,
-    this.canonicalUrl,
-  });
+  SEOPageMetadata({this.headTags = const []});
+
+  String generateMetadata() {
+    final buffer = StringBuffer();
+    for (var tag in headTags) {
+      buffer.writeln(tag.toHtml());
+    }
+    return buffer.toString();
+  }
+
 }
 
 /// Generates complete HTML document from widget tree content and metadata
 class SEOHtmlDocumentGenerator {
-  static String generateMetadata({
-    SEOPageMetadata? metadata,
-  }) {
-    final buffer = StringBuffer();
-
-    // Title
-    if (metadata?.title != null) {
-      buffer.writeln('  <title>${metadata!.title}</title>');
-    } else {
-      buffer.writeln('  <title></title>');
-    }
-
-    // Description
-    if (metadata?.description != null) {
-      buffer.writeln('  <meta name="description" content="${metadata!.description}">');
-    }
-
-    // Canonical URL
-    if (metadata?.canonicalUrl != null) {
-      buffer.writeln('  <link rel="canonical" href="${metadata!.canonicalUrl}">');
-    }
-
-    // Additional meta tags
-    if (metadata?.additionalTags != null) {
-      for (final entry in metadata!.additionalTags!.entries) {
-        buffer.writeln('  <meta name="${entry.key}" content="${entry.value}">');
-      }
-    }
-
-    // Custom head tags
-    if (metadata?.headTags != null) {
-      for (final tag in metadata!.headTags!) {
-        final attrs = tag.attributes.entries.map((e) => '${e.key}="${e.value}"').join(' ');
-        buffer.writeln('  <${tag.tagName} $attrs>');
-      }
-    }
-
-    return buffer.toString();
-  }
-
   static String generateFullDocument({
     required String bodyContent,
     String? metadata,

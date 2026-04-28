@@ -2,19 +2,19 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class EasySEO extends StatefulWidget {
   final Widget child;
-  final bool enabled;
-  final String? title;
+  final bool disabled;
+  final String title;
   final String? description;
-  final Map<String, String>? additionalTags;
+  final List<EasySEOHeadTag> headTags;
   final Function(String html)? onGenerate;
 
   const EasySEO({
     Key? key,
     required this.child,
-    this.enabled = false,
-    this.title,
+    required this.title,
     this.description,
-    this.additionalTags,
+    this.disabled = false,
+    this.headTags = const [],
     this.onGenerate,
   }) : super(key: key);
 
@@ -32,15 +32,47 @@ class _EasySEOState extends State<EasySEO> {
     super.initState();
     _fileHandler = EasySEOFileOutput();
     _liveHandler = EasySEOLiveOutput();
-    if (widget.enabled) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _generateHTML();
-      });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _generateHTML();
+    });
+  }
+
+  /// Combines the explicit title adn description param with the headTags list
+  List<EasySEOHeadTag> get _allTags {
+    // Using a Map ensures that only one tag per "key" exists.
+    final Map<String, EasySEOHeadTag> deduplicated = {};
+
+    void addTag(EasySEOHeadTag tag) {
+      deduplicated[tag.key] = tag;
     }
+
+    // --- 1. DEFAULT AUTOMATIC TAGS ---
+    addTag(EasySEOTitleTag(widget.title));
+    addTag(EasySEOMetaTag.title(widget.title));
+    addTag(EasySEOOgTag.title(widget.title));
+    addTag(EasySEOTwitterTag.title(widget.title));
+
+    if (widget.description != null) {
+      addTag(EasySEOMetaTag.description(widget.description!));
+      addTag(EasySEOOgTag.description(widget.description!));
+      addTag(EasySEOTwitterTag.description(widget.description!));
+    }
+
+    // --- 2. USER OVERRIDES ---
+    // Because we add these last, if the user provided their own
+    // EasySEOOgTag.title, it will overwrite the automatic one above.
+    for (var tag in widget.headTags) {
+      addTag(tag);
+    }
+
+    return deduplicated.values.toList();
   }
 
   void _generateHTML() {
-    if (!widget.enabled) return;
+    // do noting if globally disabled
+    if (!EasySEOConfig.enabled.value) return;
+    // do nothing if locally disabled
+    if (widget.disabled) return;
     
     final rootElement = _findRootElement();
     if (rootElement == null) {
@@ -50,13 +82,9 @@ class _EasySEOState extends State<EasySEO> {
     final bodyContent = _processor.processWidgetTree(rootElement);
     
     // Use page metadata from EasySEO widget
-    final metadata = SEOPageMetadata(
-      title: widget.title,
-      description: widget.description,
-      additionalTags: widget.additionalTags,
-    );
+    final metadata = SEOPageMetadata(headTags: _allTags);
 
-    final metadataStr = SEOHtmlDocumentGenerator.generateMetadata(metadata: metadata);
+    final metadataStr = metadata.generateMetadata();
 
     if (EasySEOConfig.enableLiveOutput.value) {
       _liveHandler.injectToHead(metadataStr);
@@ -64,16 +92,15 @@ class _EasySEOState extends State<EasySEO> {
     }
 
     if (EasySEOConfig.enableFileOutput.value || widget.onGenerate != null) {
-      final html = SEOHtmlDocumentGenerator.generateFullDocument(
+      final fullHtml = SEOHtmlDocumentGenerator.generateFullDocument(
         bodyContent: bodyContent,
         metadata: metadataStr,
       );
       if (EasySEOConfig.enableFileOutput.value) {
-        _fileHandler.saveHTMLFile(html);
+        _fileHandler.saveHTMLFile(fullHtml);
       }
-      if (widget.onGenerate != null) {
-        widget.onGenerate!(html);
-      }
+      // Call the callback if provided
+      widget.onGenerate?.call(fullHtml);
     }
 
   }

@@ -6,7 +6,8 @@ void main() {
   test('EasySEO can be instantiated', () {
     expect(
       const EasySEO(
-        enabled: true,
+        disabled: true,
+        title: '',
         child: SizedBox(),
       ),
       isNotNull,

@@ -12,6 +12,7 @@ class HomePage extends StatelessWidget {
         title: const Text('SaaS Platform').seoH1,
       ),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           NavigationRail(
             selectedIndex: 0,

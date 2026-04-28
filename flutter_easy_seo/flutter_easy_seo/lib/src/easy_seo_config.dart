@@ -4,6 +4,7 @@ class EasySEOConfig {
   EasySEOConfig._();
 
   // We use ValueNotifiers so the UI or Logic can listen for changes
+  static final ValueNotifier<bool> enabled = ValueNotifier(true);
   static final ValueNotifier<bool> enableFileOutput = ValueNotifier(false);
   static final ValueNotifier<bool> enableLiveOutput = ValueNotifier(false);
 
@@ -12,10 +13,12 @@ class EasySEOConfig {
 
   /// Initialize the settings.
   static void init({
+    bool enabled = true,
     bool enableFileOutput = false,
     bool enableLiveOutput = false,
     String baseUrl = "",
   }) {
+    EasySEOConfig.enabled.value = enabled;
     EasySEOConfig.enableFileOutput.value = enableFileOutput;
     EasySEOConfig.enableLiveOutput.value = enableLiveOutput;
     EasySEOConfig.baseUrl = baseUrl;

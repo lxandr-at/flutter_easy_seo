@@ -23,30 +23,24 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const EasySEO(
-        enabled: true,
-        title: 'Home | SaaS Platform',
+      builder: (context, state) => EasySEO(
+        title: 'SaaS Platform - Home',
         description: 'The best SaaS platform for modern businesses.',
-        additionalTags: {
-          'og:title': 'SaaS Platform - Home',
-          'og:description': 'The best SaaS platform for modern businesses.',
-          'twitter:card': 'summary_large_image',
-        },
-        child: HomePage(),
+        headTags: [
+          EasySEOTwitterTag.card(), // default type is 'summary_large_image'
+        ],
+        child: const HomePage(),
       ),
     ),
     GoRoute(
       path: '/services',
-      builder: (context, state) => const EasySEO(
-        enabled: true,
+      builder: (context, state) => EasySEO(
         title: 'Our Services | SaaS Platform',
         description: 'Explore our comprehensive suite of services.',
-        additionalTags: {
-          'og:title': 'SaaS Platform - Services',
-          'og:description': 'Explore our comprehensive suite of services.',
-          'twitter:card': 'summary_large_image',
-        },
-        child: ServicesPage(),
+        headTags: [
+          EasySEOTwitterTag.card(), // default type is 'summary_large_image'
+        ],
+        child: const ServicesPage(),
       ),
     ),
   ],

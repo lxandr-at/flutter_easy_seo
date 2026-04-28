@@ -1,31 +1,153 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-/// Model for SEO tags
-class SEOTag {
+/// Base class for any tag inside the <head>
+abstract class EasySEOHeadTag {
   final String tagName;
   final Map<String, String> attributes;
 
-  const SEOTag(this.tagName, this.attributes);
+  const EasySEOHeadTag(this.tagName, this.attributes);
+
+  /// Returns a unique identifier for this tag type (e.g., "meta:description")
+  /// to prevent duplicates in the <head>.
+  String get key {
+    final String? name = attributes['name'];
+    final String? property = attributes['property'];
+    final String? rel = attributes['rel'];
+    final String? content = attributes['content'];
+
+    if (tagName == 'title') return 'title';
+
+    // 1. Handle Multi-value Link tags (rel="alternate")
+    if (rel == 'alternate') {
+      return 'link:alternate:${attributes['hreflang'] ?? attributes['href']}';
+    }
+
+    // 2. Handle Multi-value Meta tags (og:image, og:video, etc.)
+    // These properties are allowed to have multiple entries in the <head>
+    const multiValueProperties = {'og:image', 'og:video', 'og:audio', 'twitter:image'};
+    if (property != null && multiValueProperties.contains(property)) {
+      return 'meta:property:$property:$content';
+    }
+    if (name != null && multiValueProperties.contains(name)) {
+      return 'meta:name:$name:$content';
+    }
+
+    // 3. Standard Deduplication (Single-value tags)
+    if (name != null) return 'meta:name:$name';
+    if (property != null) return 'meta:property:$property';
+    if (rel != null) return 'link:rel:$rel';
+    if (attributes.containsKey('charset')) return 'meta:charset';
+
+    // Fallback for custom tags
+    return '$tagName:${attributes.hashCode}';
+  }
+
+  // HTML "Void" elements don't have closing tags
+  bool get isVoid => tagName == 'meta' || tagName == 'link';
+
+  String _escapeHtml(String value) {
+    return value
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;');
+  }
+
+  String toHtml() {
+    // 1. Prepare the library identifier
+    // We use a data attribute because it's standard for metadata scripts
+    final libAttr = 'data-easy-seo="${_escapeHtml(key)}"';
+
+    // 2. Prepare the specific attributes (name, content, etc.)
+    final attrs = attributes.entries
+        .map((e) => '${e.key}="${_escapeHtml(e.value)}"')
+        .join(' ');
+
+    // 3. Combine them
+    final allAttrs = attrs.isEmpty ? libAttr : '$libAttr $attrs';
+
+    final openTag = '<$tagName $allAttrs>';
+
+    return isVoid ? openTag : '$openTag</$tagName>';
+  }
 }
 
-/// Model for Meta tags
-class MetaTag extends SEOTag {
-  final String name;
-  final String content;
+class EasySEOTitleTag extends EasySEOHeadTag {
+  final String title;
+  // Title tags don't usually have attributes, so we pass an empty map
+  const EasySEOTitleTag(this.title) : super('title', const {});
 
-  MetaTag({required this.name, required this.content}) : super('meta', {'name': name, 'content': content});
+  @override
+  String toHtml() {
+    return "<title>$title</title>";
+  }
 }
 
-/// Model for Link tags
-class LinkTag extends SEOTag {
-  final String rel;
-  final String href;
-  final String? hreflang;
+/// Flexible Model for Meta tags
+class EasySEOMetaTag extends EasySEOHeadTag {
+  EasySEOMetaTag(Map<String, String> attributes) : super('meta', attributes);
 
-  LinkTag({required this.rel, required this.href, this.hreflang}) 
-    : super('link', {
-        'rel': rel,
-        'href': href,
-        if (hreflang != null) 'hreflang': hreflang,
-      });
+  // --- Standard SEO Factories ---
+  factory EasySEOMetaTag.title(String content) => EasySEOMetaTag({'name': 'title', 'content': content});
+  factory EasySEOMetaTag.description(String content) => EasySEOMetaTag({'name': 'description', 'content': content});
+  factory EasySEOMetaTag.keywords(List<String> keywords) => EasySEOMetaTag({'name': 'keywords', 'content': keywords.join(', ')});
+  factory EasySEOMetaTag.viewport({String content = 'width=device-width, initial-scale=1.0'}) => EasySEOMetaTag({'name': 'viewport', 'content': content});
+  factory EasySEOMetaTag.charset({String charset = 'UTF-8'}) => EasySEOMetaTag({'charset': charset});
+  factory EasySEOMetaTag.author(String name) => EasySEOMetaTag({'name': 'author', 'content': name});
+  factory EasySEOMetaTag.themeColor(String colorHex) => EasySEOMetaTag({'name': 'theme-color', 'content': colorHex});
+  factory EasySEOMetaTag.robots({bool index = true, bool follow = true}) =>
+    EasySEOMetaTag({
+      'name': 'robots',
+      'content': '${index ? 'index' : 'noindex'}, ${follow ? 'follow' : 'nofollow'}'
+    });
+}
+
+/// Specialized class for Open Graph (Social Media)
+class EasySEOOgTag extends EasySEOMetaTag {
+  // OG tags use 'property' instead of 'name'
+  EasySEOOgTag(String type, String content) : super({'property': 'og:$type', 'content': content});
+
+  factory EasySEOOgTag.title(String title) => EasySEOOgTag('title', title);
+  factory EasySEOOgTag.description(String description) => EasySEOOgTag('description', description);
+  factory EasySEOOgTag.image(String imageUrl) => EasySEOOgTag('image', imageUrl);
+  factory EasySEOOgTag.url(String url) => EasySEOOgTag('url', url);
+  factory EasySEOOgTag.type({String type = 'website'}) => EasySEOOgTag('type', type);
+  factory EasySEOOgTag.siteName(String name) => EasySEOOgTag('site_name', name);
+}
+
+/// Specialized class for Twitter Cards
+class EasySEOTwitterTag extends EasySEOMetaTag {
+  // Twitter tags use 'name' but prefixed with 'twitter:'
+  EasySEOTwitterTag(String type, String content) : super({'name': 'twitter:$type', 'content': content});
+  factory EasySEOTwitterTag.card({String type = 'summary_large_image'}) => EasySEOTwitterTag('card', type);
+  factory EasySEOTwitterTag.site(String handle) => EasySEOTwitterTag('site', handle);
+  factory EasySEOTwitterTag.title(String title) => EasySEOTwitterTag('title', title);
+  factory EasySEOTwitterTag.description(String description) => EasySEOTwitterTag('description', description);
+  factory EasySEOTwitterTag.image(String imageUrl) => EasySEOTwitterTag('image', imageUrl);
+}
+
+class EasySEOLinkTag extends EasySEOHeadTag {
+  EasySEOLinkTag(Map<String, String> attributes) : super('link', attributes);
+
+  /// Standard factory for any link tag
+  factory EasySEOLinkTag.custom({
+    required String rel,
+    required String href,
+    String? hreflang,
+    String? type,
+  }) {
+    return EasySEOLinkTag({
+      'rel': rel,
+      'href': href,
+      if (hreflang != null) 'hreflang': hreflang,
+      if (type != null) 'type': type,
+    });
+  }
+
+  /// The "Master" version of a URL (Crucial for SEO)
+  factory EasySEOLinkTag.canonical(String href) => EasySEOLinkTag({'rel': 'canonical', 'href': href});
+  /// For multilingual support
+  factory EasySEOLinkTag.alternate({required String href, required String lang}) => EasySEOLinkTag({'rel': 'alternate', 'href': href, 'hreflang': lang});
+  /// For site icons
+  factory EasySEOLinkTag.icon(String href, {String type = 'image/x-icon'}) => EasySEOLinkTag({'rel': 'icon', 'href': href, 'type': type});
 }
