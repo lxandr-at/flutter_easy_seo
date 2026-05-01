@@ -167,7 +167,7 @@ extension DrawerSEO on Drawer {
 }
 
 /// Extension for custom widget mapping
-extension CustomSEO on Widget {
+extension SEOWidgetExtension on Widget {
   Widget seo({
     Widget Function(BuildContext, Widget)? builder,
     String? tag,
@@ -177,6 +177,42 @@ extension CustomSEO on Widget {
     return SEOCustomWrapper(
       builder: builder,
       tag: tag,
+      className: className,
+      attributes: attributes,
+      child: this,
+    );
+  }
+
+  Widget seoText({
+    SEOTextType textType = SEOTextType.p,
+    String? className,
+    Map<String, String>? attributes,
+    String? text
+  }) {
+    return SEOTextWrapper(
+      textType: textType,
+      className: className,
+      attributes: attributes,
+      text: text,
+      child: this,
+    );
+  }
+
+  Widget seoH1({String? text}) => seoText(textType: SEOTextType.h1, text: text);
+  Widget seoH2({String? text}) => seoText(textType: SEOTextType.h2, text: text);
+  Widget seoH3({String? text}) => seoText(textType: SEOTextType.h3, text: text);
+  Widget seoH4({String? text}) => seoText(textType: SEOTextType.h4, text: text);
+  Widget seoH5({String? text}) => seoText(textType: SEOTextType.h5, text: text);
+  Widget seoH6({String? text}) => seoText(textType: SEOTextType.h6, text: text);
+  Widget seoP({String? text}) => seoText(textType: SEOTextType.p, text: text);
+
+  Widget seoNavLink({
+    required String path,
+    String? className,
+    Map<String, String>? attributes,
+  }) {
+    return SEONavLinkWrapper(
+      path: path,
       className: className,
       attributes: attributes,
       child: this,
@@ -220,18 +256,3 @@ extension FlexNavSEO on Flex {
   }
 }
 
-/// Extension for any widget to create a navigation link
-extension NavLinkSEO on Widget {
-  Widget seoNavLink({
-    required String path,
-    String? className,
-    Map<String, String>? attributes,
-  }) {
-    return SEONavLinkWrapper(
-      path: path,
-      className: className,
-      attributes: attributes,
-      child: this,
-    );
-  }
-}

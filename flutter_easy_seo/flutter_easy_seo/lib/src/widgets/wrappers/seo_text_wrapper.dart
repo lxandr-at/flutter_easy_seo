@@ -9,9 +9,11 @@ class SEOTextWrapper extends BaseSEOWrapper {
     this.textType = SEOTextType.p,
     super.className,
     super.attributes,
+    this.text
   });
 
   final SEOTextType textType;
+  final String? text;
 
   @override
   String get tagName => textType.name;

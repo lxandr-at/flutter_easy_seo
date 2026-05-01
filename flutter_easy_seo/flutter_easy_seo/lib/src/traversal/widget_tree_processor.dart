@@ -68,7 +68,7 @@ class SEOWidgetTreeProcessor {
   }
 
   bool _handleSEOTextWrapper(SEOTextWrapper wrapper, Element element) {
-    final text = _extractTextFromChild(wrapper.child);
+    final text = wrapper.text ?? _extractTextFromChild(wrapper.child);
     _output.write(wrapper.getOpenTag());
     _output.write(text);
     _output.write(wrapper.getCloseTag());

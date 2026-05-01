@@ -7,6 +7,7 @@ import 'src/output/easy_seo_file_output_facade.dart';
 import 'src/output/easy_seo_live_output_facade.dart';
 
 part 'src/extensions/all_extensions.dart';
+part 'src/interfaces/easy_seo_text_content.dart';
 part 'src/models/seo_metadata_models.dart';
 part 'src/traversal/widget_tree_processor.dart';
 part 'src/easy_seo_config.dart';
