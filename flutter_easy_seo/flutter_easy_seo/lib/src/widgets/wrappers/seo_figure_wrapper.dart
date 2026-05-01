@@ -13,4 +13,9 @@ class SEOFigureWrapper extends BaseSEOWrapper {
 
   @override
   String get tagName => 'figure';
+
+  @override
+  State<StatefulWidget> createState() => _SEOFigureWrapperState();
 }
+
+class _SEOFigureWrapperState extends BaseSEOWrapperState<SEOFigureWrapper> {}

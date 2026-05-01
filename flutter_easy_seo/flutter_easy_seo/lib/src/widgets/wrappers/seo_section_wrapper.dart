@@ -10,4 +10,9 @@ class SEOSectionWrapper extends BaseSEOWrapper {
 
   @override
   String get tagName => 'section';
+
+  @override
+  State<StatefulWidget> createState() => _SEOSectionWrapperState();
 }
+
+class _SEOSectionWrapperState extends BaseSEOWrapperState<SEOSectionWrapper> {}

@@ -10,4 +10,9 @@ class SEOHeaderWrapper extends BaseSEOWrapper {
 
   @override
   String get tagName => 'header';
+
+  @override
+  State<StatefulWidget> createState() => _SEOHeaderWrapperState();
 }
+
+class _SEOHeaderWrapperState extends BaseSEOWrapperState<SEOHeaderWrapper> {}

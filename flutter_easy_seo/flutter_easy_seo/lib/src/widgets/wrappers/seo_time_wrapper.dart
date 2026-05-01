@@ -26,4 +26,9 @@ class SEOTimeWrapper extends BaseSEOWrapper {
     buffer.write('>');
     return buffer.toString();
   }
+
+  @override
+  State<StatefulWidget> createState() => _SEOTimeWrapperState();
 }
+
+class _SEOTimeWrapperState extends BaseSEOWrapperState<SEOTimeWrapper> {}

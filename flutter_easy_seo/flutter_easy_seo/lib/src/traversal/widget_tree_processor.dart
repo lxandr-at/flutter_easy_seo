@@ -4,9 +4,18 @@ class SEOWidgetTreeProcessor {
   StringBuffer _output = StringBuffer();
   SEOPageMetadata? _metadata;
 
-  String processWidgetTree(Element rootElement) {
+  String processWidgetTree(Element rootElement, List<String> includeGlobals) {
     _output = StringBuffer();
     _metadata = null;
+
+    // add widget info from outside of
+    includeGlobals.forEach((name) {
+      Element? element = EasySEOConfig.instance.globals[name] as Element?;
+      if (element != null) {
+        _traverseElement(element);
+      }
+    });
+
     _traverseElement(rootElement);
     return _output.toString();
   }

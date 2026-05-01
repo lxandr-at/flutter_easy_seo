@@ -7,6 +7,16 @@ class EasySEOLiveOutput with EasySEOLiveOutputBase {
   void injectToHead(String htmlContent) {
     final head = web.document.head;
     if (head != null) {
+      // 1. Cleanup: Remove existing tags injected by EasySEO
+      final existingTags = head.querySelectorAll('[data-easy-seo]');
+      for (var i = 0; i < existingTags.length; i++) {
+        final node = existingTags.item(i);
+        if (node != null) {
+          (node as web.Element).remove();
+        }
+      }
+
+      // 2. Injection
       // We create this in memory, NOT in the live document
       final tempElement = web.document.createElement('div');
       // The browser parses the string and creates the nodes inside the div

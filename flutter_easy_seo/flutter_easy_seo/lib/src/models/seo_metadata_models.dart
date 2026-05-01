@@ -79,7 +79,7 @@ class EasySEOTitleTag extends EasySEOHeadTag {
 
   @override
   String toHtml() {
-    return "<title>$title</title>";
+    return '<title data-easy-seo="title">$title</title>';
   }
 }
 

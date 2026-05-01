@@ -1,29 +1,41 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class EasySEOConfig {
+  // 1. Private constructor
   EasySEOConfig._();
 
-  // We use ValueNotifiers so the UI or Logic can listen for changes
-  static final ValueNotifier<bool> enabled = ValueNotifier(true);
-  static final ValueNotifier<bool> enableFileOutput = ValueNotifier(false);
-  static final ValueNotifier<bool> enableLiveOutput = ValueNotifier(false);
+  // 2. The single instance
+  static final EasySEOConfig _instance = EasySEOConfig._();
 
-  // Base URL usually doesn't change at runtime, so a standard variable is fine
-  static String baseUrl = "";
+  // 3. The 'instance' getter
+  static EasySEOConfig get instance => _instance;
+
+  // --- Instance Properties ---
+
+  // ValueNotifiers are now instance-level, accessible via EasySEOConfig.instance
+  final ValueNotifier<bool> enabled = ValueNotifier(true);
+  final ValueNotifier<bool> enableFileOutput = ValueNotifier(false);
+  final ValueNotifier<bool> enableLiveOutput = ValueNotifier(false);
+
+  String baseUrl = "";
+
+  // This is now directly accessible via EasySEOConfig.instance.globals
+  final Map<String, BuildContext> globals = {};
 
   /// Initialize the settings.
-  static void init({
+  /// You can call this via EasySEOConfig.instance.init(...)
+  void init({
     bool enabled = true,
     bool enableFileOutput = false,
     bool enableLiveOutput = false,
     String baseUrl = "",
   }) {
-    EasySEOConfig.enabled.value = enabled;
-    EasySEOConfig.enableFileOutput.value = enableFileOutput;
-    EasySEOConfig.enableLiveOutput.value = enableLiveOutput;
-    EasySEOConfig.baseUrl = baseUrl;
+    this.enabled.value = enabled;
+    this.enableFileOutput.value = enableFileOutput;
+    this.enableLiveOutput.value = enableLiveOutput;
+    this.baseUrl = baseUrl;
   }
 
   /// Helper to check if any SEO output is active
-  static bool get isActive => enableFileOutput.value || enableLiveOutput.value;
+  bool get isActive => enableFileOutput.value || enableLiveOutput.value;
 }

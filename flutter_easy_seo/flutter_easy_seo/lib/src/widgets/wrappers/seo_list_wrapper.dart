@@ -13,4 +13,9 @@ class SEOListWrapper extends BaseSEOWrapper {
 
   @override
   String get tagName => _tag;
+
+  @override
+  State<StatefulWidget> createState() => _SEOListWrapperState();
 }
+
+class _SEOListWrapperState extends BaseSEOWrapperState<SEOListWrapper> {}

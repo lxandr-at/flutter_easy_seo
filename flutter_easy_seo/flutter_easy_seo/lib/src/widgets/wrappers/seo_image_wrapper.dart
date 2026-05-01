@@ -21,4 +21,9 @@ class SEOImageWrapper extends BaseSEOWrapper {
     if (src != null) 'src': src!,
     if (alt != null) 'alt': alt!,
   };
+
+  @override
+  State<StatefulWidget> createState() => _SEOImageWrapperState();
 }
+
+class _SEOImageWrapperState extends BaseSEOWrapperState<SEOImageWrapper> {}

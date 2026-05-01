@@ -17,4 +17,9 @@ class SEOTextWrapper extends BaseSEOWrapper {
 
   @override
   String get tagName => textType.name;
+
+  @override
+  State<StatefulWidget> createState() => _SEOTextWrapperState();
 }
+
+class _SEOTextWrapperState extends BaseSEOWrapperState<SEOTextWrapper> {}

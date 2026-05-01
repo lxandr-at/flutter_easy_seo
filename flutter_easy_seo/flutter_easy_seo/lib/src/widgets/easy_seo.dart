@@ -7,6 +7,7 @@ class EasySEO extends StatefulWidget {
   final String? description;
   final List<EasySEOHeadTag> headTags;
   final Function(String html)? onGenerate;
+  final List<String> includeGlobals;
 
   const EasySEO({
     Key? key,
@@ -16,6 +17,7 @@ class EasySEO extends StatefulWidget {
     this.disabled = false,
     this.headTags = const [],
     this.onGenerate,
+    this.includeGlobals = const []
   }) : super(key: key);
 
   @override
@@ -70,7 +72,7 @@ class _EasySEOState extends State<EasySEO> {
 
   void _generateHTML() {
     // do noting if globally disabled
-    if (!EasySEOConfig.enabled.value) return;
+    if (!EasySEOConfig.instance.enabled.value) return;
     // do nothing if locally disabled
     if (widget.disabled) return;
     
@@ -79,24 +81,24 @@ class _EasySEOState extends State<EasySEO> {
       return;
     }
 
-    final bodyContent = _processor.processWidgetTree(rootElement);
+    final bodyContent = _processor.processWidgetTree(rootElement, widget.includeGlobals);
     
     // Use page metadata from EasySEO widget
     final metadata = SEOPageMetadata(headTags: _allTags);
 
     final metadataStr = metadata.generateMetadata();
 
-    if (EasySEOConfig.enableLiveOutput.value) {
+    if (EasySEOConfig.instance.enableLiveOutput.value) {
       _liveHandler.injectToHead(metadataStr);
       _liveHandler.injectToBody(bodyContent);
     }
 
-    if (EasySEOConfig.enableFileOutput.value || widget.onGenerate != null) {
+    if (EasySEOConfig.instance.enableFileOutput.value || widget.onGenerate != null) {
       final fullHtml = SEOHtmlDocumentGenerator.generateFullDocument(
         bodyContent: bodyContent,
         metadata: metadataStr,
       );
-      if (EasySEOConfig.enableFileOutput.value) {
+      if (EasySEOConfig.instance.enableFileOutput.value) {
         _fileHandler.saveHTMLFile(fullHtml);
       }
       // Call the callback if provided

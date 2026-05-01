@@ -11,22 +11,22 @@ class EasySEOConfigWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ValueListenableBuilder<bool>(
-          valueListenable: EasySEOConfig.enableLiveOutput,
+          valueListenable: EasySEOConfig.instance.enableLiveOutput,
           builder: (context, value, child) {
             return SwitchListTile(
               title: const Text("Live DOM Injection"),
               value: value,
-              onChanged: (newValue) => EasySEOConfig.enableLiveOutput.value = newValue,
+              onChanged: (newValue) => EasySEOConfig.instance.enableLiveOutput.value = newValue,
             );
           },
         ),
         ValueListenableBuilder<bool>(
-          valueListenable: EasySEOConfig.enableFileOutput,
+          valueListenable: EasySEOConfig.instance.enableFileOutput,
           builder: (context, value, child) {
             return SwitchListTile(
               title: const Text("Auto-Download HTML"),
               value: value,
-              onChanged: (newValue) => EasySEOConfig.enableFileOutput.value = newValue,
+              onChanged: (newValue) => EasySEOConfig.instance.enableFileOutput.value = newValue,
             );
           },
         ),

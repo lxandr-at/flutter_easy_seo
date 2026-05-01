@@ -9,37 +9,34 @@ abstract class SEOSelfClosingWrapper {
   String getTag();
 }
 
-abstract class BaseSEOWrapper extends StatelessWidget implements SEOWrapper {
+abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
   const BaseSEOWrapper({
     super.key,
-    required Widget child,
-    String? className,
-    Map<String, String>? attributes,
-  })  : _child = child,
-        _className = className,
-        _attributes = attributes;
+    required this.child,
+    this.className,
+    this.attributes,
+    this.globalName
+  });
 
-  final Widget _child;
-  final String? _className;
-  final Map<String, String>? _attributes;
-
-  Widget get child => _child;
-  String? get className => _className;
-  Map<String, String>? get attributes => _attributes;
-
-  @override
-  Widget build(BuildContext context) => _child;
-
-  String get tagName;
+  final Widget child;
+  final String? className;
+  final Map<String, String>? attributes;
+  final String? globalName;
 
   static const _voidElements = {'img', 'br', 'hr', 'meta', 'link', 'input', 'source', 'area', 'base', 'col', 'embed', 'param', 'track', 'wbr'};
 
-  bool get _isVoid => _voidElements.contains(tagName);
+  String get tagName;
+
+  bool get _isVoid => BaseSEOWrapper._voidElements.contains(tagName);
 
   String get appendBeforeContent => "";
+
   String get appendAfterContent => "";
+
   String get appendBeforeTag => "";
+
   String get appendAfterTag => "";
+
   Map<String, String> get additionalAttributes => {};
 
   @override
@@ -71,4 +68,37 @@ abstract class BaseSEOWrapper extends StatelessWidget implements SEOWrapper {
     if (_isVoid) return '';
     return '$appendAfterContent</$tagName>$appendAfterTag';
   }
+}
+
+abstract class BaseSEOWrapperState<T extends BaseSEOWrapper> extends State<T> {
+  @override
+  void initState() {
+    super.initState();
+    // Register the WIDGET instance, not the state
+    if (widget.globalName != null) {
+      EasySEOConfig.instance.globals[widget.globalName!] = context;
+    }
+  }
+
+  @override
+  void dispose() {
+    // CLEANUP: Remove this widget from globals when it leaves the tree
+    if (widget.globalName != null) {
+      EasySEOConfig.instance.globals.remove(widget.globalName);
+    }
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(T oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Re-register to ensure EasySEOConfig has the most recent 'widget' instance
+    if (widget.globalName != null) {
+      EasySEOConfig.instance.globals[widget.globalName!] = context;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+
 }

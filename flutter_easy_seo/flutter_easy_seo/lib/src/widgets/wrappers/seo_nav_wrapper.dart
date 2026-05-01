@@ -8,6 +8,7 @@ class SEONavWrapper extends BaseSEOWrapper  {
     required super.child,
     super.className,
     super.attributes,
+    super.globalName,
     this.label,
   });
 
@@ -19,4 +20,9 @@ class SEONavWrapper extends BaseSEOWrapper  {
 
   @override
   String get appendAfterContent => "</ul>";
+
+  @override
+  State<StatefulWidget> createState() => _SEONavWrapperState();
 }
+
+class _SEONavWrapperState extends BaseSEOWrapperState<SEONavWrapper> {}

@@ -64,12 +64,14 @@ extension NavigationRailSEO on NavigationRail {
     String? label,
     String? className,
     Map<String, String>? attributes,
+    String? globalName,
   }) {
     return SEONavWrapper(
       label: label,
       className: className,
       attributes: attributes,
       child: this,
+      globalName: globalName
     );
   }
 }

@@ -10,4 +10,9 @@ class SEOFormWrapper extends BaseSEOWrapper {
 
   @override
   String get tagName => 'form';
+
+  @override
+  State<StatefulWidget> createState() => _SEOFormWrapperState();
 }
+
+class _SEOFormWrapperState extends BaseSEOWrapperState<SEOFormWrapper> {}

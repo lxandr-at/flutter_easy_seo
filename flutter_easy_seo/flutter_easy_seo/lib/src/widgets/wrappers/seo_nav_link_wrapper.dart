@@ -22,4 +22,9 @@ class SEONavLinkWrapper extends BaseSEOWrapper {
 
   @override
   Map<String, String> get additionalAttributes => {'href': path};
+
+  @override
+  State<StatefulWidget> createState() => _SEONavLinkWrapperState();
 }
+
+class _SEONavLinkWrapperState extends BaseSEOWrapperState<SEONavLinkWrapper> {}

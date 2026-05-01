@@ -10,7 +10,7 @@ import 'services_page.dart';
 void main() {
   usePathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
-  EasySEOConfig.init(
+  EasySEOConfig.instance.init(
     enableFileOutput: false, // Generate files on every walk
     enableLiveOutput: kDebugMode, // Only inject to DOM during debugging
     baseUrl: "https://mysite.com",
