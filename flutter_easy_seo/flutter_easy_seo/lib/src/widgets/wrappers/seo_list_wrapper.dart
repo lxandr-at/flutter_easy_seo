@@ -4,16 +4,12 @@ class SEOListWrapper extends BaseSEOWrapper {
   const SEOListWrapper({
     super.key,
     required Widget child,
-    required String tag,
     String? className,
     Map<String, String>? attributes,
-  })  : _tag = tag,
-        super(child: child, className: className, attributes: attributes);
-
-  final String _tag;
+  }) : super(child: child, className: className, attributes: attributes);
 
   @override
-  String get tagName => _tag;
+  String get tagName => "ul";
 
   @override
   State<StatefulWidget> createState() => _SEOListWrapperState();

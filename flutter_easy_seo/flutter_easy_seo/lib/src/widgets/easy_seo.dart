@@ -8,6 +8,7 @@ class EasySEO extends StatefulWidget {
   final List<EasySEOHeadTag> headTags;
   final Function(String html)? onGenerate;
   final List<String> includeGlobals;
+  final Future? whenDone;
 
   const EasySEO({
     Key? key,
@@ -18,6 +19,7 @@ class EasySEO extends StatefulWidget {
     this.headTags = const [],
     this.onGenerate,
     this.includeGlobals = const [],
+    this.whenDone,
   }) : super(key: key);
 
   @override
@@ -34,9 +36,20 @@ class _EasySEOState extends State<EasySEO> {
     super.initState();
     _fileHandler = EasySEOFileOutput();
     _liveHandler = EasySEOLiveOutput();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _generateHTML();
-    });
+
+    if (widget.whenDone != null) {
+      widget.whenDone!.then((_) {
+        if (!mounted) return;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          _generateHTML();
+        });
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _generateHTML();
+      });
+    }
   }
 
   /// Combines the explicit title adn description param with the headTags list

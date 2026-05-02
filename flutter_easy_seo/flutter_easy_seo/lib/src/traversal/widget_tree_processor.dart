@@ -1,50 +1,145 @@
-part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
+﻿part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class SEOWidgetTreeProcessor {
-  StringBuffer _output = StringBuffer();
   SEOPageMetadata? _metadata;
 
+  /// Priority order for heading tags. Lower value = output first.
+  static const _headingPriority = {
+    'h1': 0,
+    'h2': 1,
+    'h3': 2,
+    'h4': 3,
+    'h5': 4,
+    'h6': 5,
+  };
+
   String processWidgetTree(Element rootElement, List<String> includeGlobals) {
-    _output = StringBuffer();
     _metadata = null;
 
-    // add widget info from outside of
+    final roots = <_HtmlNode>[];
+
+    // add widget info from outside of the root
     for (var name in includeGlobals) {
-      Element? element = EasySEOConfig.instance.globals[name] as Element?;
+      final element = EasySEOConfig.instance.globals[name] as Element?;
       if (element != null) {
-        _traverseElement(element);
+        roots.add(_buildNode(element, 0));
       }
     }
 
-    _traverseElement(rootElement);
-    return _output.toString();
+    roots.add(_buildNode(rootElement, 0));
+
+    final buffer = StringBuffer();
+    for (final node in roots) {
+      _serialize(node, buffer);
+    }
+    return buffer.toString();
   }
 
   SEOPageMetadata? get metadata => _metadata;
 
-  void _traverseElement(Element element) {
+  /// Recursively builds an [_HtmlNode] tree. Children at each level are
+  /// collected first, then sorted by heading priority before being stored.
+  _HtmlNode _buildNode(Element element, int level) {
     final widget = element.widget;
-    final isWrapper = widget is SEOWrapper;
+    final children = _collectChildren(element, level);
 
-    if (isWrapper) {
+    // Sort children by THEIR bubbled priority
+    final sortedChildren = _sortedChildren(children);
+
+    int ownPriority = 6;
+    String openTag = '';
+    String content = '';
+    String closeTag = '';
+    String tagName = '';
+
+    if (widget is SEOWrapper) {
       final wrapper = widget as SEOWrapper;
-      _output.write(wrapper.getOpenTag());
-      final content = wrapper.getContent();
-      if (content.isNotEmpty) {
-        _output.write(content);
+      debugPrint(wrapper.getOpenTag());
+      tagName = widget is BaseSEOWrapper ? widget.tagName : '';
+      ownPriority = _headingPriority[tagName] ?? 6;
+      openTag = wrapper.getOpenTag();
+      content = wrapper.getContent();
+      closeTag = wrapper.getCloseTag();
+    }
+
+    // Bubble up priority: take the minimum (highest importance)
+    // of own priority and all children priorities.
+    int bubbledPriority = ownPriority;
+    for (final child in sortedChildren) {
+      if (child.priority < bubbledPriority) {
+        bubbledPriority = child.priority;
       }
     }
 
-    _traverseChildren(element);
+    return _HtmlNode(
+      openTag: openTag,
+      content: content,
+      closeTag: closeTag,
+      tagName: tagName,
+      children: sortedChildren,
+      priority: bubbledPriority,
+    );
+  }
 
-    if (isWrapper) {
-      _output.write((widget as SEOWrapper).getCloseTag());
+  List<_HtmlNode> _collectChildren(Element element, int level) {
+    final nodes = <_HtmlNode>[];
+    element.visitChildren((child) {
+      // if (child.widget is SEOWrapper) {
+      //   debugPrint((child.widget as SEOWrapper).runtimeType.toString());
+      // }
+      // debugPrint("${" " * level} ${child.widget.runtimeType.toString()}");
+      nodes.add(_buildNode(child, level + 1));
+    });
+    return nodes;
+  }
+
+  /// Stable sort: heading tags (h1–h6) come first in priority order;
+  /// all other siblings preserve their original relative order.
+  static List<_HtmlNode> _sortedChildren(List<_HtmlNode> nodes) {
+    final indexed = List.generate(
+      nodes.length,
+      (i) => (index: i, node: nodes[i]),
+    );
+
+    indexed.sort((a, b) {
+      final pa = a.node.priority;
+      final pb = b.node.priority;
+      if (pa != pb) return pa.compareTo(pb);
+      return a.index.compareTo(b.index); // preserve original index for equal priority
+    });
+
+    return indexed.map((e) => e.node).toList();
+  }
+
+  void _serialize(_HtmlNode node, StringBuffer buffer) {
+    if (node.openTag.isNotEmpty) buffer.write(node.openTag);
+    if (node.content.isNotEmpty) buffer.write(node.content);
+    for (final child in node.children) {
+      _serialize(child, buffer);
     }
+    if (node.closeTag.isNotEmpty) buffer.write(node.closeTag);
   }
+}
 
-  void _traverseChildren(Element element) {
-    element.visitChildren(_traverseElement);
-  }
+/// Intermediate representation of a single HTML element produced during
+/// widget tree traversal. Children are already sorted by the time a node
+/// is created.
+class _HtmlNode {
+  final String openTag;
+  final String content;
+  final String closeTag;
+  final String tagName;
+  final List<_HtmlNode> children;
+  final int priority;
+
+  const _HtmlNode({
+    required this.openTag,
+    required this.content,
+    required this.closeTag,
+    required this.tagName,
+    required this.children,
+    required this.priority,
+  });
 }
 
 /// Page metadata extracted from EasySEO widget

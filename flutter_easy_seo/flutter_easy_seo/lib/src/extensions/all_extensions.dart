@@ -95,12 +95,10 @@ extension BottomNavigationBarSEO on BottomNavigationBar {
 /// Extension for ListView widgets to add SEO capabilities
 extension ListViewSEO on ListView {
   Widget seo({
-    String tag = 'ul',
     String? className,
     Map<String, String>? attributes,
   }) {
     return SEOListWrapper(
-      tag: tag,
       className: className,
       attributes: attributes,
       child: this,
@@ -111,12 +109,10 @@ extension ListViewSEO on ListView {
 /// Extension for Column widgets to add SEO capabilities
 extension ColumnSEO on Column {
   Widget seo({
-    String tag = 'div',
     String? className,
     Map<String, String>? attributes,
   }) {
     return SEOListWrapper(
-      tag: tag,
       className: className,
       attributes: attributes,
       child: this,
@@ -127,12 +123,10 @@ extension ColumnSEO on Column {
 /// Extension for Row widgets to add SEO capabilities
 extension RowSEO on Row {
   Widget seo({
-    String tag = 'div',
     String? className,
     Map<String, String>? attributes,
   }) {
     return SEOListWrapper(
-      tag: tag,
       className: className,
       attributes: attributes,
       child: this,
@@ -161,68 +155,6 @@ extension DrawerSEO on Drawer {
     Map<String, String>? attributes,
   }) {
     return SEOAsideWrapper(
-      className: className,
-      attributes: attributes,
-      child: this,
-    );
-  }
-}
-
-/// Extension for custom widget mapping
-extension SEOWidgetExtension on Widget {
-  Widget seo({
-    Widget Function(BuildContext, Widget)? builder,
-    String? tag,
-    String? className,
-    Map<String, String>? attributes,
-  }) {
-    return SEOCustomWrapper(
-      builder: builder,
-      tag: tag,
-      className: className,
-      attributes: attributes,
-      child: this,
-    );
-  }
-
-  Widget seoText({
-    SEOTextType textType = SEOTextType.p,
-    String? className,
-    Map<String, String>? attributes,
-    String? text,
-  }) {
-    return SEOTextWrapper(
-      textType: textType,
-      className: className,
-      attributes: attributes,
-      text: text,
-      child: this,
-    );
-  }
-
-  Widget seoH1({String? text}) => seoText(textType: SEOTextType.h1, text: text);
-  Widget seoH2({String? text}) => seoText(textType: SEOTextType.h2, text: text);
-  Widget seoH3({String? text}) => seoText(textType: SEOTextType.h3, text: text);
-  Widget seoH4({String? text}) => seoText(textType: SEOTextType.h4, text: text);
-  Widget seoH5({String? text}) => seoText(textType: SEOTextType.h5, text: text);
-  Widget seoH6({String? text}) => seoText(textType: SEOTextType.h6, text: text);
-  Widget seoP({String? text}) => seoText(textType: SEOTextType.p, text: text);
-
-  Widget seoNavLink({
-    required String path,
-    String? className,
-    Map<String, String>? attributes,
-  }) {
-    return SEONavLinkWrapper(
-      path: path,
-      className: className,
-      attributes: attributes,
-      child: this,
-    );
-  }
-
-  Widget seoSection({String? className, Map<String, String>? attributes}) {
-    return SEOSectionWrapper(
       className: className,
       attributes: attributes,
       child: this,

@@ -24,6 +24,10 @@ class SEOTextWrapper extends BaseSEOWrapper {
         _extractTextFromTextSpan(span, buffer);
       }
       return buffer.toString();
+    } else if (widgetChild is TextSpan) {
+      final buffer = StringBuffer();
+      _extractTextFromTextSpan(widgetChild as TextSpan, buffer);
+      return buffer.toString();
     }
     return '';
   }

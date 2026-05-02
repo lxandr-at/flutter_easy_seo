@@ -7,6 +7,7 @@ import 'src/output/easy_seo_file_output_facade.dart';
 import 'src/output/easy_seo_live_output_facade.dart';
 
 part 'src/extensions/all_extensions.dart';
+part 'src/extensions/widget_extensions.dart';
 part 'src/interfaces/easy_seo_text_content.dart';
 part 'src/models/seo_metadata_models.dart';
 part 'src/traversal/widget_tree_processor.dart';
@@ -23,6 +24,7 @@ part 'src/widgets/wrappers/seo_section_wrapper.dart';
 part 'src/widgets/wrappers/seo_nav_wrapper.dart';
 part 'src/widgets/wrappers/seo_main_wrapper.dart';
 part 'src/widgets/wrappers/seo_list_wrapper.dart';
+part 'src/widgets/wrappers/seo_list_item_wrapper.dart';
 part 'src/widgets/wrappers/seo_image_wrapper.dart';
 part 'src/widgets/wrappers/seo_header_wrapper.dart';
 part 'src/widgets/wrappers/seo_form_wrapper.dart';
