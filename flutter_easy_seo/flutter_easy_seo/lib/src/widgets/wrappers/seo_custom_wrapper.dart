@@ -33,5 +33,8 @@ class SEOCustomWrapper extends StatelessWidget implements SEOWrapper {
   }
 
   @override
+  String getContent() => "";
+
+  @override
   String getCloseTag() => '</${tag ?? 'div'}>';
 }

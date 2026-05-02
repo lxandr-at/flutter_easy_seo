@@ -82,9 +82,9 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                   ).seo(tag: 'section'),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Hero Image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
@@ -95,13 +95,13 @@ class HomePage extends StatelessWidget {
                       fit: BoxFit.cover,
                     ).seo(alt: 'SaaS Platform Dashboard Overview'),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Features Section
                   const Text('Our Features').seo(textType: SEOTextType.h2),
                   const SizedBox(height: 16),
-                  
+
                   // Feature Cards Grid
                   const Wrap(
                     spacing: 16,
@@ -110,7 +110,8 @@ class HomePage extends StatelessWidget {
                       _FeatureCard(
                         icon: Icons.speed,
                         title: 'Lightning Fast',
-                        description: 'Optimized performance for enterprise workloads.',
+                        description:
+                            'Optimized performance for enterprise workloads.',
                       ),
                       _FeatureCard(
                         icon: Icons.security,
@@ -120,7 +121,8 @@ class HomePage extends StatelessWidget {
                       _FeatureCard(
                         icon: Icons.cloud,
                         title: 'Cloud Native',
-                        description: 'Deploy anywhere with our flexible infrastructure.',
+                        description:
+                            'Deploy anywhere with our flexible infrastructure.',
                       ),
                       _FeatureCard(
                         icon: Icons.support_agent,
@@ -130,9 +132,9 @@ class HomePage extends StatelessWidget {
                       EasySEOConfigWidget()
                     ],
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // CTA Section
                   Container(
                     width: double.infinity,
@@ -143,7 +145,8 @@ class HomePage extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        const Text('Ready to get started?').seo(textType: SEOTextType.h3),
+                        const Text('Ready to get started?')
+                            .seo(textType: SEOTextType.h3),
                         const SizedBox(height: 12),
                         const Text(
                           'Join thousands of companies using our platform.',
@@ -174,7 +177,8 @@ class HomePage extends StatelessWidget {
                         Column(
                           children: [
                             const Text('Home').seoNavLink(path: '/'),
-                            const Text('Services').seoNavLink(path: '/services'),
+                            const Text('Services')
+                                .seoNavLink(path: '/services'),
                             const Text('Contact').seoNavLink(path: '/contact'),
                             const Text('About').seoNavLink(path: '/about'),
                           ],

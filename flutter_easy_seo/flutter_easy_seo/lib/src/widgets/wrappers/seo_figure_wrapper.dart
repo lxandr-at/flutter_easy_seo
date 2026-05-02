@@ -7,7 +7,8 @@ class SEOFigureWrapper extends BaseSEOWrapper {
     String? caption,
     String? className,
     Map<String, String>? attributes,
-  }) : _caption = caption, super(child: child, className: className, attributes: attributes);
+  })  : _caption = caption,
+        super(child: child, className: className, attributes: attributes);
 
   final String? _caption;
 

@@ -9,12 +9,12 @@ class SEOWidgetTreeProcessor {
     _metadata = null;
 
     // add widget info from outside of
-    includeGlobals.forEach((name) {
+    for (var name in includeGlobals) {
       Element? element = EasySEOConfig.instance.globals[name] as Element?;
       if (element != null) {
         _traverseElement(element);
       }
-    });
+    }
 
     _traverseElement(rootElement);
     return _output.toString();
@@ -24,121 +24,26 @@ class SEOWidgetTreeProcessor {
 
   void _traverseElement(Element element) {
     final widget = element.widget;
-    
-    final handled = _dispatchToHandler(widget, element);
-    if (!handled) {
-      _traverseChildren(element);
+    final isWrapper = widget is SEOWrapper;
+
+    if (isWrapper) {
+      final wrapper = widget as SEOWrapper;
+      _output.write(wrapper.getOpenTag());
+      final content = wrapper.getContent();
+      if (content.isNotEmpty) {
+        _output.write(content);
+      }
     }
-  }
 
-  bool _dispatchToHandler(Widget widget, Element element) {
-    final typeName = widget.runtimeType.toString();
-    if (typeName == 'SEOTextWrapper') return _handleSEOTextWrapper(widget as SEOTextWrapper, element);
-    if (typeName == 'SEOImageWrapper') return _handleSEOImageWrapper(widget as SEOImageWrapper, element);
-    if (typeName == 'SEOSelfClosingWrapper') return _handleSEOSelfClosingWrapper(widget as SEOSelfClosingWrapper, element);
-    if (typeName == 'SEONavWrapper') return _handleSEONavWrapper(widget as SEONavWrapper, element);
-    if (typeName == 'SEONavLinkWrapper') return _handleSEONavLinkWrapper(widget as SEONavLinkWrapper, element);
-    if (_isSEOWrapper(typeName)) return _handleSEOWrapper(widget as SEOWrapper, element);
-    return false;
-  }
-
-  bool _isSEOWrapper(String typeName) {
-    const wrappers = [
-      'SEOContainerWrapper', 'SEOListWrapper',
-      'SEOHeaderWrapper', 'SEOAsideWrapper', 'SEOMainWrapper',
-      'SEOArticleWrapper', 'SEOSectionWrapper', 'SEOTimeWrapper',
-      'SEOFigureWrapper', 'SEOFormWrapper', 'SEOCustomWrapper',
-      'SEONavWrapper', 'SEONavLinkWrapper',
-    ];
-    return wrappers.contains(typeName);
-  }
-
-  bool _isNavigationWidget(String typeName) {
-    const navWidgets = [
-      'NavigationRail', 'NavigationBar', 'BottomNavigationBar',
-      'NavigationDestination', 'NavigationDrawer',
-    ];
-    return navWidgets.contains(typeName);
-  }
-
-  bool _handleSEONavWrapper(SEONavWrapper wrapper, Element element) {
-    _output.write(wrapper.getOpenTag());
     _traverseChildren(element);
-    _output.write(wrapper.getCloseTag());
-    return true;
-  }
 
-  bool _handleSEONavLinkWrapper(SEONavLinkWrapper wrapper, Element element) {
-    _output.write(wrapper.getOpenTag());
-    final text = _extractTextFromChild(wrapper.child);
-    _output.write(text);
-    _output.write(wrapper.getCloseTag());
-    return true;
-  }
-
-  bool _handleSEOTextWrapper(SEOTextWrapper wrapper, Element element) {
-    final text = wrapper.text ?? _extractTextFromChild(wrapper.child);
-    _output.write(wrapper.getOpenTag());
-    _output.write(text);
-    _output.write(wrapper.getCloseTag());
-    return true;
-  }
-
-  bool _handleSEOImageWrapper(SEOImageWrapper wrapper, Element element) {
-    final imgSrc = _extractImageSrcFromChild(wrapper.child);
-    _output.write(wrapper.getOpenTag(overrideAttributes: {if (imgSrc != null) 'src': imgSrc}));
-    _output.write(wrapper.getCloseTag());
-    return true;
-  }
-
-  bool _handleSEOSelfClosingWrapper(SEOSelfClosingWrapper wrapper, Element element) {
-    _output.write(wrapper.getTag());
-    return true;
-  }
-
-  bool _handleSEOWrapper(SEOWrapper wrapper, Element element) {
-    _output.write(wrapper.getOpenTag());
-    _traverseChildren(element);
-    _output.write(wrapper.getCloseTag());
-    return true;
+    if (isWrapper) {
+      _output.write((widget as SEOWrapper).getCloseTag());
+    }
   }
 
   void _traverseChildren(Element element) {
     element.visitChildren(_traverseElement);
-  }
-
-  String _extractTextFromChild(Widget child) {
-    if (child is Text) return child.data ?? '';
-    if (child is RichText) {
-      final buffer = StringBuffer();
-      final span = child.text;
-      if (span is TextSpan) {
-        _extractTextFromTextSpan(span, buffer);
-      }
-      return buffer.toString();
-    }
-    return '';
-  }
-
-  void _extractTextFromTextSpan(TextSpan span, StringBuffer buffer) {
-    buffer.write(span.text ?? '');
-    if (span.children != null) {
-      for (final child in span.children!) {
-        if (child is TextSpan) {
-          _extractTextFromTextSpan(child, buffer);
-        }
-      }
-    }
-  }
-
-  String? _extractImageSrcFromChild(Widget child) {
-    if (child is Image) {
-      final provider = child.image;
-      if (provider is NetworkImage) {
-        return provider.url;
-      }
-    }
-    return null;
   }
 }
 
@@ -155,7 +60,6 @@ class SEOPageMetadata {
     }
     return buffer.toString();
   }
-
 }
 
 /// Generates complete HTML document from widget tree content and metadata
@@ -165,7 +69,7 @@ class SEOHtmlDocumentGenerator {
     String? metadata,
   }) {
     final buffer = StringBuffer();
-    
+
     buffer.writeln('<!DOCTYPE html>');
     buffer.writeln('<html lang="en">');
     buffer.writeln('<head>');
@@ -181,7 +85,7 @@ class SEOHtmlDocumentGenerator {
     buffer.write(bodyContent);
     buffer.writeln('</body>');
     buffer.writeln('</html>');
-    
+
     return buffer.toString();
   }
 }

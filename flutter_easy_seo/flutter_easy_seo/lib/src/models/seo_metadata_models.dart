@@ -46,11 +46,7 @@ abstract class EasySEOHeadTag {
   bool get isVoid => tagName == 'meta' || tagName == 'link';
 
   String _escapeHtml(String value) {
-    return value
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;');
+    return value.replaceAll('"', '&quot;').replaceAll("'", '&#39;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
   }
 
   String toHtml() {
@@ -59,9 +55,7 @@ abstract class EasySEOHeadTag {
     final libAttr = 'data-easy-seo="${_escapeHtml(key)}"';
 
     // 2. Prepare the specific attributes (name, content, etc.)
-    final attrs = attributes.entries
-        .map((e) => '${e.key}="${_escapeHtml(e.value)}"')
-        .join(' ');
+    final attrs = attributes.entries.map((e) => '${e.key}="${_escapeHtml(e.value)}"').join(' ');
 
     // 3. Combine them
     final allAttrs = attrs.isEmpty ? libAttr : '$libAttr $attrs';
@@ -90,16 +84,16 @@ class EasySEOMetaTag extends EasySEOHeadTag {
   // --- Standard SEO Factories ---
   factory EasySEOMetaTag.title(String content) => EasySEOMetaTag({'name': 'title', 'content': content});
   factory EasySEOMetaTag.description(String content) => EasySEOMetaTag({'name': 'description', 'content': content});
-  factory EasySEOMetaTag.keywords(List<String> keywords) => EasySEOMetaTag({'name': 'keywords', 'content': keywords.join(', ')});
-  factory EasySEOMetaTag.viewport({String content = 'width=device-width, initial-scale=1.0'}) => EasySEOMetaTag({'name': 'viewport', 'content': content});
+  factory EasySEOMetaTag.keywords(List<String> keywords) =>
+      EasySEOMetaTag({'name': 'keywords', 'content': keywords.join(', ')});
+  factory EasySEOMetaTag.viewport({String content = 'width=device-width, initial-scale=1.0'}) =>
+      EasySEOMetaTag({'name': 'viewport', 'content': content});
   factory EasySEOMetaTag.charset({String charset = 'UTF-8'}) => EasySEOMetaTag({'charset': charset});
   factory EasySEOMetaTag.author(String name) => EasySEOMetaTag({'name': 'author', 'content': name});
   factory EasySEOMetaTag.themeColor(String colorHex) => EasySEOMetaTag({'name': 'theme-color', 'content': colorHex});
-  factory EasySEOMetaTag.robots({bool index = true, bool follow = true}) =>
-    EasySEOMetaTag({
-      'name': 'robots',
-      'content': '${index ? 'index' : 'noindex'}, ${follow ? 'follow' : 'nofollow'}'
-    });
+  factory EasySEOMetaTag.robots({bool index = true, bool follow = true}) => EasySEOMetaTag(
+        {'name': 'robots', 'content': '${index ? 'index' : 'noindex'}, ${follow ? 'follow' : 'nofollow'}'},
+      );
 }
 
 /// Specialized class for Open Graph (Social Media)
@@ -146,8 +140,12 @@ class EasySEOLinkTag extends EasySEOHeadTag {
 
   /// The "Master" version of a URL (Crucial for SEO)
   factory EasySEOLinkTag.canonical(String href) => EasySEOLinkTag({'rel': 'canonical', 'href': href});
+
   /// For multilingual support
-  factory EasySEOLinkTag.alternate({required String href, required String lang}) => EasySEOLinkTag({'rel': 'alternate', 'href': href, 'hreflang': lang});
+  factory EasySEOLinkTag.alternate({required String href, required String lang}) =>
+      EasySEOLinkTag({'rel': 'alternate', 'href': href, 'hreflang': lang});
+
   /// For site icons
-  factory EasySEOLinkTag.icon(String href, {String type = 'image/x-icon'}) => EasySEOLinkTag({'rel': 'icon', 'href': href, 'type': type});
+  factory EasySEOLinkTag.icon(String href, {String type = 'image/x-icon'}) =>
+      EasySEOLinkTag({'rel': 'icon', 'href': href, 'type': type});
 }

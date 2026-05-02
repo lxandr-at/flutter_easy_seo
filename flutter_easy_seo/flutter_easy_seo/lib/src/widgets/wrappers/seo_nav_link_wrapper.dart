@@ -2,6 +2,7 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class SEONavLinkWrapper extends BaseSEOWrapper {
   final String path;
+  final String? text;
 
   const SEONavLinkWrapper({
     super.key,
@@ -9,10 +10,14 @@ class SEONavLinkWrapper extends BaseSEOWrapper {
     super.className,
     super.attributes,
     required this.path,
+    this.text,
   });
 
   @override
   String get tagName => "a";
+
+  @override
+  String getContent() => text ?? "";
 
   @override
   String get appendBeforeTag => "<li>";

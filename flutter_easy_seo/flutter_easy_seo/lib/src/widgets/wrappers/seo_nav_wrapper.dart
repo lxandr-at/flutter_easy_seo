@@ -1,6 +1,6 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEONavWrapper extends BaseSEOWrapper  {
+class SEONavWrapper extends BaseSEOWrapper {
   final String? label;
 
   const SEONavWrapper({

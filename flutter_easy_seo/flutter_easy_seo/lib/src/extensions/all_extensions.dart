@@ -70,8 +70,8 @@ extension NavigationRailSEO on NavigationRail {
       label: label,
       className: className,
       attributes: attributes,
+      globalName: globalName,
       child: this,
-      globalName: globalName
     );
   }
 }
@@ -189,7 +189,7 @@ extension SEOWidgetExtension on Widget {
     SEOTextType textType = SEOTextType.p,
     String? className,
     Map<String, String>? attributes,
-    String? text
+    String? text,
   }) {
     return SEOTextWrapper(
       textType: textType,
@@ -215,6 +215,14 @@ extension SEOWidgetExtension on Widget {
   }) {
     return SEONavLinkWrapper(
       path: path,
+      className: className,
+      attributes: attributes,
+      child: this,
+    );
+  }
+
+  Widget seoSection({String? className, Map<String, String>? attributes}) {
+    return SEOSectionWrapper(
       className: className,
       attributes: attributes,
       child: this,
@@ -257,4 +265,3 @@ extension FlexNavSEO on Flex {
     );
   }
 }
-

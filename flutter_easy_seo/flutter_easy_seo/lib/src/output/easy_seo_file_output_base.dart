@@ -25,6 +25,7 @@ mixin EasySEOFileOutputBase {
     }
     return formatted.toString();
   }
+
   /// Generate sitemap.xml content
   String generateSitemapContent(List<String> urls) {
     final StringBuffer sitemap = StringBuffer();
@@ -54,4 +55,3 @@ mixin EasySEOFileOutputBase {
   // This is the platform-specific bit
   void saveHTMLFile(String htmlContent);
 }
-

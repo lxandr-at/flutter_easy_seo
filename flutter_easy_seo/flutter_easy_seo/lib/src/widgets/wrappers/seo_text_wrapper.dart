@@ -9,7 +9,7 @@ class SEOTextWrapper extends BaseSEOWrapper {
     this.textType = SEOTextType.p,
     super.className,
     super.attributes,
-    this.text
+    this.text,
   });
 
   final SEOTextType textType;
@@ -17,6 +17,33 @@ class SEOTextWrapper extends BaseSEOWrapper {
 
   @override
   String get tagName => textType.name;
+
+  @override
+  String getContent() => text ?? _extractTextFromChild(child);
+
+  String _extractTextFromChild(Widget widgetChild) {
+    if (widgetChild is Text) return widgetChild.data ?? '';
+    if (widgetChild is RichText) {
+      final buffer = StringBuffer();
+      final span = widgetChild.text;
+      if (span is TextSpan) {
+        _extractTextFromTextSpan(span, buffer);
+      }
+      return buffer.toString();
+    }
+    return '';
+  }
+
+  void _extractTextFromTextSpan(TextSpan span, StringBuffer buffer) {
+    buffer.write(span.text ?? '');
+    if (span.children != null) {
+      for (final child in span.children!) {
+        if (child is TextSpan) {
+          _extractTextFromTextSpan(child, buffer);
+        }
+      }
+    }
+  }
 
   @override
   State<StatefulWidget> createState() => _SEOTextWrapperState();

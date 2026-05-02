@@ -17,7 +17,7 @@ class EasySEO extends StatefulWidget {
     this.disabled = false,
     this.headTags = const [],
     this.onGenerate,
-    this.includeGlobals = const []
+    this.includeGlobals = const [],
   }) : super(key: key);
 
   @override
@@ -75,14 +75,14 @@ class _EasySEOState extends State<EasySEO> {
     if (!EasySEOConfig.instance.enabled.value) return;
     // do nothing if locally disabled
     if (widget.disabled) return;
-    
+
     final rootElement = _findRootElement();
     if (rootElement == null) {
       return;
     }
 
     final bodyContent = _processor.processWidgetTree(rootElement, widget.includeGlobals);
-    
+
     // Use page metadata from EasySEO widget
     final metadata = SEOPageMetadata(headTags: _allTags);
 
@@ -104,7 +104,6 @@ class _EasySEOState extends State<EasySEO> {
       // Call the callback if provided
       widget.onGenerate?.call(fullHtml);
     }
-
   }
 
   Element? _findRootElement() {

@@ -17,10 +17,21 @@ class SEOImageWrapper extends BaseSEOWrapper {
   String get tagName => "img";
 
   @override
-  Map<String, String> get additionalAttributes => {
-    if (src != null) 'src': src!,
-    if (alt != null) 'alt': alt!,
-  };
+  Map<String, String> get additionalAttributes {
+    String? extractedSrc = src;
+    if (extractedSrc == null) {
+      if (child is Image) {
+        final provider = (child as Image).image;
+        if (provider is NetworkImage) {
+          extractedSrc = provider.url;
+        }
+      }
+    }
+    return {
+      if (extractedSrc != null) 'src': extractedSrc,
+      if (alt != null) 'alt': alt!,
+    };
+  }
 
   @override
   State<StatefulWidget> createState() => _SEOImageWrapperState();

@@ -7,7 +7,8 @@ class SEOListWrapper extends BaseSEOWrapper {
     required String tag,
     String? className,
     Map<String, String>? attributes,
-  }) : _tag = tag, super(child: child, className: className, attributes: attributes);
+  })  : _tag = tag,
+        super(child: child, className: className, attributes: attributes);
 
   final String _tag;
 

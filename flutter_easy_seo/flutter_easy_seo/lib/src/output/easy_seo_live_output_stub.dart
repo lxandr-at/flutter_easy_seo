@@ -5,8 +5,8 @@ class EasySEOLiveOutput with EasySEOLiveOutputBase {
   void injectToHead(String htmlContent) {
     // Do nothing, or print a warning: "Save not supported on this platform"
     print('injectToHead is only supported on Web');
-
   }
+
   @override
   void injectToBody(String htmlContent) {
     // Do nothing, or print a warning: "Save not supported on this platform"

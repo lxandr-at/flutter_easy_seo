@@ -7,7 +7,8 @@ class SEOTimeWrapper extends BaseSEOWrapper {
     String? className,
     Map<String, String>? attributes,
     required DateTime dateTime,
-  }) : _dateTime = dateTime, super(child: child, className: className, attributes: attributes);
+  })  : _dateTime = dateTime,
+        super(child: child, className: className, attributes: attributes);
 
   final DateTime _dateTime;
 

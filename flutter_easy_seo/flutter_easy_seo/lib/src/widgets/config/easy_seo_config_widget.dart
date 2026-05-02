@@ -1,9 +1,7 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class EasySEOConfigWidget extends StatelessWidget {
-  const EasySEOConfigWidget({
-    super.key
-  });
+  const EasySEOConfigWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,5 +31,4 @@ class EasySEOConfigWidget extends StatelessWidget {
       ],
     );
   }
-
 }

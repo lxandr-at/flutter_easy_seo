@@ -3,27 +3,33 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 abstract class SEOWrapper {
   String getOpenTag();
   String getCloseTag();
-}
-
-abstract class SEOSelfClosingWrapper {
-  String getTag();
+  String getContent();
 }
 
 abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
-  const BaseSEOWrapper({
-    super.key,
-    required this.child,
-    this.className,
-    this.attributes,
-    this.globalName
-  });
+  const BaseSEOWrapper({super.key, required this.child, this.className, this.attributes, this.globalName});
 
   final Widget child;
   final String? className;
   final Map<String, String>? attributes;
   final String? globalName;
 
-  static const _voidElements = {'img', 'br', 'hr', 'meta', 'link', 'input', 'source', 'area', 'base', 'col', 'embed', 'param', 'track', 'wbr'};
+  static const _voidElements = {
+    'img',
+    'br',
+    'hr',
+    'meta',
+    'link',
+    'input',
+    'source',
+    'area',
+    'base',
+    'col',
+    'embed',
+    'param',
+    'track',
+    'wbr',
+  };
 
   String get tagName;
 
@@ -38,6 +44,9 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
   String get appendAfterTag => "";
 
   Map<String, String> get additionalAttributes => {};
+
+  @override
+  String getContent() => "";
 
   @override
   String getOpenTag({Map<String, String> overrideAttributes = const {}}) {
@@ -100,5 +109,4 @@ abstract class BaseSEOWrapperState<T extends BaseSEOWrapper> extends State<T> {
 
   @override
   Widget build(BuildContext context) => widget.child;
-
 }
