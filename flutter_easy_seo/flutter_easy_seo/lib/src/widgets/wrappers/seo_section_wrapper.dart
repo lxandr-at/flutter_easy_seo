@@ -6,6 +6,7 @@ class SEOSectionWrapper extends BaseSEOWrapper {
     required super.child,
     super.className,
     super.attributes,
+    super.additionalTags,
   });
 
   @override

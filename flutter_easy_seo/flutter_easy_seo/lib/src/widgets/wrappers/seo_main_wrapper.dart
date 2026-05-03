@@ -3,10 +3,11 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 class SEOMainWrapper extends BaseSEOWrapper {
   const SEOMainWrapper({
     super.key,
-    required Widget child,
-    String? className,
-    Map<String, String>? attributes,
-  }) : super(child: child, className: className, attributes: attributes);
+    required super.child,
+    super.className,
+    super.attributes,
+    super.additionalTags,
+  });
 
   @override
   String get tagName => 'main';

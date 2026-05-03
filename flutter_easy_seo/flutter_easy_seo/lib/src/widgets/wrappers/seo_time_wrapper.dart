@@ -3,12 +3,12 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 class SEOTimeWrapper extends BaseSEOWrapper {
   const SEOTimeWrapper({
     super.key,
-    required Widget child,
-    String? className,
-    Map<String, String>? attributes,
+    required super.child,
+    super.className,
+    super.attributes,
+    super.additionalTags,
     required DateTime dateTime,
-  })  : _dateTime = dateTime,
-        super(child: child, className: className, attributes: attributes);
+  }) : _dateTime = dateTime;
 
   final DateTime _dateTime;
 

@@ -6,11 +6,13 @@ extension TextSEO on Text {
     SEOTextType textType = SEOTextType.p,
     String? className,
     Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
   }) {
     return SEOTextWrapper(
       textType: textType,
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -30,11 +32,13 @@ extension ContainerSEO on Container {
     String tag = 'div',
     String? className,
     Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
   }) {
     return SEOContainerWrapper(
       tag: tag,
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -47,12 +51,14 @@ extension ImageSEO on Image {
     String? alt,
     String? className,
     Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
   }) {
     return SEOImageWrapper(
       src: src,
       alt: alt,
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -65,12 +71,14 @@ extension NavigationRailSEO on NavigationRail {
     String? className,
     Map<String, String>? attributes,
     String? globalName,
+    List<SEOHtml> additionalTags = const [],
   }) {
     return SEONavWrapper(
       label: label,
       className: className,
       attributes: attributes,
       globalName: globalName,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -82,11 +90,13 @@ extension BottomNavigationBarSEO on BottomNavigationBar {
     String? label,
     String? className,
     Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
   }) {
     return SEONavWrapper(
       label: label,
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -97,10 +107,12 @@ extension ListViewSEO on ListView {
   Widget seo({
     String? className,
     Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
   }) {
     return SEOListWrapper(
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -111,10 +123,12 @@ extension ColumnSEO on Column {
   Widget seo({
     String? className,
     Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
   }) {
     return SEOListWrapper(
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -125,10 +139,12 @@ extension RowSEO on Row {
   Widget seo({
     String? className,
     Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
   }) {
     return SEOListWrapper(
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -139,10 +155,12 @@ extension AppBarSEO on AppBar {
   Widget seo({
     String? className,
     Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
   }) {
     return SEOHeaderWrapper(
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -153,10 +171,12 @@ extension DrawerSEO on Drawer {
   Widget seo({
     String? className,
     Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
   }) {
     return SEOAsideWrapper(
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -164,11 +184,13 @@ extension DrawerSEO on Drawer {
 
 /// Extension for Column widgets to mark as navigation container
 extension ColumnNavSEO on Column {
-  Widget seoNav({String? label, String? className, Map<String, String>? attributes}) {
+  Widget seoNav(
+      {String? label, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
     return SEONavWrapper(
       label: label,
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -176,11 +198,13 @@ extension ColumnNavSEO on Column {
 
 /// Extension for Row widgets to mark as navigation container
 extension RowNavSEO on Row {
-  Widget seoNav({String? label, String? className, Map<String, String>? attributes}) {
+  Widget seoNav(
+      {String? label, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
     return SEONavWrapper(
       label: label,
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }
@@ -188,11 +212,13 @@ extension RowNavSEO on Row {
 
 /// Extension for Flex widgets to mark as navigation container
 extension FlexNavSEO on Flex {
-  Widget seoNav({String? label, String? className, Map<String, String>? attributes}) {
+  Widget seoNav(
+      {String? label, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
     return SEONavWrapper(
       label: label,
       className: className,
       attributes: attributes,
+      additionalTags: additionalTags,
       child: this,
     );
   }

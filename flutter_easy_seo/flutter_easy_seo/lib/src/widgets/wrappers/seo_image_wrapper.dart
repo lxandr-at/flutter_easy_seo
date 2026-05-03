@@ -9,12 +9,13 @@ class SEOImageWrapper extends BaseSEOWrapper {
     required super.child,
     super.className,
     super.attributes,
+    super.additionalTags,
     this.alt,
     this.src,
   });
 
   @override
-  String get tagName => "img";
+  String get tagName => 'img';
 
   @override
   Map<String, String> get additionalAttributes {

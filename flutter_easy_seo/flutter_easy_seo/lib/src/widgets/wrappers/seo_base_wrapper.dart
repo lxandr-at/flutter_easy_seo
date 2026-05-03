@@ -7,12 +7,20 @@ abstract class SEOWrapper {
 }
 
 abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
-  const BaseSEOWrapper({super.key, required this.child, this.className, this.attributes, this.globalName});
+  const BaseSEOWrapper({
+    super.key,
+    required this.child,
+    this.className,
+    this.attributes,
+    this.globalName,
+    this.additionalTags = const [],
+  });
 
   final Widget child;
   final String? className;
-  final Map<String, String>? attributes;
+  final Map<String, String?>? attributes;
   final String? globalName;
+  final List<SEOHtml> additionalTags;
 
   static const _voidElements = {
     'img',
@@ -51,7 +59,7 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
   @override
   String getOpenTag({Map<String, String> overrideAttributes = const {}}) {
     final buffer = StringBuffer('$appendBeforeTag<$tagName');
-    Map<String, String> allAttributes = {};
+    Map<String, String?> allAttributes = {};
     if (className != null) {
       allAttributes["class"] = className!;
     }
@@ -62,7 +70,11 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
     // TODO maybe change to override only if not defined in attributes
     allAttributes.addAll(overrideAttributes);
     for (final entry in allAttributes.entries) {
-      buffer.write(' ${entry.key}="${entry.value}"');
+      if (entry.value != null && entry.value!.isNotEmpty) {
+        buffer.write(' ${entry.key}="${entry.value}"');
+      } else {
+        buffer.write(' ${entry.key}');
+      }
     }
     if (_isVoid) {
       buffer.write(' />');

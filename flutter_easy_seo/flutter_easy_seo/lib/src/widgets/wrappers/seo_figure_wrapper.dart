@@ -3,12 +3,12 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 class SEOFigureWrapper extends BaseSEOWrapper {
   const SEOFigureWrapper({
     super.key,
-    required Widget child,
+    required super.child,
     String? caption,
-    String? className,
-    Map<String, String>? attributes,
-  })  : _caption = caption,
-        super(child: child, className: className, attributes: attributes);
+    super.className,
+    super.attributes,
+    super.additionalTags,
+  }) : _caption = caption;
 
   final String? _caption;
 

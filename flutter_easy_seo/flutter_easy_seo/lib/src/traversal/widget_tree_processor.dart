@@ -1,4 +1,4 @@
-﻿part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
+part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class SEOWidgetTreeProcessor {
   SEOPageMetadata? _metadata;
@@ -51,6 +51,8 @@ class SEOWidgetTreeProcessor {
     String content = '';
     String closeTag = '';
     String tagName = '';
+    String prependedTags = '';
+    String appendedTags = '';
 
     if (widget is SEOWrapper) {
       final wrapper = widget as SEOWrapper;
@@ -60,6 +62,23 @@ class SEOWidgetTreeProcessor {
       openTag = wrapper.getOpenTag();
       content = wrapper.getContent();
       closeTag = wrapper.getCloseTag();
+
+      if (widget is BaseSEOWrapper && widget.additionalTags.isNotEmpty) {
+        prependedTags =
+            widget.additionalTags.where((t) => _headingPriority.containsKey(t.tag)).map((t) => t.toHtmlString()).join();
+        appendedTags = widget.additionalTags
+            .where((t) => !_headingPriority.containsKey(t.tag))
+            .map((t) => t.toHtmlString())
+            .join();
+
+        // Update ownPriority if additionalTags contain higher priority headings
+        for (final tag in widget.additionalTags) {
+          final tagPriority = _headingPriority[tag.tag] ?? 6;
+          if (tagPriority < ownPriority) {
+            ownPriority = tagPriority;
+          }
+        }
+      }
     }
 
     // Bubble up priority: take the minimum (highest importance)
@@ -78,6 +97,8 @@ class SEOWidgetTreeProcessor {
       tagName: tagName,
       children: sortedChildren,
       priority: bubbledPriority,
+      additionalPrependedTags: prependedTags,
+      additionalAppendedTags: appendedTags,
     );
   }
 
@@ -113,10 +134,12 @@ class SEOWidgetTreeProcessor {
 
   void _serialize(_HtmlNode node, StringBuffer buffer) {
     if (node.openTag.isNotEmpty) buffer.write(node.openTag);
+    if (node.additionalPrependedTags.isNotEmpty) buffer.write(node.additionalPrependedTags);
     if (node.content.isNotEmpty) buffer.write(node.content);
     for (final child in node.children) {
       _serialize(child, buffer);
     }
+    if (node.additionalAppendedTags.isNotEmpty) buffer.write(node.additionalAppendedTags);
     if (node.closeTag.isNotEmpty) buffer.write(node.closeTag);
   }
 }
@@ -131,6 +154,8 @@ class _HtmlNode {
   final String tagName;
   final List<_HtmlNode> children;
   final int priority;
+  final String additionalPrependedTags;
+  final String additionalAppendedTags;
 
   const _HtmlNode({
     required this.openTag,
@@ -139,6 +164,8 @@ class _HtmlNode {
     required this.tagName,
     required this.children,
     required this.priority,
+    this.additionalPrependedTags = '',
+    this.additionalAppendedTags = '',
   });
 }
 

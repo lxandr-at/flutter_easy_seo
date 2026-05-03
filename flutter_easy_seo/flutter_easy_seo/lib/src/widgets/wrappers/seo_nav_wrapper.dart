@@ -9,17 +9,18 @@ class SEONavWrapper extends BaseSEOWrapper {
     super.className,
     super.attributes,
     super.globalName,
+    super.additionalTags,
     this.label,
   });
 
   @override
-  String get tagName => "nav";
+  String get tagName => 'nav';
 
   @override
-  String get appendBeforeContent => "<ul>";
+  String get appendBeforeContent => '<ul>';
 
   @override
-  String get appendAfterContent => "</ul>";
+  String get appendAfterContent => '</ul>';
 
   @override
   State<StatefulWidget> createState() => _SEONavWrapperState();

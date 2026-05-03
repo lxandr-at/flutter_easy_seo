@@ -123,8 +123,53 @@ void main() {
     expect(h1Index, greaterThanOrEqualTo(0));
     expect(sectionIndex, greaterThanOrEqualTo(0));
 
-    // Currently, this will likely FAIL because Padding doesn't have a tagName, 
+    // Currently, this will likely FAIL because Padding doesn't have a tagName,
     // so it's not prioritized over SEOSectionWrapper.
     expect(h1Index, lessThan(sectionIndex), reason: 'Deep h1 should move its parent container before the section');
+  });
+
+  testWidgets('SEOWidgetTreeProcessor supports additionalTags', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: EasySEO(
+          title: 'Additional Tags Test',
+          child: Scaffold(
+            body: Column(
+              children: [
+                SEOSectionWrapper(
+                  additionalTags: const [
+                    SEOHtml(tag: 'h2', content: 'Section Subtitle'),
+                    SEOHtml(
+                      tag: 'script',
+                      attributes: {'type': 'application/ld+json'},
+                      content: '{"@type":"Article"}',
+                    ),
+                  ],
+                  child: const SEOTextWrapper(textType: SEOTextType.p, child: Text('Section content')),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    final element = tester.element(find.byType(EasySEO));
+    final processor = SEOWidgetTreeProcessor();
+    final html = processor.processWidgetTree(element, []);
+
+    // Heading tags in additionalTags should be prepended
+    final h2Index = html.indexOf('<h2>Section Subtitle</h2>');
+    final sectionContentIndex = html.indexOf('Section content');
+    final scriptIndex = html.indexOf('<script type="application/ld+json">{"@type":"Article"}</script>');
+
+    expect(h2Index, greaterThanOrEqualTo(0), reason: 'HTML: $html');
+    expect(sectionContentIndex, greaterThanOrEqualTo(0));
+    expect(scriptIndex, greaterThanOrEqualTo(0));
+
+    expect(h2Index, lessThan(sectionContentIndex), reason: 'h2 should be prepended before content');
+    expect(sectionContentIndex, lessThan(scriptIndex), reason: 'script should be appended after content');
   });
 }

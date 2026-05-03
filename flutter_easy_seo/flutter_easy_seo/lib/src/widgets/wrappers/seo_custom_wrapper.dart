@@ -1,40 +1,24 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEOCustomWrapper extends StatelessWidget implements SEOWrapper {
-  final Widget child;
+class SEOCustomWrapper extends BaseSEOWrapper {
   final Widget Function(BuildContext, Widget)? builder;
   final String? tag;
-  final String? className;
-  final Map<String, String>? attributes;
 
   const SEOCustomWrapper({
-    Key? key,
-    required this.child,
+    super.key,
+    required super.child,
     this.builder,
     this.tag,
-    this.className,
-    this.attributes,
-  }) : super(key: key);
+    super.className,
+    super.attributes,
+    super.additionalTags,
+  });
 
   @override
-  Widget build(BuildContext context) => child;
+  String get tagName => tag ?? 'div';
 
   @override
-  String getOpenTag() {
-    final buffer = StringBuffer('<${tag ?? 'div'}');
-    if (className != null) buffer.write(' class="$className"');
-    if (attributes != null) {
-      for (final entry in attributes!.entries) {
-        buffer.write(' ${entry.key}="${entry.value}"');
-      }
-    }
-    buffer.write('>');
-    return buffer.toString();
-  }
-
-  @override
-  String getContent() => "";
-
-  @override
-  String getCloseTag() => '</${tag ?? 'div'}>';
+  State<StatefulWidget> createState() => _SEOCustomWrapperState();
 }
+
+class _SEOCustomWrapperState extends BaseSEOWrapperState<SEOCustomWrapper> {}

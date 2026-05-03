@@ -3,12 +3,12 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 class SEOContainerWrapper extends BaseSEOWrapper {
   const SEOContainerWrapper({
     super.key,
-    required Widget child,
+    required super.child,
     String tag = 'div',
-    String? className,
-    Map<String, String>? attributes,
-  })  : _tag = tag,
-        super(child: child, className: className, attributes: attributes);
+    super.className,
+    super.attributes,
+    super.additionalTags,
+  }) : _tag = tag;
 
   final String _tag;
 

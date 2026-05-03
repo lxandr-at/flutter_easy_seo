@@ -1,7 +1,14 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class SEOAsideWrapper extends BaseSEOWrapper {
-  const SEOAsideWrapper({super.key, required super.child, super.className, super.attributes, super.globalName});
+  const SEOAsideWrapper({
+    super.key,
+    required super.child,
+    super.className,
+    super.attributes,
+    super.globalName,
+    super.additionalTags,
+  });
 
   @override
   String get tagName => 'aside';
