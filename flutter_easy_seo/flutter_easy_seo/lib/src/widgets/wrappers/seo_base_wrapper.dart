@@ -101,14 +101,14 @@ abstract class BaseSEOWrapperState<T extends BaseSEOWrapper> extends State<T> {
     }
   }
 
-  @override
-  void dispose() {
-    // CLEANUP: Remove this widget from globals when it leaves the tree
-    if (widget.globalName != null) {
-      EasySEOConfig.instance.globals.remove(widget.globalName);
-    }
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // CLEANUP: Remove this widget from globals when it leaves the tree
+  //   if (widget.globalName != null) {
+  //     EasySEOConfig.instance.globals.remove(widget.globalName);
+  //   }
+  //   super.dispose();
+  // }
 
   @override
   void didUpdateWidget(T oldWidget) {

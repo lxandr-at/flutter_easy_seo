@@ -120,4 +120,13 @@ extension SEOWidgetExtension on Widget {
       child: this,
     );
   }
+
+  Widget seoImage({String? name, String? url}) {
+    return SEOImageWrapper(
+      alt: name,
+      src: url,
+      attributes: {'itemprop': "image"},
+      child: this
+    );
+  }
 }

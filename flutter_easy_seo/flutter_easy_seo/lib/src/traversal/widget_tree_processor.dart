@@ -21,7 +21,7 @@ class SEOWidgetTreeProcessor {
     // add widget info from outside of the root
     for (var name in includeGlobals) {
       final element = EasySEOConfig.instance.globals[name] as Element?;
-      if (element != null) {
+      if (element != null && element.mounted) {
         roots.add(_buildNode(element, 0));
       }
     }
