@@ -1,6 +1,10 @@
 library flutter_easy_seo;
 
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'src/utils/url_helper.dart' as url_helper;
 
 // Import the "facade" which handles the platform switching
 import 'src/output/easy_seo_file_output_facade.dart';

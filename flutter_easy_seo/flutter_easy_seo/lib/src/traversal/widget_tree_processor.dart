@@ -43,6 +43,12 @@ class SEOWidgetTreeProcessor {
     final widget = element.widget;
     final children = _collectChildren(element, level);
 
+    // Collect navLinks from children
+    final List<SEONavItem> subtreeNavLinks = [];
+    for (final child in children) {
+      subtreeNavLinks.addAll(child.navLinks);
+    }
+
     // Sort children by THEIR bubbled priority
     final sortedChildren = _sortedChildren(children);
 
@@ -53,14 +59,34 @@ class SEOWidgetTreeProcessor {
     String tagName = '';
     String prependedTags = '';
     String appendedTags = '';
+    String appendBeforeTag = '';
+    String appendBeforeContent = '';
+    String appendAfterContent = '';
+    String appendAfterTag = '';
 
     if (widget is SEOWrapper) {
       final wrapper = widget as SEOWrapper;
       tagName = widget is BaseSEOWrapper ? widget.tagName : '';
       ownPriority = _headingPriority[tagName] ?? 6;
-      openTag = wrapper.getOpenTag();
+
+      if (widget is BaseSEOWrapper) {
+        openTag = widget.getRawOpenTag();
+        closeTag = widget.getRawCloseTag();
+        appendBeforeTag = widget.appendBeforeTag;
+        appendBeforeContent = widget.appendBeforeContent;
+        appendAfterContent = widget.appendAfterContent;
+        appendAfterTag = widget.appendAfterTag;
+      } else {
+        openTag = wrapper.getOpenTag();
+        closeTag = wrapper.getCloseTag();
+      }
+
       content = wrapper.getContent();
-      closeTag = wrapper.getCloseTag();
+
+      // If it's a NavLink, add it to our list
+      if (widget is SEONavLinkWrapper) {
+        subtreeNavLinks.add(SEONavItem(text: widget.text ?? '', url: widget.path));
+      }
 
       if (widget is BaseSEOWrapper && widget.additionalTags.isNotEmpty) {
         prependedTags =
@@ -77,6 +103,14 @@ class SEOWidgetTreeProcessor {
             ownPriority = tagPriority;
           }
         }
+      }
+
+      // If it's a Nav, generate JSON-LD from collected links
+      if (widget is SEONavWrapper && subtreeNavLinks.isNotEmpty) {
+        final jsonLd = widget.isBreadcrumb
+            ? SEOHtmlJsonLd.breadcrumbList(subtreeNavLinks)
+            : SEOHtmlJsonLd.siteNavigation(subtreeNavLinks);
+        appendedTags += jsonLd.toHtmlString();
       }
     }
 
@@ -98,6 +132,11 @@ class SEOWidgetTreeProcessor {
       priority: bubbledPriority,
       additionalPrependedTags: prependedTags,
       additionalAppendedTags: appendedTags,
+      navLinks: subtreeNavLinks,
+      appendBeforeTag: appendBeforeTag,
+      appendBeforeContent: appendBeforeContent,
+      appendAfterContent: appendAfterContent,
+      appendAfterTag: appendAfterTag,
     );
   }
 
@@ -118,24 +157,43 @@ class SEOWidgetTreeProcessor {
     );
 
     indexed.sort((a, b) {
-      final pa = a.node.priority;
-      final pb = b.node.priority;
-      if (pa != pb) return pa.compareTo(pb);
-      return a.index.compareTo(b.index); // preserve original index for equal priority
+      if (a.node.priority != b.node.priority) {
+        return a.node.priority.compareTo(b.node.priority);
+      }
+      return a.index.compareTo(b.index);
     });
 
     return indexed.map((e) => e.node).toList();
   }
 
   void _serialize(_HtmlNode node, StringBuffer buffer) {
-    if (node.openTag.isNotEmpty) buffer.write(node.openTag);
+    if (node.appendBeforeTag.isNotEmpty) buffer.write(node.appendBeforeTag);
+
+    if (node.openTag.isNotEmpty) {
+      buffer.write(node.openTag);
+      if (!node.openTag.endsWith('/')) {
+        buffer.write('>');
+      } else {
+        buffer.write('>');
+        // It's a void tag, no content or children or close tag
+        if (node.appendAfterTag.isNotEmpty) buffer.write(node.appendAfterTag);
+        return;
+      }
+    }
+
+    if (node.appendBeforeContent.isNotEmpty) buffer.write(node.appendBeforeContent);
     if (node.additionalPrependedTags.isNotEmpty) buffer.write(node.additionalPrependedTags);
     if (node.content.isNotEmpty) buffer.write(node.content);
+
     for (final child in node.children) {
       _serialize(child, buffer);
     }
+
+    if (node.appendAfterContent.isNotEmpty) buffer.write(node.appendAfterContent);
     if (node.additionalAppendedTags.isNotEmpty) buffer.write(node.additionalAppendedTags);
+
     if (node.closeTag.isNotEmpty) buffer.write(node.closeTag);
+    if (node.appendAfterTag.isNotEmpty) buffer.write(node.appendAfterTag);
   }
 }
 
@@ -151,6 +209,11 @@ class _HtmlNode {
   final int priority;
   final String additionalPrependedTags;
   final String additionalAppendedTags;
+  final List<SEONavItem> navLinks;
+  final String appendBeforeTag;
+  final String appendBeforeContent;
+  final String appendAfterContent;
+  final String appendAfterTag;
 
   const _HtmlNode({
     required this.openTag,
@@ -161,6 +224,11 @@ class _HtmlNode {
     required this.priority,
     this.additionalPrependedTags = '',
     this.additionalAppendedTags = '',
+    this.navLinks = const [],
+    this.appendBeforeTag = '',
+    this.appendBeforeContent = '',
+    this.appendAfterContent = '',
+    this.appendAfterTag = '',
   });
 }
 

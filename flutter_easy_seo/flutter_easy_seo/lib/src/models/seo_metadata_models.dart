@@ -16,6 +16,7 @@ abstract class EasySEOHeadTag {
     final String? content = attributes['content'];
 
     if (tagName == 'title') return 'title';
+    if (tagName == 'script') return 'script:${attributes['type'] ?? 'no-type'}:${hashCode}';
 
     // 1. Handle Multi-value Link tags (rel="alternate")
     if (rel == 'alternate') {
@@ -148,4 +149,51 @@ class EasySEOLinkTag extends EasySEOHeadTag {
   /// For site icons
   factory EasySEOLinkTag.icon(String href, {String type = 'image/x-icon'}) =>
       EasySEOLinkTag({'rel': 'icon', 'href': href, 'type': type});
+}
+
+class EasySEOScriptTag extends EasySEOHeadTag {
+  final String content;
+
+  EasySEOScriptTag(this.content, {Map<String, String> attributes = const {'type': 'application/ld+json'}})
+      : super('script', attributes);
+
+  @override
+  String toHtml() {
+    final libAttr = 'data-easy-seo="${_escapeHtml(key)}"';
+    final attrs = attributes.entries.map((e) => '${e.key}="${_escapeHtml(e.value)}"').join(' ');
+    final allAttrs = attrs.isEmpty ? libAttr : '$libAttr $attrs';
+    return '<script $allAttrs>$content</script>';
+  }
+}
+
+class SEOServiceInfo {
+  final String serviceType;
+  final String providerName;
+  final String brandLogoUrl;
+  final List<String> areasServed;
+  final String? providerUrl;
+
+  const SEOServiceInfo({
+    required this.serviceType,
+    required this.providerName,
+    required this.brandLogoUrl,
+    required this.areasServed,
+    this.providerUrl,
+  });
+
+  SEOServiceInfo copyWith({
+    String? serviceType,
+    String? providerName,
+    String? brandLogoUrl,
+    List<String>? areasServed,
+    String? providerUrl,
+  }) {
+    return SEOServiceInfo(
+      serviceType: serviceType ?? this.serviceType,
+      providerName: providerName ?? this.providerName,
+      brandLogoUrl: brandLogoUrl ?? this.brandLogoUrl,
+      areasServed: areasServed ?? this.areasServed,
+      providerUrl: providerUrl ?? this.providerUrl,
+    );
+  }
 }

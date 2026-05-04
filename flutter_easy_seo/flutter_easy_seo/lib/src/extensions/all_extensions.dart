@@ -68,6 +68,7 @@ extension ImageSEO on Image {
 extension NavigationRailSEO on NavigationRail {
   Widget seo({
     String? label,
+    bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
     String? globalName,
@@ -75,6 +76,7 @@ extension NavigationRailSEO on NavigationRail {
   }) {
     return SEONavWrapper(
       label: label,
+      isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
       globalName: globalName,
@@ -88,12 +90,14 @@ extension NavigationRailSEO on NavigationRail {
 extension BottomNavigationBarSEO on BottomNavigationBar {
   Widget seo({
     String? label,
+    bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
     return SEONavWrapper(
       label: label,
+      isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
       additionalTags: additionalTags,
@@ -188,10 +192,16 @@ extension DrawerSEO on Drawer {
 
 /// Extension for Column widgets to mark as navigation container
 extension ColumnNavSEO on Column {
-  Widget seoNav(
-      {String? label, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoNav({
+    String? label,
+    bool isBreadcrumb = false,
+    String? className,
+    Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
+  }) {
     return SEONavWrapper(
       label: label,
+      isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
       additionalTags: additionalTags,
@@ -202,10 +212,16 @@ extension ColumnNavSEO on Column {
 
 /// Extension for Row widgets to mark as navigation container
 extension RowNavSEO on Row {
-  Widget seoNav(
-      {String? label, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoNav({
+    String? label,
+    bool isBreadcrumb = false,
+    String? className,
+    Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
+  }) {
     return SEONavWrapper(
       label: label,
+      isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
       additionalTags: additionalTags,
@@ -216,10 +232,16 @@ extension RowNavSEO on Row {
 
 /// Extension for Flex widgets to mark as navigation container
 extension FlexNavSEO on Flex {
-  Widget seoNav(
-      {String? label, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoNav({
+    String? label,
+    bool isBreadcrumb = false,
+    String? className,
+    Map<String, String>? attributes,
+    List<SEOHtml> additionalTags = const [],
+  }) {
     return SEONavWrapper(
       label: label,
+      isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
       additionalTags: additionalTags,

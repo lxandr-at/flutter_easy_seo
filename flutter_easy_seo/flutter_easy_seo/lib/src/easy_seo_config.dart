@@ -18,6 +18,7 @@ class EasySEOConfig {
   final ValueNotifier<bool> enableLiveOutput = ValueNotifier(false);
 
   String baseUrl = "";
+  SEOServiceInfo? serviceInfo;
 
   // This is now directly accessible via EasySEOConfig.instance.globals
   final Map<String, BuildContext> globals = {};
@@ -29,11 +30,13 @@ class EasySEOConfig {
     bool enableFileOutput = false,
     bool enableLiveOutput = false,
     String baseUrl = "",
+    SEOServiceInfo? serviceInfo,
   }) {
     this.enabled.value = enabled;
     this.enableFileOutput.value = enableFileOutput;
     this.enableLiveOutput.value = enableLiveOutput;
     this.baseUrl = baseUrl;
+    this.serviceInfo = serviceInfo;
   }
 
   /// Helper to check if any SEO output is active

@@ -6,6 +6,7 @@ class EasySEO extends StatefulWidget {
   final String title;
   final String? description;
   final List<EasySEOHeadTag> headTags;
+  final SEOServiceInfo? serviceInfo;
   final Function(String html)? onGenerate;
   final List<String> includeGlobals;
   final Future? whenDone;
@@ -17,6 +18,7 @@ class EasySEO extends StatefulWidget {
     this.description,
     this.disabled = false,
     this.headTags = const [],
+    this.serviceInfo,
     this.onGenerate,
     this.includeGlobals = const [],
     this.whenDone,
@@ -71,6 +73,15 @@ class _EasySEOState extends State<EasySEO> {
       addTag(EasySEOMetaTag.description(widget.description!));
       addTag(EasySEOOgTag.description(widget.description!));
       addTag(EasySEOTwitterTag.description(widget.description!));
+    }
+
+    final serviceInfo = widget.serviceInfo ?? EasySEOConfig.instance.serviceInfo;
+    if (serviceInfo != null) {
+      SEOServiceInfo finalInfo = serviceInfo;
+      if (finalInfo.providerUrl == null) {
+        finalInfo = finalInfo.copyWith(providerUrl: url_helper.getCurrentUrl());
+      }
+      addTag(EasySEOScriptTag(SEOHtmlJsonLd.service(finalInfo)));
     }
 
     // --- 2. USER OVERRIDES ---

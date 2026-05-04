@@ -164,3 +164,78 @@ class SEOHtml {
 
   String _escapeAttr(String value) => value.replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 }
+
+/// Represents an item in a navigation menu for JSON-LD generation
+class SEONavItem {
+  final String text;
+  final String url;
+
+  const SEONavItem({required this.text, required this.url});
+}
+
+extension SEOHtmlJsonLd on SEOHtml {
+  /// Generates a SiteNavigationElement JSON-LD script tag.
+  static SEOHtml siteNavigation(List<SEONavItem> items) {
+    final data = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": items
+          .asMap()
+          .entries
+          .map((e) => {
+                "@type": "SiteNavigationElement",
+                "position": e.key + 1,
+                "name": e.value.text,
+                "url": e.value.url,
+              })
+          .toList(),
+    };
+
+    return SEOHtml.script(
+      attributes: {'type': 'application/ld+json'},
+      content: jsonEncode(data),
+    );
+  }
+
+  /// Generates a BreadcrumbList JSON-LD script tag.
+  static SEOHtml breadcrumbList(List<SEONavItem> items) {
+    final data = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": items
+          .asMap()
+          .entries
+          .map((e) => {
+                "@type": "ListItem",
+                "position": e.key + 1,
+                "name": e.value.text,
+                if (e.value.url.isNotEmpty) "item": e.value.url,
+              })
+          .toList(),
+    };
+
+    return SEOHtml.script(
+      attributes: {'type': 'application/ld+json'},
+      content: jsonEncode(data),
+    );
+  }
+
+  /// Generates a Service JSON-LD script content.
+  static String service(SEOServiceInfo info) {
+    final data = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "mainEntityOfPage": {"@type": "WebPage"},
+      "serviceType": info.serviceType,
+      "provider": {
+        "@type": "Organization",
+        "name": info.providerName,
+        "logo": info.brandLogoUrl,
+        if (info.providerUrl != null) "url": info.providerUrl,
+      },
+      "areaServed": info.areasServed.map((area) => {"@type": "Country", "name": area}).toList(),
+    };
+
+    return jsonEncode(data);
+  }
+}

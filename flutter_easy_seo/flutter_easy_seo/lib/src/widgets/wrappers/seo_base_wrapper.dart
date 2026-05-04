@@ -59,7 +59,11 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
 
   @override
   String getOpenTag({Map<String, String> overrideAttributes = const {}}) {
-    final buffer = StringBuffer('$appendBeforeTag<$tagName');
+    return '$appendBeforeTag${getRawOpenTag(overrideAttributes: overrideAttributes)}>$appendBeforeContent';
+  }
+
+  String getRawOpenTag({Map<String, String> overrideAttributes = const {}}) {
+    final buffer = StringBuffer('<$tagName');
     Map<String, String?> allAttributes = {};
     if (className != null) {
       allAttributes["class"] = className!;
@@ -68,7 +72,6 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
     if (attributes != null) {
       allAttributes.addAll(attributes!);
     }
-    // TODO maybe change to override only if not defined in attributes
     allAttributes.addAll(overrideAttributes);
     for (final entry in allAttributes.entries) {
       if (entry.value != null && entry.value!.isNotEmpty) {
@@ -78,17 +81,19 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
       }
     }
     if (_isVoid) {
-      buffer.write(' />');
-    } else {
-      buffer.write('>$appendBeforeContent');
+      buffer.write(' /');
     }
     return buffer.toString();
   }
 
   @override
   String getCloseTag() {
+    return '$appendAfterContent${getRawCloseTag()}$appendAfterTag';
+  }
+
+  String getRawCloseTag() {
     if (_isVoid) return '';
-    return '$appendAfterContent</$tagName>$appendAfterTag';
+    return '</$tagName>';
   }
 }
 
