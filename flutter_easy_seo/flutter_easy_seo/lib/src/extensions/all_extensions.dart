@@ -153,11 +153,15 @@ extension RowSEO on Row {
 /// Extension for AppBar widgets to add SEO capabilities
 extension AppBarSEO on AppBar {
   Widget seo({
+    String? h1,
+    String? p,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
     return SEOHeaderWrapper(
+      h1: h1,
+      p: p,
       className: className,
       attributes: attributes,
       additionalTags: additionalTags,

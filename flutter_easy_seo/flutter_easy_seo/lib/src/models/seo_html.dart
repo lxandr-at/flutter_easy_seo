@@ -49,7 +49,18 @@ class SEOHtml {
   const SEOHtml.section({this.content, this.attributes, this.children = const []}) : tag = 'section';
   const SEOHtml.article({this.content, this.attributes, this.children = const []}) : tag = 'article';
   const SEOHtml.aside({this.content, this.attributes, this.children = const []}) : tag = 'aside';
-  const SEOHtml.header({this.content, this.attributes, this.children = const []}) : tag = 'header';
+  factory SEOHtml.header({
+    String? h1,
+    String? p,
+    String? content,
+    Map<String, String>? attributes,
+    List<SEOHtml> children = const [],
+  }) {
+    final list = <SEOHtml>[...children];
+    if (p != null) list.insert(0, SEOHtml.p(p));
+    if (h1 != null) list.insert(0, SEOHtml.h1(h1));
+    return SEOHtml(tag: 'header', content: content, attributes: attributes, children: list);
+  }
   const SEOHtml.main({this.content, this.attributes, this.children = const []}) : tag = 'main';
   const SEOHtml.footer({this.content, this.attributes, this.children = const []}) : tag = 'footer';
   const SEOHtml.nav({this.content, this.attributes, this.children = const []}) : tag = 'nav';
@@ -62,7 +73,16 @@ class SEOHtml {
   const SEOHtml.li({this.content, this.attributes, this.children = const []}) : tag = 'li';
 
   // Link and media tags
-  const SEOHtml.a({this.content, this.attributes, this.children = const []}) : tag = 'a';
+  SEOHtml.a({
+    required String href,
+    this.content,
+    this.children = const [],
+    Map<String, String> attributes = const {},
+  })  : tag = 'a',
+        attributes = {
+          ...attributes,
+          'href': href,
+        };
   const SEOHtml.img({this.attributes})
       : tag = 'img',
         content = null,
@@ -83,18 +103,17 @@ class SEOHtml {
 
   // special tags for products
   SEOHtml.sizeUnit(String size, String unit)
-  : tag = 'p',
-    content = '',
-    attributes = {
-      'itemprop': 'additionalProperty', // change to height/width as needed
-      'itemscope': '',
-      'itemtype': 'https://schema.org/PropertyValue',
-    },
-    children = [
-      SEOHtml.span(size, attributes: {'itemprop': 'value'}),
-      SEOHtml.span(unit, attributes: {'itemprop': 'unitText'}),
-    ];
-
+      : tag = 'p',
+        content = '',
+        attributes = {
+          'itemprop': 'additionalProperty', // change to height/width as needed
+          'itemscope': '',
+          'itemtype': 'https://schema.org/PropertyValue',
+        },
+        children = [
+          SEOHtml.span(size, attributes: {'itemprop': 'value'}),
+          SEOHtml.span(unit, attributes: {'itemprop': 'unitText'}),
+        ];
 
   // HTML void elements — they have no closing tag.
   static const _voidElements = {

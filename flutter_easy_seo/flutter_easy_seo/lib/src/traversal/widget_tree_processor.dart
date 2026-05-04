@@ -56,7 +56,6 @@ class SEOWidgetTreeProcessor {
 
     if (widget is SEOWrapper) {
       final wrapper = widget as SEOWrapper;
-      debugPrint(wrapper.getOpenTag());
       tagName = widget is BaseSEOWrapper ? widget.tagName : '';
       ownPriority = _headingPriority[tagName] ?? 6;
       openTag = wrapper.getOpenTag();
@@ -105,10 +104,6 @@ class SEOWidgetTreeProcessor {
   List<_HtmlNode> _collectChildren(Element element, int level) {
     final nodes = <_HtmlNode>[];
     element.visitChildren((child) {
-      // if (child.widget is SEOWrapper) {
-      //   debugPrint((child.widget as SEOWrapper).runtimeType.toString());
-      // }
-      // debugPrint("${" " * level} ${child.widget.runtimeType.toString()}");
       nodes.add(_buildNode(child, level + 1));
     });
     return nodes;

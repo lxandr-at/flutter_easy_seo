@@ -9,17 +9,17 @@ extension SEOStringExtension on String {
   SEOHtml get seoH6 => SEOHtml.h6(this);
   SEOHtml get seoP => SEOHtml.p(this);
   SEOHtml get seoBrand => SEOHtml.p(
-    "",
-    attributes: {
-      'itemprop': 'brand',
-      'itemscope': '',
-      'itemtype': 'https://schema.org/Brand',
-    },
-    children: [
-      SEOHtml.span(
-        this,
-        attributes: {'itemprop': "name"},
-      ),
-    ],
-  );
+        "",
+        attributes: {
+          'itemprop': 'brand',
+          'itemscope': '',
+          'itemtype': 'https://schema.org/Brand',
+        },
+        children: [
+          SEOHtml.span(
+            this,
+            attributes: {'itemprop': "name"},
+          ),
+        ],
+      );
 }

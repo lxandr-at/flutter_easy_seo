@@ -13,14 +13,15 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
     this.className,
     this.attributes,
     this.globalName,
-    this.additionalTags = const [],
-  });
+    List<SEOHtml> additionalTags = const [],
+  }) : _additionalTags = additionalTags;
 
   final Widget child;
   final String? className;
   final Map<String, String?>? attributes;
   final String? globalName;
-  final List<SEOHtml> additionalTags;
+  final List<SEOHtml> _additionalTags;
+  List<SEOHtml> get additionalTags => _additionalTags;
 
   static const _voidElements = {
     'img',
