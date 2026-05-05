@@ -130,14 +130,14 @@ void main() {
 
   testWidgets('SEOWidgetTreeProcessor supports additionalTags', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         home: EasySEO(
           title: 'Additional Tags Test',
           child: Scaffold(
             body: Column(
               children: [
                 SEOSectionWrapper(
-                  additionalTags: const [
+                  additionalTags: [
                     SEOHtml(tag: 'h2', content: 'Section Subtitle'),
                     SEOHtml(
                       tag: 'script',
@@ -145,7 +145,7 @@ void main() {
                       content: '{"@type":"Article"}',
                     ),
                   ],
-                  child: const SEOTextWrapper(textType: SEOTextType.p, child: Text('Section content')),
+                  child: SEOTextWrapper(textType: SEOTextType.p, child: Text('Section content')),
                 ),
               ],
             ),

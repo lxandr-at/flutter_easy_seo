@@ -10,6 +10,7 @@ class EasySEO extends StatefulWidget {
   final Function(String html)? onGenerate;
   final List<String> includeGlobals;
   final Future? whenDone;
+  final ChangeNotifier? generateOnChanged;
 
   const EasySEO({
     Key? key,
@@ -22,6 +23,7 @@ class EasySEO extends StatefulWidget {
     this.onGenerate,
     this.includeGlobals = const [],
     this.whenDone,
+    this.generateOnChanged,
   }) : super(key: key);
 
   @override
@@ -39,16 +41,27 @@ class _EasySEOState extends State<EasySEO> {
     _fileHandler = EasySEOFileOutput();
     _liveHandler = EasySEOLiveOutput();
 
+    if (widget.generateOnChanged != null) {
+      debugPrint("EasySEO: calling gen in generateOnChanged()");
+      widget.generateOnChanged!.addListener(() => _generate());
+    }
+
+    _generate();
+  }
+
+  void _generate() {
     if (widget.whenDone != null) {
       widget.whenDone!.then((_) {
         if (!mounted) return;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted) return;
+          debugPrint("EasySEO: calling gen in initState() after whenDone");
           _generateHTML();
         });
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        debugPrint("EasySEO: calling gen in initState()");
         _generateHTML();
       });
     }
@@ -57,10 +70,9 @@ class _EasySEOState extends State<EasySEO> {
   @override
   void didUpdateWidget(EasySEO oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-    // Check if critical SEO data has changed
-    if (oldWidget.title != widget.title) {
-      _generateHTML();
+    if (widget.title != oldWidget.title) {
+      debugPrint("EasySEO: calling gen in didUpdateWidget()");
+      _generate();
     }
   }
 
@@ -74,10 +86,11 @@ class _EasySEOState extends State<EasySEO> {
     }
 
     // --- 1. DEFAULT AUTOMATIC TAGS ---
-    addTag(EasySEOTitleTag(widget.title));
-    addTag(EasySEOMetaTag.title(widget.title));
-    addTag(EasySEOOgTag.title(widget.title));
-    addTag(EasySEOTwitterTag.title(widget.title));
+    String currentTitle = widget.title;
+    addTag(EasySEOTitleTag(currentTitle));
+    addTag(EasySEOMetaTag.title(currentTitle));
+    addTag(EasySEOOgTag.title(currentTitle));
+    addTag(EasySEOTwitterTag.title(currentTitle));
 
     if (widget.description != null) {
       addTag(EasySEOMetaTag.description(widget.description!));
