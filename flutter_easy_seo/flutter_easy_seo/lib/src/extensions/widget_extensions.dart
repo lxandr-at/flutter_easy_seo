@@ -129,11 +129,12 @@ extension SEOWidgetExtension on Widget {
     );
   }
 
-  Widget seoProduct(String productName) {
+  Widget seoProduct(String productName, {List<SEOHtml> additionalTags = const []}) {
     return SEOArticleWrapper(
       attributes: const {'itemscope': null, 'itemtype': "https://schema.org/Product"},
       additionalTags: [
-        SEOHtml.h3(productName, attributes: {'itemprop': "name"})
+        SEOHtml.h3(productName, attributes: {'itemprop': "name"}),
+        ...additionalTags
       ],
       child: this,
     );

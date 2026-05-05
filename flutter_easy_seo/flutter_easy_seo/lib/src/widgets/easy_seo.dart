@@ -54,6 +54,16 @@ class _EasySEOState extends State<EasySEO> {
     }
   }
 
+  @override
+  void didUpdateWidget(EasySEO oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Check if critical SEO data has changed
+    if (oldWidget.title != widget.title) {
+      _generateHTML();
+    }
+  }
+
   /// Combines the explicit title adn description param with the headTags list
   List<EasySEOHeadTag> get _allTags {
     // Using a Map ensures that only one tag per "key" exists.

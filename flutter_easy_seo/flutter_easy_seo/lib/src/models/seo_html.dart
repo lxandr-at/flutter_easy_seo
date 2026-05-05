@@ -101,7 +101,6 @@ class SEOHtml {
         content = null,
         children = const [];
 
-  // special tags for products
   SEOHtml.sizeUnit(String size, String unit)
       : tag = 'p',
         content = '',
@@ -114,6 +113,47 @@ class SEOHtml {
           SEOHtml.span(size, attributes: {'itemprop': 'value'}),
           SEOHtml.span(unit, attributes: {'itemprop': 'unitText'}),
         ];
+
+  // Helper for AggregateOffer
+  /// assumes 'price' and 'seller' in individualOffers
+  static SEOHtml aggregateOffer(SEOOfferInfo info) {
+    return SEOHtml.div(
+      attributes: {
+        'itemprop': 'offers',
+        'itemscope': '',
+        'itemtype': 'https://schema.org/AggregateOffer',
+      },
+      children: [
+        SEOHtml.meta(attributes: {'itemprop': 'lowPrice', 'content': info.lowPrice.toString()}),
+        SEOHtml.meta(attributes: {'itemprop': 'highPrice', 'content': info.highPrice.toString()}),
+        SEOHtml.meta(attributes: {'itemprop': 'offerCount', 'content': info.offerCount.toString()}),
+        SEOHtml.meta(attributes: {'itemprop': 'priceCurrency', 'content': info.currency}),
+        ...info.individualOffers.map((offer) {
+          return SEOHtml.div(
+            attributes: {
+              'itemprop': 'offers',
+              'itemscope': '',
+              'itemtype': 'https://schema.org/Offer',
+            },
+            children: [
+              SEOHtml.meta(attributes: {'itemprop': 'price', 'content': offer['price'].toString()}),
+              SEOHtml.meta(attributes: {'itemprop': 'priceCurrency', 'content': info.currency}),
+              SEOHtml.div(
+                attributes: {
+                  'itemprop': 'seller',
+                  'itemscope': '',
+                  'itemtype': 'https://schema.org/Organization',
+                },
+                children: [
+                  SEOHtml.meta(attributes: {'itemprop': 'name', 'content': offer['seller'].toString()}),
+                ],
+              ),
+            ],
+          );
+        }),
+      ],
+    );
+  }
 
   // HTML void elements — they have no closing tag.
   static const _voidElements = {
@@ -137,11 +177,24 @@ class SEOHtml {
 
   /// Recursively renders this element and all its [children] to an HTML string.
   String toHtmlString() {
+    if (tag.isEmpty) {
+      final buffer = StringBuffer();
+      if (content != null) buffer.write(content);
+      for (final child in children) {
+        buffer.write(child.toHtmlString());
+      }
+      return buffer.toString();
+    }
+
     final buffer = StringBuffer('<$tag');
 
     if (attributes != null) {
       for (final entry in attributes!.entries) {
-        buffer.write(' ${entry.key}="${_escapeAttr(entry.value)}"');
+        if (entry.value.isNotEmpty) {
+          buffer.write(' ${entry.key}="${_escapeAttr(entry.value)}"');
+        } else {
+          buffer.write(' ${entry.key}');
+        }
       }
     }
 

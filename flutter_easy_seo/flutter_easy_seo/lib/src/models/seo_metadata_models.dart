@@ -197,3 +197,19 @@ class SEOServiceInfo {
     );
   }
 }
+
+class SEOOfferInfo {
+  final double lowPrice;
+  final double highPrice;
+  final int offerCount;
+  final String currency;
+  final List<Map<String, dynamic>> individualOffers;
+
+  const SEOOfferInfo({
+    required this.lowPrice,
+    required this.highPrice,
+    required this.offerCount,
+    this.currency = "EUR",
+    this.individualOffers = const [],
+  });
+}

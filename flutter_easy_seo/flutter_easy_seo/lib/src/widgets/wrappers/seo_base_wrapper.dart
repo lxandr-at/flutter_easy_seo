@@ -63,6 +63,7 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
   }
 
   String getRawOpenTag({Map<String, String> overrideAttributes = const {}}) {
+    if (tagName.isEmpty) return '';
     final buffer = StringBuffer('<$tagName');
     Map<String, String?> allAttributes = {};
     if (className != null) {
@@ -92,6 +93,7 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
   }
 
   String getRawCloseTag() {
+    if (tagName.isEmpty) return '';
     if (_isVoid) return '';
     return '</$tagName>';
   }

@@ -171,10 +171,10 @@ class SEOWidgetTreeProcessor {
 
     if (node.openTag.isNotEmpty) {
       buffer.write(node.openTag);
-      if (!node.openTag.endsWith('/')) {
+      if (!node.openTag.endsWith('>')) {
         buffer.write('>');
-      } else {
-        buffer.write('>');
+      }
+      if (node.openTag.endsWith('/')) {
         // It's a void tag, no content or children or close tag
         if (node.appendAfterTag.isNotEmpty) buffer.write(node.appendAfterTag);
         return;
