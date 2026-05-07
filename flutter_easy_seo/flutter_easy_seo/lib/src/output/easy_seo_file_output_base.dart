@@ -26,32 +26,6 @@ mixin EasySEOFileOutputBase {
     return formatted.toString();
   }
 
-  /// Generate sitemap.xml content
-  String generateSitemapContent(List<String> urls) {
-    final StringBuffer sitemap = StringBuffer();
-    sitemap.writeln('<?xml version="1.0" encoding="UTF-8"?>');
-    sitemap.writeln('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
-
-    for (final url in urls) {
-      sitemap.writeln('  <url>');
-      sitemap.writeln('    <loc>$url</loc>');
-      sitemap.writeln('  </url>');
-    }
-
-    sitemap.writeln('</urlset>');
-    return sitemap.toString();
-  }
-
-  /// Generate robots.txt content
-  String generateRobotsContent(String sitemapUrl) {
-    return '''
-      User-agent: *
-      Allow: /
-      
-      Sitemap: $sitemapUrl
-    ''';
-  }
-
   // This is the platform-specific bit
   void saveHTMLFile(String htmlContent);
 }

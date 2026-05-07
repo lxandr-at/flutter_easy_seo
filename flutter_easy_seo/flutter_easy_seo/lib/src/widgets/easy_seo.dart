@@ -132,7 +132,12 @@ class _EasySEOState extends State<EasySEO> {
       addTag(EasySEOScriptTag(SEOHtmlJsonLd.service(finalInfo)));
     }
 
-    // --- 2. USER OVERRIDES ---
+    // --- 2. GLOBAL OVERRIDES (from EasySEOConfig) ---
+    for (var tag in EasySEOConfig.instance.headTags) {
+      addTag(tag);
+    }
+
+    // --- 3. LOCAL USER OVERRIDES ---
     // Because we add these last, if the user provided their own
     // EasySEOOgTag.title, it will overwrite the automatic one above.
     for (var tag in widget.headTags) {
@@ -166,9 +171,22 @@ class _EasySEOState extends State<EasySEO> {
     }
 
     if (EasySEOConfig.instance.enableFileOutput.value || widget.onGenerate != null) {
+      // Detect language from path for the <html> tag
+      final currentPath = _urlHelper.getCurrentPath();
+      final segments = currentPath.split('/');
+      final supportedLangs = EasySEOConfig.instance.supportedLanguages;
+      String currentLang = 'en'; // Default
+      
+      if (segments.length > 1 && supportedLangs.contains(segments[1])) {
+        currentLang = segments[1];
+      } else if (supportedLangs.isNotEmpty) {
+        currentLang = supportedLangs.first;
+      }
+
       final fullHtml = SEOHtmlDocumentGenerator.generateFullDocument(
         bodyContent: bodyContent,
         metadata: metadataStr,
+        lang: currentLang,
       );
       if (EasySEOConfig.instance.enableFileOutput.value) {
         _fileHandler.saveHTMLFile(fullHtml);

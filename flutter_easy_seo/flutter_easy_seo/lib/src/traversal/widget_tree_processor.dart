@@ -252,11 +252,12 @@ class SEOHtmlDocumentGenerator {
   static String generateFullDocument({
     required String bodyContent,
     String? metadata,
+    String lang = 'en',
   }) {
     final buffer = StringBuffer();
 
     buffer.writeln('<!DOCTYPE html>');
-    buffer.writeln('<html lang="en">');
+    buffer.writeln('<html lang="$lang">');
     buffer.writeln('<head>');
     buffer.writeln('  <meta charset="UTF-8">');
     buffer.writeln('  <meta name="viewport" content="width=device-width, initial-scale=1.0">');

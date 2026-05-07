@@ -95,6 +95,14 @@ class EasySEOMetaTag extends EasySEOHeadTag {
   factory EasySEOMetaTag.robots({bool index = true, bool follow = true}) => EasySEOMetaTag(
         {'name': 'robots', 'content': '${index ? 'index' : 'noindex'}, ${follow ? 'follow' : 'nofollow'}'},
       );
+
+  // --- Apple & PWA Factories ---
+  factory EasySEOMetaTag.appleMobileWebAppCapable({bool capable = true}) =>
+      EasySEOMetaTag({'name': 'apple-mobile-web-app-capable', 'content': capable ? 'yes' : 'no'});
+  factory EasySEOMetaTag.appleStatusBarStyle({String style = 'black-translucent'}) =>
+      EasySEOMetaTag({'name': 'apple-mobile-web-app-status-bar-style', 'content': style});
+  factory EasySEOMetaTag.appleWebAppTitle(String title) =>
+      EasySEOMetaTag({'name': 'apple-mobile-web-app-title', 'content': title});
 }
 
 /// Specialized class for Open Graph (Social Media)
@@ -146,9 +154,24 @@ class EasySEOLinkTag extends EasySEOHeadTag {
   factory EasySEOLinkTag.alternate({required String href, required String lang}) =>
       EasySEOLinkTag({'rel': 'alternate', 'href': href, 'hreflang': lang});
 
-  /// For site icons
-  factory EasySEOLinkTag.icon(String href, {String type = 'image/x-icon'}) =>
-      EasySEOLinkTag({'rel': 'icon', 'href': href, 'type': type});
+  /// For site icons - handles .ico, .png, and .svg
+  factory EasySEOLinkTag.icon(String href, {String? type}) {
+    // Logic to guess the type if not provided
+    String effectiveType = type ?? (href.endsWith('.svg') ? 'image/svg+xml' : 'image/png');
+    if (href.endsWith('.ico')) effectiveType = 'image/x-icon';
+
+    return EasySEOLinkTag({
+      'rel': 'icon',
+      'href': href,
+      'type': effectiveType,
+    });
+  }
+
+  /// For PWA manifest
+  factory EasySEOLinkTag.manifest(String href) => EasySEOLinkTag({'rel': 'manifest', 'href': href});
+
+  /// For Apple touch icon
+  factory EasySEOLinkTag.appleTouchIcon(String href) => EasySEOLinkTag({'rel': 'apple-touch-icon', 'href': href});
 }
 
 class EasySEOScriptTag extends EasySEOHeadTag {
@@ -212,4 +235,19 @@ class SEOOfferInfo {
     this.currency = "EUR",
     this.individualOffers = const [],
   });
+}
+
+/// Helper to bundle common Apple PWA tags
+List<EasySEOHeadTag> appleHeadTags({
+  required String title,
+  required String iconHref,
+  String statusBarStyle = 'black-translucent',
+  bool isWebAppCapable = true,
+}) {
+  return [
+    EasySEOMetaTag.appleWebAppTitle(title),
+    EasySEOLinkTag.appleTouchIcon(iconHref),
+    EasySEOMetaTag.appleMobileWebAppCapable(capable: isWebAppCapable),
+    EasySEOMetaTag.appleStatusBarStyle(style: statusBarStyle),
+  ];
 }
