@@ -17,7 +17,7 @@ class EasySEOConfig {
   final ValueNotifier<bool> enableFileOutput = ValueNotifier(false);
   final ValueNotifier<bool> enableLiveOutput = ValueNotifier(false);
 
-  String baseUrl = "";
+  String? baseUrl;
   SEOServiceInfo? serviceInfo;
 
   // This is now directly accessible via EasySEOConfig.instance.globals
@@ -29,7 +29,7 @@ class EasySEOConfig {
     bool enabled = true,
     bool enableFileOutput = false,
     bool enableLiveOutput = false,
-    String baseUrl = "",
+    String? baseUrl,
     SEOServiceInfo? serviceInfo,
   }) {
     this.enabled.value = enabled;
