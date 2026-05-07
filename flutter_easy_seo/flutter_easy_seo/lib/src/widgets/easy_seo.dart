@@ -34,12 +34,14 @@ class _EasySEOState extends State<EasySEO> {
   final _processor = SEOWidgetTreeProcessor();
   late final EasySEOFileOutput _fileHandler;
   late final EasySEOLiveOutput _liveHandler;
+  late final url_helper.URLHelper _urlHelper;
 
   @override
   void initState() {
     super.initState();
     _fileHandler = EasySEOFileOutput();
     _liveHandler = EasySEOLiveOutput();
+    _urlHelper = url_helper.URLHelper();
 
     if (widget.generateOnChanged != null) {
       debugPrint("EasySEO: calling gen in generateOnChanged()");
@@ -92,6 +94,29 @@ class _EasySEOState extends State<EasySEO> {
     addTag(EasySEOOgTag.title(currentTitle));
     addTag(EasySEOTwitterTag.title(currentTitle));
 
+    // --- AUTOMATIC URL TAGS ---
+    final fullUrl = _urlHelper.getCurrentUrl();
+    if (fullUrl != null) {
+      addTag(EasySEOLinkTag.canonical(fullUrl));
+      addTag(EasySEOOgTag.url(fullUrl));
+    }
+
+    // --- AUTOMATIC LANGUAGE ALTERNATES ---
+    final alternates = _urlHelper.getAlternateUrls();
+    if (alternates.isNotEmpty) {
+      final languages = EasySEOConfig.instance.supportedLanguages;
+      final defaultLang = languages.first;
+
+      alternates.forEach((lang, url) {
+        addTag(EasySEOLinkTag.alternate(href: url, lang: lang));
+      });
+
+      // x-default using the first supported language
+      if (alternates.containsKey(defaultLang)) {
+        addTag(EasySEOLinkTag.alternate(href: alternates[defaultLang]!, lang: 'x-default'));
+      }
+    }
+
     if (widget.description != null) {
       addTag(EasySEOMetaTag.description(widget.description!));
       addTag(EasySEOOgTag.description(widget.description!));
@@ -102,7 +127,7 @@ class _EasySEOState extends State<EasySEO> {
     if (serviceInfo != null) {
       SEOServiceInfo finalInfo = serviceInfo;
       if (finalInfo.providerUrl == null) {
-        finalInfo = finalInfo.copyWith(providerUrl: url_helper.getCurrentUrl());
+        finalInfo = finalInfo.copyWith(providerUrl: fullUrl);
       }
       addTag(EasySEOScriptTag(SEOHtmlJsonLd.service(finalInfo)));
     }

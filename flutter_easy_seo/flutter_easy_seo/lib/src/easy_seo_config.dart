@@ -19,6 +19,7 @@ class EasySEOConfig {
 
   String? baseUrl;
   SEOServiceInfo? serviceInfo;
+  List<String> supportedLanguages = const [];
 
   // This is now directly accessible via EasySEOConfig.instance.globals
   final Map<String, BuildContext> globals = {};
@@ -31,12 +32,14 @@ class EasySEOConfig {
     bool enableLiveOutput = false,
     String? baseUrl,
     SEOServiceInfo? serviceInfo,
+    List<String> supportedLanguages = const [],
   }) {
     this.enabled.value = enabled;
     this.enableFileOutput.value = enableFileOutput;
     this.enableLiveOutput.value = enableLiveOutput;
     this.baseUrl = baseUrl;
     this.serviceInfo = serviceInfo;
+    this.supportedLanguages = supportedLanguages;
   }
 
   /// Helper to check if any SEO output is active
