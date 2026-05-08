@@ -45,9 +45,9 @@
     },
     {
       "name": "flutter_lints",
-      "rootUri": "file:///C:/Users/alex/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-2.0.3",
+      "rootUri": "file:///C:/Users/alex/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-6.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.8"
     },
     {
       "name": "flutter_test",
@@ -75,9 +75,9 @@
     },
     {
       "name": "lints",
-      "rootUri": "file:///C:/Users/alex/AppData/Local/Pub/Cache/hosted/pub.dev/lints-2.1.1",
+      "rootUri": "file:///C:/Users/alex/AppData/Local/Pub/Cache/hosted/pub.dev/lints-6.1.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.8"
     },
     {
       "name": "matcher",
@@ -153,7 +153,7 @@
     },
     {
       "name": "vm_service",
-      "rootUri": "file:///C:/Users/alex/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-15.1.0",
+      "rootUri": "file:///C:/Users/alex/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-15.2.0",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -173,6 +173,6 @@
   "generator": "pub",
   "generatorVersion": "3.11.5",
   "flutterRoot": "file:///E:/Flutter/flutter",
-  "flutterVersion": "3.41.7",
+  "flutterVersion": "3.41.9",
   "pubCache": "file:///C:/Users/alex/AppData/Local/Pub/Cache"
 }
