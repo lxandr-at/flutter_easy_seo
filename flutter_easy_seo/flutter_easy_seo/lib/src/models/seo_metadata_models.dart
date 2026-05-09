@@ -98,7 +98,7 @@ class EasySEOMetaTag extends EasySEOHeadTag {
 
   // --- Apple & PWA Factories ---
   factory EasySEOMetaTag.appleMobileWebAppCapable({bool capable = true}) =>
-      EasySEOMetaTag({'name': 'apple-mobile-web-app-capable', 'content': capable ? 'yes' : 'no'});
+      EasySEOMetaTag({'name': 'mobile-web-app-capable', 'content': capable ? 'yes' : 'no'});
   factory EasySEOMetaTag.appleStatusBarStyle({String style = 'black-translucent'}) =>
       EasySEOMetaTag({'name': 'apple-mobile-web-app-status-bar-style', 'content': style});
   factory EasySEOMetaTag.appleWebAppTitle(String title) =>
