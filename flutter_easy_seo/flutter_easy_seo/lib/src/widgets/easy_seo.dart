@@ -7,7 +7,13 @@ class EasySEO extends StatefulWidget {
   final String? description;
   final List<EasySEOHeadTag> headTags;
   final SEOServiceInfo? serviceInfo;
-  final Function(String html)? onGenerate;
+  final Function({
+    required String fullHtml,
+    required String currentLanguage,
+    required String path,
+    required String headContent,
+    required String bodyContent,
+  })? onGenerate;
   final List<String> includeGlobals;
   final Future? whenDone;
   final ChangeNotifier? generateOnChanged;
@@ -174,13 +180,13 @@ class _EasySEOState extends State<EasySEO> {
       // Detect language from path for the <html> tag
       final currentPath = _urlHelper.getCurrentPath();
       final segments = currentPath.split('/');
-      final supportedLangs = EasySEOConfig.instance.supportedLanguages;
+      final supportedLanguages = EasySEOConfig.instance.supportedLanguages;
       String currentLang = 'en'; // Default
       
-      if (segments.length > 1 && supportedLangs.contains(segments[1])) {
+      if (segments.length > 1 && supportedLanguages.contains(segments[1])) {
         currentLang = segments[1];
-      } else if (supportedLangs.isNotEmpty) {
-        currentLang = supportedLangs.first;
+      } else if (supportedLanguages.isNotEmpty) {
+        currentLang = supportedLanguages.first;
       }
 
       final fullHtml = SEOHtmlDocumentGenerator.generateFullDocument(
@@ -192,7 +198,13 @@ class _EasySEOState extends State<EasySEO> {
         _fileHandler.saveHTMLFile(fullHtml);
       }
       // Call the callback if provided
-      widget.onGenerate?.call(fullHtml);
+      widget.onGenerate?.call(
+        fullHtml: fullHtml,
+        currentLanguage: currentLang,
+        path: currentPath,
+        headContent: metadataStr,
+        bodyContent: bodyContent,
+      );
     }
   }
 
