@@ -73,16 +73,28 @@ class SEOHtml {
   const SEOHtml.li({this.content, this.attributes, this.children = const []}) : tag = 'li';
 
   // Link and media tags
-  SEOHtml.a({
-    required String href,
-    this.content,
-    this.children = const [],
+  factory SEOHtml.a({
+    String? href,
+    String? path,
+    String? content,
+    List<SEOHtml> children = const [],
     Map<String, String> attributes = const {},
-  })  : tag = 'a',
-        attributes = {
-          ...attributes,
-          'href': href,
-        };
+  }) {
+    String finalHref = href ?? '';
+    if (href == null && path != null) {
+      finalHref = EasySEOConfig.instance.formatFullUrl(path);
+    }
+
+    return SEOHtml(
+      tag: 'a',
+      content: content,
+      children: children,
+      attributes: {
+        ...attributes,
+        'href': finalHref,
+      },
+    );
+  }
   const SEOHtml.img({this.attributes})
       : tag = 'img',
         content = null,

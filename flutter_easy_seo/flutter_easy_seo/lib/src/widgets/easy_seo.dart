@@ -198,13 +198,15 @@ class _EasySEOState extends State<EasySEO> {
         _fileHandler.saveHTMLFile(fullHtml);
       }
       // Call the callback if provided
-      widget.onGenerate?.call(
-        fullHtml: fullHtml,
-        currentLanguage: currentLang,
-        path: currentPath,
-        headContent: metadataStr,
-        bodyContent: bodyContent,
-      );
+      if (!EasySEOConfig.instance.disableOnGenerate.value) {
+        widget.onGenerate?.call(
+          fullHtml: fullHtml,
+          currentLanguage: currentLang,
+          path: currentPath,
+          headContent: metadataStr,
+          bodyContent: bodyContent,
+        );
+      }
     }
   }
 

@@ -51,24 +51,25 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
 
     final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
     final langs = config.supportedLanguages;
-    final pages = config.pages.isEmpty ? [''] : config.pages;
+    final List<String> rawPages = config.pages.isEmpty ? [''] : config.pages;
+    
+    // Deduplicate pages based on their cleaned path
+    final Set<String> uniqueCleanPages = {};
+    for (final p in rawPages) {
+      String cp = p.trim();
+      if (cp.isNotEmpty && !cp.startsWith('/')) cp = '/$cp';
+      if (cp == '/') cp = '';
+      uniqueCleanPages.add(cp);
+    }
 
     final StringBuffer sitemap = StringBuffer();
     sitemap.writeln('<?xml version="1.0" encoding="UTF-8"?>');
     sitemap.writeln('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
     sitemap.writeln('        xmlns:xhtml="http://www.w3.org/1999/xhtml">');
 
-    // x-default typically points to the first supported language or a neutral version
     final String? firstLang = langs.isNotEmpty ? langs.first : null;
 
-    for (final page in pages) {
-      // Normalize page path
-      String cleanPage = page.trim();
-      if (cleanPage.isNotEmpty && !cleanPage.startsWith('/')) {
-        cleanPage = '/$cleanPage';
-      }
-      if (cleanPage == '/') cleanPage = '';
-
+    for (final cleanPage in uniqueCleanPages) {
       // Determine priority based on page name
       String priority = "0.8";
       if (cleanPage.contains('offers') || cleanPage.isEmpty) {
@@ -77,7 +78,25 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
         priority = "0.8";
       }
 
-      // If no languages, just output the neutral page
+      // Helper to generate the correct URL for a given language
+      String getUrlForLang(String? lang, String pagePath) {
+        final targetLang = lang ?? firstLang;
+        
+        // Root case: if it's the first language and root path, omit the prefix
+        if (pagePath.isEmpty && targetLang == firstLang) {
+          return '$cleanBase/';
+        }
+        
+        // All other cases (subpages or non-primary languages) use the prefix
+        if (targetLang != null) {
+          return '$cleanBase/$targetLang$pagePath';
+        }
+        
+        // Fallback for neutral subpages (shouldn't normally happen with exhaustive langs)
+        return pagePath.isEmpty ? '$cleanBase/' : '$cleanBase$pagePath';
+      }
+
+      // 1. If no languages are defined, just output the neutral page
       if (langs.isEmpty) {
         final displayLoc = cleanPage.isEmpty ? '$cleanBase/' : '$cleanBase$cleanPage';
         sitemap.writeln('  <url>');
@@ -88,22 +107,22 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
         continue;
       }
 
-      // Exhaustive loop for every language/page combination
+      // 2. Language-specific entries (Exhaustive)
       for (final currentLang in langs) {
-        final displayLoc = '$cleanBase/$currentLang$cleanPage';
+        final displayLoc = getUrlForLang(currentLang, cleanPage);
 
         sitemap.writeln('  <url>');
         sitemap.writeln('    <loc>$displayLoc</loc>');
 
-        // Every entry includes alternates for ALL languages
+        // Alternates for all languages
         for (final altLang in langs) {
-          final altUrl = '$cleanBase/$altLang$cleanPage';
+          final altUrl = getUrlForLang(altLang, cleanPage);
           sitemap.writeln('    <xhtml:link rel="alternate" hreflang="$altLang" href="$altUrl"/>');
         }
 
-        // Add x-default pointing to the first language
+        // x-default points to the first language's location
         if (firstLang != null) {
-          final defaultUrl = '$cleanBase/$firstLang$cleanPage';
+          final defaultUrl = getUrlForLang(firstLang, cleanPage);
           sitemap.writeln('    <xhtml:link rel="alternate" hreflang="x-default" href="$defaultUrl"/>');
         }
 

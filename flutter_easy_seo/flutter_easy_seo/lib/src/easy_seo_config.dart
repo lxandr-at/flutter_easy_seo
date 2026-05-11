@@ -16,6 +16,7 @@ class EasySEOConfig {
   final ValueNotifier<bool> enabled = ValueNotifier(true);
   final ValueNotifier<bool> enableFileOutput = ValueNotifier(false);
   final ValueNotifier<bool> enableLiveOutput = ValueNotifier(false);
+  final ValueNotifier<bool> disableOnGenerate = ValueNotifier(false);
 
   String? baseUrl;
   SEOServiceInfo? serviceInfo;
@@ -32,6 +33,7 @@ class EasySEOConfig {
     bool enabled = true,
     bool enableFileOutput = false,
     bool enableLiveOutput = false,
+    bool disableOnGenerate = false,
     String? baseUrl,
     SEOServiceInfo? serviceInfo,
     List<String> supportedLanguages = const [],
@@ -41,6 +43,7 @@ class EasySEOConfig {
     this.enabled.value = enabled;
     this.enableFileOutput.value = enableFileOutput;
     this.enableLiveOutput.value = enableLiveOutput;
+    this.disableOnGenerate.value = disableOnGenerate;
     this.baseUrl = baseUrl;
     this.serviceInfo = serviceInfo;
     this.supportedLanguages = supportedLanguages;
@@ -49,5 +52,15 @@ class EasySEOConfig {
   }
 
   /// Helper to check if any SEO output is active
-  bool get isActive => enableFileOutput.value || enableLiveOutput.value;
+  bool get isActive =>
+      enableFileOutput.value || enableLiveOutput.value || !disableOnGenerate.value;
+
+  /// Formats a path into a full URL using the configured [baseUrl]
+  String formatFullUrl(String path) {
+    final bUrl = baseUrl;
+    if (bUrl == null || bUrl.isEmpty) return path;
+    final cleanBase = bUrl.endsWith('/') ? bUrl.substring(0, bUrl.length - 1) : bUrl;
+    final cleanPath = path.startsWith('/') ? path : '/$path';
+    return '$cleanBase$cleanPath';
+  }
 }

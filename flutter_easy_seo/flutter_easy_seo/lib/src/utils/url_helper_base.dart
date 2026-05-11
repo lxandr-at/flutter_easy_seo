@@ -11,10 +11,7 @@ mixin URLHelperBase {
   String? getCurrentUrl() {
     final baseUrl = EasySEOConfig.instance.baseUrl;
     if (baseUrl != null && baseUrl.isNotEmpty) {
-      final path = getCurrentPath();
-      final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
-      final cleanPath = path.startsWith('/') ? path : '/$path';
-      return '$cleanBase$cleanPath';
+      return EasySEOConfig.instance.formatFullUrl(getCurrentPath());
     }
     return rawCurrentUrl;
   }
@@ -30,8 +27,6 @@ mixin URLHelperBase {
     final path = getCurrentPath();
     final baseUrl = EasySEOConfig.instance.baseUrl;
     if (baseUrl == null || baseUrl.isEmpty) return {};
-
-    final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
 
     // Split the path to find and replace the language segment
     // We assume the language is the first segment: /de/offers -> ['', 'de', 'offers']
@@ -57,7 +52,7 @@ mixin URLHelperBase {
         alternatePath = alternatePath.substring(0, alternatePath.length - 1);
       }
 
-      results[lang] = '$cleanBase${alternatePath.startsWith('/') ? alternatePath : '/$alternatePath'}';
+      results[lang] = EasySEOConfig.instance.formatFullUrl(alternatePath);
     }
 
     return results;
