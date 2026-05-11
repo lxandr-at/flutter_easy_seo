@@ -156,22 +156,30 @@ class EasySEOLinkTag extends EasySEOHeadTag {
 
   /// For site icons - handles .ico, .png, and .svg
   factory EasySEOLinkTag.icon(String href, {String? type}) {
+    final cleanHref = href.startsWith('/') ? href : '/$href';
     // Logic to guess the type if not provided
-    String effectiveType = type ?? (href.endsWith('.svg') ? 'image/svg+xml' : 'image/png');
-    if (href.endsWith('.ico')) effectiveType = 'image/x-icon';
+    String effectiveType =
+        type ?? (cleanHref.endsWith('.svg') ? 'image/svg+xml' : 'image/png');
+    if (cleanHref.endsWith('.ico')) effectiveType = 'image/x-icon';
 
     return EasySEOLinkTag({
       'rel': 'icon',
-      'href': href,
+      'href': cleanHref,
       'type': effectiveType,
     });
   }
 
   /// For PWA manifest
-  factory EasySEOLinkTag.manifest(String href) => EasySEOLinkTag({'rel': 'manifest', 'href': href});
+  factory EasySEOLinkTag.manifest(String href) {
+    final cleanHref = href.startsWith('/') ? href : '/$href';
+    return EasySEOLinkTag({'rel': 'manifest', 'href': cleanHref});
+  }
 
   /// For Apple touch icon
-  factory EasySEOLinkTag.appleTouchIcon(String href) => EasySEOLinkTag({'rel': 'apple-touch-icon', 'href': href});
+  factory EasySEOLinkTag.appleTouchIcon(String href) {
+    final cleanHref = href.startsWith('/') ? href : '/$href';
+    return EasySEOLinkTag({'rel': 'apple-touch-icon', 'href': cleanHref});
+  }
 }
 
 class EasySEOScriptTag extends EasySEOHeadTag {
