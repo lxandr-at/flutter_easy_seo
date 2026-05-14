@@ -1,5 +1,6 @@
 library flutter_easy_seo;
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
@@ -8,6 +9,9 @@ import 'src/utils/url_helper_facade.dart' as url_helper;
 // Import the "facade" which handles the platform switching
 import 'src/output/easy_seo_file_output_facade.dart';
 import 'src/output/easy_seo_live_output_facade.dart';
+import 'src/utils/platform_helper_facade.dart';
+
+export 'src/utils/platform_helper_facade.dart';
 
 part 'src/extensions/all_extensions.dart';
 part 'src/extensions/widget_extensions.dart';

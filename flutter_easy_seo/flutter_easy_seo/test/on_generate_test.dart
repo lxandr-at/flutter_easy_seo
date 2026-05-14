@@ -10,24 +10,19 @@ void main() {
     String? capturedHead;
     String? capturedBody;
 
+    EasySEOConfig.instance.onGenerate = (EasySEOGenerationResult gen) {
+      capturedFullHtml = gen.fullHtml;
+      capturedLang = gen.currentLanguage;
+      capturedPath = gen.path;
+      capturedHead = gen.headContent;
+      capturedBody = gen.bodyContent;
+    };
+
     await tester.pumpWidget(
       MaterialApp(
         home: EasySEO(
           title: 'Test Page',
           description: 'Test Description',
-          onGenerate: ({
-            required String fullHtml,
-            required String currentLanguage,
-            required String path,
-            required String headContent,
-            required String bodyContent,
-          }) {
-            capturedFullHtml = fullHtml;
-            capturedLang = currentLanguage;
-            capturedPath = path;
-            capturedHead = headContent;
-            capturedBody = bodyContent;
-          },
           child: const Scaffold(
             body: SEOTextWrapper(
               textType: SEOTextType.h1,

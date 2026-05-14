@@ -20,11 +20,11 @@ mixin URLHelperBase {
   String getCurrentPath() => rawCurrentPath;
 
   /// Returns a map of language code to full URL for all supported languages.
-  Map<String, String> getAlternateUrls() {
+  Map<String, String> getAlternateUrls({String? pathOverride}) {
     final languages = EasySEOConfig.instance.supportedLanguages;
     if (languages.isEmpty) return {};
 
-    final path = getCurrentPath();
+    final path = pathOverride ?? getCurrentPath();
     final baseUrl = EasySEOConfig.instance.baseUrl;
     if (baseUrl == null || baseUrl.isEmpty) return {};
 

@@ -1,5 +1,49 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
+class FutureTracker {
+  bool _isDone = false;
+  bool get isDone => _isDone;
+
+  FutureTracker(Future? future) {
+    if (future == null) {
+      _isDone = true;
+    } else {
+      future.then((_) => _isDone = true).catchError((_) => _isDone = true); // Complete even on error}
+    }
+  }
+}
+
+class EasySEOController {
+  // These are internal function pointers
+  FutureOr<EasySEOGenerationResult?> Function()? _onGenerate;
+  bool Function()? _isReady;
+  // void Function()? _onClear;
+
+  // The State calls this to "register" its internal methods
+  void _attach({
+    required FutureOr<EasySEOGenerationResult?> Function() onGenerate,
+    required bool Function()? isReady,
+    // required void Function() onClear,
+  }) {
+    _onGenerate = onGenerate;
+    _isReady = isReady;
+    // _onClear = onClear;
+  }
+
+  // Public API
+  FutureOr<EasySEOGenerationResult?> generate() async {
+    if (_onGenerate == null) throw Exception("Controller not attached!");
+    return await _onGenerate!();
+  }
+
+  bool isReady() {
+    if (_isReady == null) throw Exception("Controller not attached!");
+    return _isReady!();
+  }
+
+  // void clear() => _onClear?.call();
+}
+
 class EasySEO extends StatefulWidget {
   final Widget child;
   final bool disabled;
@@ -7,30 +51,22 @@ class EasySEO extends StatefulWidget {
   final String? description;
   final List<EasySEOHeadTag> headTags;
   final SEOServiceInfo? serviceInfo;
-  final Function({
-    required String fullHtml,
-    required String currentLanguage,
-    required String path,
-    required String headContent,
-    required String bodyContent,
-  })? onGenerate;
   final List<String> includeGlobals;
   final Future? whenDone;
   final ChangeNotifier? generateOnChanged;
 
   const EasySEO({
-    Key? key,
+    super.key,
     required this.child,
     required this.title,
     this.description,
     this.disabled = false,
     this.headTags = const [],
     this.serviceInfo,
-    this.onGenerate,
     this.includeGlobals = const [],
     this.whenDone,
-    this.generateOnChanged,
-  }) : super(key: key);
+    this.generateOnChanged
+  });
 
   @override
   State<EasySEO> createState() => _EasySEOState();
@@ -41,20 +77,42 @@ class _EasySEOState extends State<EasySEO> {
   late final EasySEOFileOutput _fileHandler;
   late final EasySEOLiveOutput _liveHandler;
   late final url_helper.URLHelper _urlHelper;
+  late final EasySEOController _controller;
+  late final FutureTracker whenDoneTracker;
 
   @override
   void initState() {
     super.initState();
+    _controller = EasySEOController();
     _fileHandler = EasySEOFileOutput();
     _liveHandler = EasySEOLiveOutput();
     _urlHelper = url_helper.URLHelper();
+    whenDoneTracker = FutureTracker(widget.whenDone);
 
     if (widget.generateOnChanged != null) {
       debugPrint("EasySEO: calling gen in generateOnChanged()");
       widget.generateOnChanged!.addListener(() => _generate());
     }
 
+    // 1. Attach internal logic to the controller
+    _controller._attach(
+      onGenerate: _generateHTML,
+      isReady: () => whenDoneTracker._isDone,
+      // onClear: _internalClearLogic,
+    );
+    // 2. Register this instance with the global singleton
+    // Because it's added last, it becomes the 'activeController'
+    EasySEOConfig.instance.register(_getCurrentPath(), _controller);
+
+    // Auto-trigger on mount for your bot
     _generate();
+  }
+
+  @override
+  void dispose() {
+    // 3. Clean up the registry to allow the previous page to regain authority
+    EasySEOConfig.instance.unregister(_controller);
+    super.dispose();
   }
 
   void _generate() {
@@ -79,7 +137,7 @@ class _EasySEOState extends State<EasySEO> {
   void didUpdateWidget(EasySEO oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.title != oldWidget.title) {
-      debugPrint("EasySEO: calling gen in didUpdateWidget()");
+      debugPrint("EasySEO: calling gen in didUpdateWidget() because title changed");
       _generate();
     }
   }
@@ -101,14 +159,14 @@ class _EasySEOState extends State<EasySEO> {
     addTag(EasySEOTwitterTag.title(currentTitle));
 
     // --- AUTOMATIC URL TAGS ---
-    final fullUrl = _urlHelper.getCurrentUrl();
+    final fullUrl = _getCurrentUrl();
     if (fullUrl != null) {
       addTag(EasySEOLinkTag.canonical(fullUrl));
       addTag(EasySEOOgTag.url(fullUrl));
     }
 
     // --- AUTOMATIC LANGUAGE ALTERNATES ---
-    final alternates = _urlHelper.getAlternateUrls();
+    final alternates = _getAlternateUrls();
     if (alternates.isNotEmpty) {
       final languages = EasySEOConfig.instance.supportedLanguages;
       final defaultLang = languages.first;
@@ -153,17 +211,19 @@ class _EasySEOState extends State<EasySEO> {
     return deduplicated.values.toList();
   }
 
-  void _generateHTML() {
-    // do noting if globally disabled
-    if (!EasySEOConfig.instance.enabled.value) return;
+  EasySEOGenerationResult? _generateHTML() {
+    // do nothing if globally disabled
+    if (!EasySEOConfig.instance.enabled.value) return null;
     // do nothing if locally disabled
-    if (widget.disabled) return;
+    if (widget.disabled) return null;
 
     final rootElement = _findRootElement();
     if (rootElement == null) {
-      return;
+      debugPrint("EasySEO: rootElement is null, skipping generation");
+      return null;
     }
 
+    debugPrint("EasySEO: Starting generation for path: ${_getCurrentPath()}");
     final bodyContent = _processor.processWidgetTree(rootElement, widget.includeGlobals);
 
     // Use page metadata from EasySEO widget
@@ -176,9 +236,9 @@ class _EasySEOState extends State<EasySEO> {
       _liveHandler.injectToBody(bodyContent);
     }
 
-    if (EasySEOConfig.instance.enableFileOutput.value || widget.onGenerate != null) {
+    if (EasySEOConfig.instance.enableFileOutput.value || EasySEOConfig.instance.onGenerate != null) {
       // Detect language from path for the <html> tag
-      final currentPath = _urlHelper.getCurrentPath();
+      final currentPath = _getCurrentPath();
       final segments = currentPath.split('/');
       final supportedLanguages = EasySEOConfig.instance.supportedLanguages;
       String currentLang = 'en'; // Default
@@ -197,17 +257,23 @@ class _EasySEOState extends State<EasySEO> {
       if (EasySEOConfig.instance.enableFileOutput.value) {
         _fileHandler.saveHTMLFile(fullHtml);
       }
+
+      var result = (
+        fullHtml: fullHtml,
+        currentLanguage: currentLang,
+        path: currentPath,
+        headContent: metadataStr,
+        bodyContent: bodyContent
+      );
+
       // Call the callback if provided
       if (!EasySEOConfig.instance.disableOnGenerate.value) {
-        widget.onGenerate?.call(
-          fullHtml: fullHtml,
-          currentLanguage: currentLang,
-          path: currentPath,
-          headContent: metadataStr,
-          bodyContent: bodyContent,
-        );
+        EasySEOConfig.instance.onGenerate?.call(result);
       }
+      return result;
     }
+
+    return null;
   }
 
   Element? _findRootElement() {
@@ -215,6 +281,38 @@ class _EasySEOState extends State<EasySEO> {
     return element;
   }
 
+  String _getCurrentPath() {
+    if (EasySEOConfig.instance.pathProvider != null) {
+      final path = EasySEOConfig.instance.pathProvider!(context);
+      if (path != null) return path;
+    }
+    return _urlHelper.getCurrentPath();
+  }
+
+  String? _getCurrentUrl() {
+    if (EasySEOConfig.instance.urlProvider != null) {
+      final url = EasySEOConfig.instance.urlProvider!(context);
+      if (url != null) return url;
+    }
+
+    final baseUrl = EasySEOConfig.instance.baseUrl;
+    if (baseUrl != null && baseUrl.isNotEmpty) {
+      return EasySEOConfig.instance.formatFullUrl(_getCurrentPath());
+    }
+
+    return _urlHelper.rawCurrentUrl;
+  }
+
+  Map<String, String> _getAlternateUrls() {
+    // If we have a path provider, we should use it for alternates too
+    if (EasySEOConfig.instance.pathProvider != null) {
+      return _urlHelper.getAlternateUrls(pathOverride: _getCurrentPath());
+    }
+    return _urlHelper.getAlternateUrls();
+  }
+
   @override
-  Widget build(BuildContext context) => widget.child;
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
 }
