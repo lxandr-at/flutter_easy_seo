@@ -1,33 +1,15 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class FutureTracker {
-  bool _isDone = false;
-  bool get isDone => _isDone;
-
-  FutureTracker(Future? future) {
-    if (future == null) {
-      _isDone = true;
-    } else {
-      future.then((_) => _isDone = true).catchError((_) => _isDone = true); // Complete even on error}
-    }
-  }
-}
-
 class EasySEOController {
   // These are internal function pointers
   FutureOr<EasySEOGenerationResult?> Function()? _onGenerate;
-  bool Function()? _isReady;
-  // void Function()? _onClear;
+  bool _isReady = true;
 
   // The State calls this to "register" its internal methods
   void _attach({
     required FutureOr<EasySEOGenerationResult?> Function() onGenerate,
-    required bool Function()? isReady,
-    // required void Function() onClear,
   }) {
     _onGenerate = onGenerate;
-    _isReady = isReady;
-    // _onClear = onClear;
   }
 
   // Public API
@@ -36,12 +18,9 @@ class EasySEOController {
     return await _onGenerate!();
   }
 
-  bool isReady() {
-    if (_isReady == null) throw Exception("Controller not attached!");
-    return _isReady!();
-  }
+  bool isReady() => _isReady;
 
-  // void clear() => _onClear?.call();
+  void _setReady(bool ready) => _isReady = ready;
 }
 
 class EasySEO extends StatefulWidget {
@@ -55,18 +34,17 @@ class EasySEO extends StatefulWidget {
   final Future? whenDone;
   final ChangeNotifier? generateOnChanged;
 
-  const EasySEO({
-    super.key,
-    required this.child,
-    required this.title,
-    this.description,
-    this.disabled = false,
-    this.headTags = const [],
-    this.serviceInfo,
-    this.includeGlobals = const [],
-    this.whenDone,
-    this.generateOnChanged
-  });
+  const EasySEO(
+      {super.key,
+      required this.child,
+      required this.title,
+      this.description,
+      this.disabled = false,
+      this.headTags = const [],
+      this.serviceInfo,
+      this.includeGlobals = const [],
+      this.whenDone,
+      this.generateOnChanged});
 
   @override
   State<EasySEO> createState() => _EasySEOState();
@@ -78,7 +56,6 @@ class _EasySEOState extends State<EasySEO> {
   late final EasySEOLiveOutput _liveHandler;
   late final url_helper.URLHelper _urlHelper;
   late final EasySEOController _controller;
-  late final FutureTracker whenDoneTracker;
 
   @override
   void initState() {
@@ -87,7 +64,10 @@ class _EasySEOState extends State<EasySEO> {
     _fileHandler = EasySEOFileOutput();
     _liveHandler = EasySEOLiveOutput();
     _urlHelper = url_helper.URLHelper();
-    whenDoneTracker = FutureTracker(widget.whenDone);
+    if (widget.whenDone != null) {
+      _controller._setReady(false);
+      widget.whenDone!.whenComplete(() => _controller._setReady(true));
+    }
 
     if (widget.generateOnChanged != null) {
       debugPrint("EasySEO: calling gen in generateOnChanged()");
@@ -97,8 +77,6 @@ class _EasySEOState extends State<EasySEO> {
     // 1. Attach internal logic to the controller
     _controller._attach(
       onGenerate: _generateHTML,
-      isReady: () => whenDoneTracker._isDone,
-      // onClear: _internalClearLogic,
     );
     // 2. Register this instance with the global singleton
     // Because it's added last, it becomes the 'activeController'
@@ -242,7 +220,7 @@ class _EasySEOState extends State<EasySEO> {
       final segments = currentPath.split('/');
       final supportedLanguages = EasySEOConfig.instance.supportedLanguages;
       String currentLang = 'en'; // Default
-      
+
       if (segments.length > 1 && supportedLanguages.contains(segments[1])) {
         currentLang = segments[1];
       } else if (supportedLanguages.isNotEmpty) {
