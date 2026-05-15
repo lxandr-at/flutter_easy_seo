@@ -1,6 +1,7 @@
 library flutter_easy_seo;
 
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,7 @@ part 'src/extensions/all_extensions.dart';
 part 'src/extensions/widget_extensions.dart';
 part 'src/extensions/string_extensions.dart';
 part 'src/interfaces/easy_seo_text_content.dart';
+part 'src/models/seo_gen_result.dart';
 part 'src/models/seo_metadata_models.dart';
 part 'src/models/seo_html.dart';
 part 'src/traversal/widget_tree_processor.dart';

@@ -1,23 +1,15 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-typedef EasySEOGenerationResult = ({
-  String fullHtml,
-  String currentLanguage,
-  String path,
-  String headContent,
-  String bodyContent,
-});
-
 typedef EasySEOOnGenerateCallback = void Function(EasySEOGenerationResult generatedData);
 
 /// Private registry entry type
-typedef _SeoRegistryEntry = ({String path, EasySEOController controller});
+typedef _SeoRegistryEntry = ({String path, EasySEOPageController controller});
 
-class EasySEOConfig {
+class EasySEOManager {
   // singleton
-  EasySEOConfig._internal();
-  static final EasySEOConfig _instance = EasySEOConfig._internal();
-  static EasySEOConfig get instance => _instance;
+  EasySEOManager._internal();
+  static final EasySEOManager _instance = EasySEOManager._internal();
+  static EasySEOManager get instance => _instance;
 
   // --- Instance Properties ---
 
@@ -48,31 +40,29 @@ class EasySEOConfig {
   // The stack of registered controllers
   final List<_SeoRegistryEntry> _stack = [];
   /// Returns the controller that currently has authority (the deepest/newest one)
-  EasySEOController? get activeController => _stack.lastOrNull?.controller;
+  EasySEOPageController? get activeController => _stack.lastOrNull?.controller;
   /// Returns the path associated with the currently active SEO widget
   String? get currentPath => _stack.lastOrNull?.path;
 
-  void register(String path, EasySEOController controller) {
+  void register(String path, EasySEOPageController controller) {
     debugPrint('📦 [EasySEO] Registering: $path');
     _stack.add((path: path, controller: controller));
   }
 
-  void unregister(EasySEOController controller) {
+  void unregister(EasySEOPageController controller) {
     debugPrint('🗑️ [EasySEO] Unregistering controller');
     _stack.removeWhere((entry) => entry.controller == controller);
   }
 
   /// Global trigger for the headless test or automated syncs
-  Future<EasySEOGenerationResult?> generateActive() async {
+  Future<EasySEOGenerationResult> generateActive() async {
     final controller = activeController;
-    if (controller == null) {
-      debugPrint('⚠️ No active EasySEO controller found in registry.');
-      return null;
-    }
+    if (controller == null) return SeoSkipped("No active EasySEO controller found in registry.");
     return await controller.generate();
   }
 
   bool seoPageIsReady() {
+    // TODO sealed bool class
     final controller = activeController;
     if (controller == null) {
       debugPrint('⚠️ No active EasySEO controller found in registry.');
@@ -160,7 +150,7 @@ class EasySEOConfig {
 
   /// Returns a list of all routes that can be built from supportedLanguages and pages.
   List<String> getAllRoutes() {
-    final langs = supportedLanguages;
+    final languages = UnmodifiableListView(supportedLanguages);
     final List<String> rawPages = pages.isEmpty ? [''] : pages;
     
     final Set<String> uniqueCleanPages = {};
@@ -174,10 +164,10 @@ class EasySEOConfig {
     final List<String> allRoutes = [];
 
     for (final cleanPage in uniqueCleanPages) {
-      if (langs.isEmpty) {
+      if (languages.isEmpty) {
         allRoutes.add(cleanPage.isEmpty ? '/' : cleanPage);
       } else {
-        for (final currentLang in langs) {
+        for (final currentLang in languages) {
           allRoutes.add(_getUrlForLang(currentLang, cleanPage));
         }
       }
@@ -191,7 +181,7 @@ class EasySEOConfig {
     if (baseUrl == null || baseUrl.isEmpty) return '';
 
     final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
-    final langs = supportedLanguages;
+    final languages = UnmodifiableListView(supportedLanguages);
     final List<String> rawPages = pages.isEmpty ? [''] : pages;
     
     final Set<String> uniqueCleanPages = {};
@@ -207,7 +197,7 @@ class EasySEOConfig {
     sitemap.writeln('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
     sitemap.writeln('        xmlns:xhtml="http://www.w3.org/1999/xhtml">');
 
-    final String? firstLang = langs.isNotEmpty ? langs.first : null;
+    final String? firstLang = languages.isNotEmpty ? languages.first : null;
 
     for (final cleanPage in uniqueCleanPages) {
       String priority = "0.8";
@@ -217,7 +207,7 @@ class EasySEOConfig {
         priority = "0.8";
       }
 
-      if (langs.isEmpty) {
+      if (languages.isEmpty) {
         final displayLoc = cleanPage.isEmpty ? '$cleanBase/' : '$cleanBase$cleanPage';
         sitemap.writeln('  <url>');
         sitemap.writeln('    <loc>$displayLoc</loc>');
@@ -227,13 +217,13 @@ class EasySEOConfig {
         continue;
       }
 
-      for (final currentLang in langs) {
+      for (final currentLang in languages) {
         final displayLoc = _getUrlForLang(currentLang, cleanPage, cleanBase: cleanBase);
 
         sitemap.writeln('  <url>');
         sitemap.writeln('    <loc>$displayLoc</loc>');
 
-        for (final altLang in langs) {
+        for (final altLang in languages) {
           final altUrl = _getUrlForLang(altLang, cleanPage, cleanBase: cleanBase);
           sitemap.writeln('    <xhtml:link rel="alternate" hreflang="$altLang" href="$altUrl"/>');
         }

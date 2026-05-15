@@ -10,7 +10,7 @@ import 'services_page.dart';
 void main() {
   usePathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
-  EasySEOConfig.instance.init(
+  EasySEOManager.instance.init(
     enableFileOutput: false, // Generate files on every walk
     enableLiveOutput: kDebugMode, // Only inject to DOM during debugging
     baseUrl: "https://mysite.com",
@@ -23,7 +23,7 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => EasySEO(
+      builder: (context, state) => EasySEOPage(
         title: 'SaaS Platform - Home',
         description: 'The best SaaS platform for modern businesses.',
         headTags: [
@@ -34,7 +34,7 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/services',
-      builder: (context, state) => EasySEO(
+      builder: (context, state) => EasySEOPage(
         title: 'Our Services | SaaS Platform',
         description: 'Explore our comprehensive suite of services.',
         headTags: [

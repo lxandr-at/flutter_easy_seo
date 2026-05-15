@@ -46,7 +46,7 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
   void saveSitemapFile() {
     if (_sitemapSaved) return;
 
-    final content = EasySEOConfig.instance.generateSitemapContent();
+    final content = EasySEOManager.instance.generateSitemapContent();
     if (content.isEmpty) return;
 
     _downloadFile(content, 'sitemap.xml', 'text/xml');

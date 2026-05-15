@@ -10,17 +10,22 @@ void main() {
     String? capturedHead;
     String? capturedBody;
 
-    EasySEOConfig.instance.onGenerate = (EasySEOGenerationResult gen) {
-      capturedFullHtml = gen.fullHtml;
-      capturedLang = gen.currentLanguage;
-      capturedPath = gen.path;
-      capturedHead = gen.headContent;
-      capturedBody = gen.bodyContent;
+    EasySEOManager.instance.onGenerate = (EasySEOGenerationResult gen) {
+      // Use pattern matching to check for success and extract all variables at once
+      if (gen case SeoSuccess(:final fullHtml, :final currentLanguage, :final path, :final headContent, :final bodyContent)) {
+        capturedFullHtml = fullHtml;
+        capturedLang = currentLanguage;
+        capturedPath = path;
+        capturedHead = headContent;
+        capturedBody = bodyContent;
+      } else {
+        debugPrint('SEO Capture skipped or failed: $gen');
+      }
     };
 
     await tester.pumpWidget(
       MaterialApp(
-        home: EasySEO(
+        home: EasySEOPage(
           title: 'Test Page',
           description: 'Test Description',
           child: const Scaffold(

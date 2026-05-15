@@ -105,7 +105,7 @@ abstract class BaseSEOWrapperState<T extends BaseSEOWrapper> extends State<T> {
     super.initState();
     // Register the WIDGET instance, not the state
     if (widget.globalName != null) {
-      EasySEOConfig.instance.globals[widget.globalName!] = context;
+      EasySEOManager.instance.globals[widget.globalName!] = context;
     }
   }
 
@@ -123,7 +123,7 @@ abstract class BaseSEOWrapperState<T extends BaseSEOWrapper> extends State<T> {
     super.didUpdateWidget(oldWidget);
     // Re-register to ensure EasySEOConfig has the most recent 'widget' instance
     if (widget.globalName != null) {
-      EasySEOConfig.instance.globals[widget.globalName!] = context;
+      EasySEOManager.instance.globals[widget.globalName!] = context;
     }
   }
 

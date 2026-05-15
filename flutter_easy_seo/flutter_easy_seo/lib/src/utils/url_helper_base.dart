@@ -7,11 +7,11 @@ mixin URLHelperBase {
   /// Platform-specific implementation to get the raw path
   String get rawCurrentPath;
 
-  /// Returns the current full URL, respecting [EasySEOConfig.baseUrl] if set.
+  /// Returns the current full URL, respecting [EasySEOManager.baseUrl] if set.
   String? getCurrentUrl() {
-    final baseUrl = EasySEOConfig.instance.baseUrl;
+    final baseUrl = EasySEOManager.instance.baseUrl;
     if (baseUrl != null && baseUrl.isNotEmpty) {
-      return EasySEOConfig.instance.formatFullUrl(getCurrentPath());
+      return EasySEOManager.instance.formatFullUrl(getCurrentPath());
     }
     return rawCurrentUrl;
   }
@@ -21,11 +21,11 @@ mixin URLHelperBase {
 
   /// Returns a map of language code to full URL for all supported languages.
   Map<String, String> getAlternateUrls({String? pathOverride}) {
-    final languages = EasySEOConfig.instance.supportedLanguages;
+    final languages = EasySEOManager.instance.supportedLanguages;
     if (languages.isEmpty) return {};
 
     final path = pathOverride ?? getCurrentPath();
-    final baseUrl = EasySEOConfig.instance.baseUrl;
+    final baseUrl = EasySEOManager.instance.baseUrl;
     if (baseUrl == null || baseUrl.isEmpty) return {};
 
     // Split the path to find and replace the language segment
@@ -52,7 +52,7 @@ mixin URLHelperBase {
         alternatePath = alternatePath.substring(0, alternatePath.length - 1);
       }
 
-      results[lang] = EasySEOConfig.instance.formatFullUrl(alternatePath);
+      results[lang] = EasySEOManager.instance.formatFullUrl(alternatePath);
     }
 
     return results;

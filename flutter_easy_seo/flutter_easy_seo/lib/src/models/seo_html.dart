@@ -82,7 +82,7 @@ class SEOHtml {
   }) {
     String finalHref = href ?? '';
     if (href == null && path != null) {
-      finalHref = EasySEOConfig.instance.formatFullUrl(path);
+      finalHref = EasySEOManager.instance.formatFullUrl(path);
     }
 
     return SEOHtml(

@@ -6,7 +6,7 @@ void main() {
   testWidgets('SEOWidgetTreeProcessor generates correct HTML for nested widgets', (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: EasySEO(
+        home: EasySEOPage(
           title: 'Test Page',
           child: Scaffold(
             body: Column(
@@ -41,7 +41,7 @@ void main() {
     // Give some time for post frame callback
     await tester.pumpAndSettle();
 
-    final element = tester.element(find.byType(EasySEO));
+    final element = tester.element(find.byType(EasySEOPage));
     final processor = SEOWidgetTreeProcessor();
     final html = processor.processWidgetTree(element, []);
 
@@ -55,7 +55,7 @@ void main() {
     // Widget tree has h2 before h1 — h1 must appear first in HTML output.
     await tester.pumpWidget(
       const MaterialApp(
-        home: EasySEO(
+        home: EasySEOPage(
           title: 'Priority Test',
           child: Scaffold(
             body: Column(
@@ -72,7 +72,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    final element = tester.element(find.byType(EasySEO));
+    final element = tester.element(find.byType(EasySEOPage));
     final processor = SEOWidgetTreeProcessor();
     final html = processor.processWidgetTree(element, []);
 
@@ -93,7 +93,7 @@ void main() {
     // The container holding h1 should be moved before the section.
     await tester.pumpWidget(
       const MaterialApp(
-        home: EasySEO(
+        home: EasySEOPage(
           title: 'Bubbling Test',
           child: Scaffold(
             body: Column(
@@ -113,7 +113,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    final element = tester.element(find.byType(EasySEO));
+    final element = tester.element(find.byType(EasySEOPage));
     final processor = SEOWidgetTreeProcessor();
     final html = processor.processWidgetTree(element, []);
 
@@ -131,7 +131,7 @@ void main() {
   testWidgets('SEOWidgetTreeProcessor supports additionalTags', (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: EasySEO(
+        home: EasySEOPage(
           title: 'Additional Tags Test',
           child: Scaffold(
             body: Column(
@@ -156,7 +156,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    final element = tester.element(find.byType(EasySEO));
+    final element = tester.element(find.byType(EasySEOPage));
     final processor = SEOWidgetTreeProcessor();
     final html = processor.processWidgetTree(element, []);
 
