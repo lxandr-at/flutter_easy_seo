@@ -184,7 +184,15 @@ class _EasySEOPageState extends State<EasySEOPage> {
     return distinctHeadTags.values.toList();
   }
 
+  bool _isActiveController() {
+    return EasySEOManager.instance.activeController == _controller;
+  }
+
   EasySEOGenerationResult _generateHTML() {
+    // do nothing if not the active (top level) EasySEOPage widget
+    if (!_isActiveController()) {
+      return SeoSkipped("not the active (top level) EasySEOPage widget");
+    }
     // do nothing if globally or locally disabled
     if (!EasySEOManager.instance.enabled.value || widget.disabled) {
       return SeoSkipped(widget.disabled ? "Disabled locally" : "Disabled globally");
