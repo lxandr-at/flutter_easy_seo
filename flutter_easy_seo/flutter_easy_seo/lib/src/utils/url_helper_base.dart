@@ -9,11 +9,8 @@ mixin URLHelperBase {
 
   /// Returns the current full URL, respecting [EasySEOManager.baseUrl] if set.
   String? getCurrentUrl() {
-    final baseUrl = EasySEOManager.instance.baseUrl;
-    if (baseUrl != null && baseUrl.isNotEmpty) {
-      return EasySEOManager.instance.formatFullUrl(getCurrentPath());
-    }
-    return rawCurrentUrl;
+    final path = getCurrentPath();
+    return EasySEOManager.instance.resolveSeoUrls(path).canonicalUrl;
   }
 
   /// Returns the current path (pathname).
@@ -21,40 +18,7 @@ mixin URLHelperBase {
 
   /// Returns a map of language code to full URL for all supported languages.
   Map<String, String> getAlternateUrls({String? pathOverride}) {
-    final languages = EasySEOManager.instance.supportedLanguages;
-    if (languages.isEmpty) return {};
-
     final path = pathOverride ?? getCurrentPath();
-    final baseUrl = EasySEOManager.instance.baseUrl;
-    if (baseUrl == null || baseUrl.isEmpty) return {};
-
-    // Split the path to find and replace the language segment
-    // We assume the language is the first segment: /de/offers -> ['', 'de', 'offers']
-    final segments = path.split('/');
-
-    Map<String, String> results = {};
-
-    for (final lang in languages) {
-      String alternatePath;
-      if (segments.length > 1 && languages.contains(segments[1])) {
-        // Replace the existing language segment
-        final newSegments = List<String>.from(segments);
-        newSegments[1] = lang;
-        alternatePath = newSegments.join('/');
-      } else {
-        // Prepend the language segment if not found
-        final baseContent = path.startsWith('/') ? path.substring(1) : path;
-        alternatePath = '/$lang/$baseContent';
-      }
-
-      // Cleanup trailing slashes if any
-      if (alternatePath.endsWith('/')) {
-        alternatePath = alternatePath.substring(0, alternatePath.length - 1);
-      }
-
-      results[lang] = EasySEOManager.instance.formatFullUrl(alternatePath);
-    }
-
-    return results;
+    return EasySEOManager.instance.resolveSeoUrls(path).alternateUrls;
   }
 }

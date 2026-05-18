@@ -39,8 +39,10 @@ class EasySEOManager {
   // ------ EasySEO widget registry ----------
   // The stack of registered controllers
   final List<_SeoRegistryEntry> _stack = [];
+
   /// Returns the controller that currently has authority (the deepest/newest one)
   EasySEOPageController? get activeController => _stack.lastOrNull?.controller;
+
   /// Returns the path associated with the currently active SEO widget
   String? get currentPath => _stack.lastOrNull?.path;
 
@@ -107,8 +109,7 @@ class EasySEOManager {
   }
 
   /// Helper to check if any SEO output is active
-  bool get isActive =>
-      enableFileOutput.value || enableLiveOutput.value || !disableOnGenerate.value;
+  bool get isActive => enableFileOutput.value || enableLiveOutput.value || !disableOnGenerate.value;
 
   /// Formats a path into a full URL using the configured [baseUrl]
   String formatFullUrl(String path) {
@@ -123,8 +124,7 @@ class EasySEOManager {
 
     if (bUrl == null || bUrl.isEmpty) return path;
 
-    final cleanBase =
-        bUrl.endsWith('/') ? bUrl.substring(0, bUrl.length - 1) : bUrl;
+    final cleanBase = bUrl.endsWith('/') ? bUrl.substring(0, bUrl.length - 1) : bUrl;
     final cleanPath = path.startsWith('/') ? path : '/$path';
     return '$cleanBase$cleanPath';
   }
@@ -133,17 +133,17 @@ class EasySEOManager {
   String _getUrlForLang(String? lang, String pagePath, {String cleanBase = ''}) {
     final String? firstLang = supportedLanguages.firstOrNull;
     final targetLang = lang ?? firstLang;
-    
+
     // Root case: if it's the first language and root path, omit the prefix
     if (pagePath.isEmpty && targetLang == firstLang) {
       return '$cleanBase/';
     }
-    
+
     // All other cases (subpages or non-primary languages) use the prefix
     if (targetLang != null) {
       return '$cleanBase/$targetLang$pagePath';
     }
-    
+
     // Fallback for neutral subpages (shouldn't normally happen with exhaustive langs)
     return pagePath.isEmpty ? '$cleanBase/' : '$cleanBase$pagePath';
   }
@@ -152,7 +152,7 @@ class EasySEOManager {
   List<String> getAllRoutes() {
     final languages = UnmodifiableListView(supportedLanguages);
     final List<String> rawPages = pages.isEmpty ? [''] : pages;
-    
+
     final Set<String> uniqueCleanPages = {};
     for (final p in rawPages) {
       String cp = p.trim();
@@ -183,7 +183,7 @@ class EasySEOManager {
     final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
     final languages = UnmodifiableListView(supportedLanguages);
     final List<String> rawPages = pages.isEmpty ? [''] : pages;
-    
+
     final Set<String> uniqueCleanPages = {};
     for (final p in rawPages) {
       String cp = p.trim();
@@ -242,4 +242,77 @@ class EasySEOManager {
     sitemap.writeln('</urlset>');
     return sitemap.toString();
   }
+
+  /// Returns the effective base URL without trailing slash (falls back to PlatformHelper if empty)
+  String getEffectiveCleanBaseUrl() {
+    String? bUrl = baseUrl;
+    if (bUrl == null || bUrl.isEmpty) {
+      final host = PlatformHelper.host;
+      final protocol = PlatformHelper.protocol;
+      if (host != null && protocol != null) {
+        bUrl = '$protocol//$host';
+      }
+    }
+    if (bUrl == null || bUrl.isEmpty) return '';
+    return bUrl.endsWith('/') ? bUrl.substring(0, bUrl.length - 1) : bUrl;
+  }
+
+  /// Parses a given path into a [pagePath] (language-independent page path)
+  /// and the [detectedLang] (if a language prefix is present in the path).
+  ({String pagePath, String? detectedLang}) parsePath(String path) {
+    final cleanPath = path.trim();
+    // Split the path to check segments
+    final segments = cleanPath.split('/').where((s) => s.isNotEmpty).toList();
+
+    String? detectedLang;
+    List<String> pageSegments = segments;
+    if (segments.isNotEmpty && supportedLanguages.contains(segments.first)) {
+      detectedLang = segments.first;
+      pageSegments = segments.sublist(1);
+    }
+
+    final pagePath = pageSegments.isEmpty ? '' : '/' + pageSegments.join('/');
+    return (pagePath: pagePath, detectedLang: detectedLang);
+  }
+
+  /// Unified resolver that takes any path, parses it, and returns the canonical, alternate, and x-default URLs
+  EasySEOUrls resolveSeoUrls(String path) {
+    final parsed = parsePath(path);
+    final pagePath = parsed.pagePath;
+    final detectedLang = parsed.detectedLang;
+    final cleanBase = getEffectiveCleanBaseUrl();
+
+    // Canonical language defaults to the first supported language if none is detected.
+    final canonicalLang = detectedLang ?? supportedLanguages.firstOrNull;
+    final canonicalUrl = _getUrlForLang(canonicalLang, pagePath, cleanBase: cleanBase);
+
+    final Map<String, String> alternateUrls = {};
+    for (final lang in supportedLanguages) {
+      alternateUrls[lang] = _getUrlForLang(lang, pagePath, cleanBase: cleanBase);
+    }
+
+    String? xDefaultUrl;
+    final firstLang = supportedLanguages.firstOrNull;
+    if (firstLang != null) {
+      xDefaultUrl = _getUrlForLang(firstLang, pagePath, cleanBase: cleanBase);
+    }
+
+    return EasySEOUrls(
+      canonicalUrl: canonicalUrl,
+      alternateUrls: alternateUrls,
+      xDefaultUrl: xDefaultUrl,
+    );
+  }
+}
+
+class EasySEOUrls {
+  final String canonicalUrl;
+  final Map<String, String> alternateUrls;
+  final String? xDefaultUrl;
+
+  const EasySEOUrls({
+    required this.canonicalUrl,
+    required this.alternateUrls,
+    this.xDefaultUrl,
+  });
 }

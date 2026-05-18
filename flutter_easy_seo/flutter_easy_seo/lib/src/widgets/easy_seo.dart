@@ -18,6 +18,7 @@ class EasySEOPageController {
     if (_onGenerate == null) return SeoFailure("Controller generate() not attached to an EasySEOPage function!");
     return await _onGenerate!();
   }
+
   bool isReady() => _isReady;
 }
 
@@ -124,7 +125,8 @@ class _EasySEOPageState extends State<EasySEOPage> {
   List<EasySEOHeadTag> get _allDistinctHeadTags {
     // Using a Map ensures that only one tag per "key" exists.
     final Map<String, EasySEOHeadTag> distinctHeadTags = {};
-    void addTag(EasySEOHeadTag tag) { // local function
+    void addTag(EasySEOHeadTag tag) {
+      // local function
       distinctHeadTags[tag.key] = tag;
     }
 
@@ -140,24 +142,20 @@ class _EasySEOPageState extends State<EasySEOPage> {
       addTag(EasySEOTwitterTag.description(widget.description!));
     }
 
-    // default url tags
-    final fullUrl = _getCurrentUrl();
-    if (fullUrl != null) {
-      addTag(EasySEOOgTag.url(fullUrl));
-      addTag(EasySEOLinkTag.canonical(fullUrl));
-    }
+    // default url and alternate tags
+    final currentPath = _getCurrentPath();
+    final urls = EasySEOManager.instance.resolveSeoUrls(currentPath);
+    final fullUrl = urls.canonicalUrl;
 
-    // default alternate urls if supportedLanguages is provided
-    final alternates = _getAlternateUrls();
-    if (alternates.isNotEmpty) {
-      final languages = EasySEOManager.instance.supportedLanguages;
-      final defaultLang = languages.first;
-      alternates.forEach((lang, url) {
+    addTag(EasySEOOgTag.url(fullUrl));
+    addTag(EasySEOLinkTag.canonical(fullUrl));
+
+    if (urls.alternateUrls.isNotEmpty) {
+      urls.alternateUrls.forEach((lang, url) {
         addTag(EasySEOLinkTag.alternate(href: url, lang: lang));
       });
-      // x-default using the first supported language
-      if (alternates.containsKey(defaultLang)) {
-        addTag(EasySEOLinkTag.alternate(href: alternates[defaultLang]!, lang: 'x-default'));
+      if (urls.xDefaultUrl != null) {
+        addTag(EasySEOLinkTag.alternate(href: urls.xDefaultUrl!, lang: 'x-default'));
       }
     }
 
@@ -196,7 +194,8 @@ class _EasySEOPageState extends State<EasySEOPage> {
     // do nothing if globally or locally disabled
     if (!EasySEOManager.instance.enabled.value || widget.disabled) {
       return SeoSkipped(widget.disabled ? "Disabled locally" : "Disabled globally");
-    };
+    }
+    ;
 
     final rootElement = _findRootElement();
     if (rootElement == null) {
@@ -234,9 +233,15 @@ class _EasySEOPageState extends State<EasySEOPage> {
     );
 
     bool fileOutputEnabled = EasySEOManager.instance.enableFileOutput.value;
-    bool onGenerateOutputEnabled = EasySEOManager.instance.onGenerate != null && !EasySEOManager.instance.disableOnGenerate.value;
+    bool onGenerateOutputEnabled =
+        EasySEOManager.instance.onGenerate != null && !EasySEOManager.instance.disableOnGenerate.value;
 
-    var result = SeoSuccess(fullHtml: fullHtml, currentLanguage: currentLang, path: currentPath, headContent: headContent, bodyContent: bodyContent);
+    var result = SeoSuccess(
+        fullHtml: fullHtml,
+        currentLanguage: currentLang,
+        path: currentPath,
+        headContent: headContent,
+        bodyContent: bodyContent);
     // output as file download in the browser if enabled
     if (fileOutputEnabled) {
       _fileHandler.saveHTMLFile(fullHtml);
