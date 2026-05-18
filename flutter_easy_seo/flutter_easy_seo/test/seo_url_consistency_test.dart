@@ -213,6 +213,48 @@ void main() {
       // The overlay widget should NOT be visible
       expect(find.byType(EasySEOInteractiveOverlay), findsNothing);
     });
+
+    testWidgets('EasySEOInteractiveOverlay toggles update manager settings', (WidgetTester tester) async {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        enableInteractiveMode: true,
+      );
+      manager.disableOnGenerate.value = false;
+      manager.enableLiveOutput.value = false;
+      manager.enableFileOutput.value = false;
+      manager.showResultDialog.value = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: EasySEOPage(
+            title: 'Interactive Test',
+            child: const Scaffold(body: Text('Content')),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Find the "Auto Gen" toggle button and tap it to disable
+      await tester.tap(find.text('Auto Gen'));
+      await tester.pumpAndSettle();
+      expect(manager.disableOnGenerate.value, isTrue); // Auto Gen is false -> disableOnGenerate is true
+
+      // Find the "Live Out" toggle button and tap it to enable
+      await tester.tap(find.text('Live Out'));
+      await tester.pumpAndSettle();
+      expect(manager.enableLiveOutput.value, isTrue);
+
+      // Find the "File Out" toggle button and tap it to enable
+      await tester.tap(find.text('File Out'));
+      await tester.pumpAndSettle();
+      expect(manager.enableFileOutput.value, isTrue);
+
+      // Find the "Show Popup" toggle button and tap it to enable
+      await tester.tap(find.text('Show Popup'));
+      await tester.pumpAndSettle();
+      expect(manager.showResultDialog.value, isTrue);
+    });
   });
 
   group('Sitemap XML Consistency', () {

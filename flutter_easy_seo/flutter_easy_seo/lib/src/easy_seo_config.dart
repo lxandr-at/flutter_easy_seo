@@ -19,6 +19,7 @@ class EasySEOManager {
   final ValueNotifier<bool> enableLiveOutput = ValueNotifier(false);
   final ValueNotifier<bool> disableOnGenerate = ValueNotifier(false);
   final ValueNotifier<bool> enableInteractiveMode = ValueNotifier(false);
+  final ValueNotifier<bool> showResultDialog = ValueNotifier(true);
 
   String? baseUrl;
   SEOServiceInfo? serviceInfo;
@@ -87,6 +88,7 @@ class EasySEOManager {
     bool enableLiveOutput = false,
     bool disableOnGenerate = false,
     bool enableInteractiveMode = false,
+    bool showResultDialog = true,
     EasySEOOnGenerateCallback? onGenerate,
     String? baseUrl,
     SEOServiceInfo? serviceInfo,
@@ -101,6 +103,7 @@ class EasySEOManager {
     this.enableLiveOutput.value = enableLiveOutput;
     this.disableOnGenerate.value = disableOnGenerate;
     this.enableInteractiveMode.value = enableInteractiveMode;
+    this.showResultDialog.value = showResultDialog;
     this.onGenerate = onGenerate;
     this.baseUrl = baseUrl;
     this.serviceInfo = serviceInfo;

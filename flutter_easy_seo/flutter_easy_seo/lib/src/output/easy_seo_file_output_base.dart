@@ -27,5 +27,7 @@ mixin EasySEOFileOutputBase {
   }
 
   // This is the platform-specific bit
+  String getSanitizedPath();
   void saveHTMLFile(String htmlContent);
+  void saveSitemap(String sitemapContent);
 }

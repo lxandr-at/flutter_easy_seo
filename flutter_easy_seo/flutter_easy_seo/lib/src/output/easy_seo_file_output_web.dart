@@ -87,4 +87,14 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
       print('Error saving HTML file: $e');
     }
   }
+
+  @override
+  void saveSitemap(String sitemapContent) {
+    try {
+      _downloadFile(sitemapContent, 'sitemap.xml', 'text/xml');
+      print('Saved sitemap.xml directly');
+    } catch (e) {
+      print('Error saving sitemap.xml directly: $e');
+    }
+  }
 }
