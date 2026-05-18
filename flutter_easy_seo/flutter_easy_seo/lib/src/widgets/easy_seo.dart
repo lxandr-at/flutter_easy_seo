@@ -143,8 +143,8 @@ class _EasySEOPageState extends State<EasySEOPage> {
     // default url tags
     final fullUrl = _getCurrentUrl();
     if (fullUrl != null) {
-      addTag(EasySEOLinkTag.canonical(fullUrl));
       addTag(EasySEOOgTag.url(fullUrl));
+      addTag(EasySEOLinkTag.canonical(fullUrl));
     }
 
     // default alternate urls if supportedLanguages is provided

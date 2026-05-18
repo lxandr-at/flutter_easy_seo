@@ -131,7 +131,7 @@ class EasySEOManager {
 
   /// Helper to generate the correct relative path for a given language
   String _getUrlForLang(String? lang, String pagePath, {String cleanBase = ''}) {
-    final String? firstLang = supportedLanguages.isNotEmpty ? supportedLanguages.first : null;
+    final String? firstLang = supportedLanguages.firstOrNull;
     final targetLang = lang ?? firstLang;
     
     // Root case: if it's the first language and root path, omit the prefix
@@ -197,7 +197,7 @@ class EasySEOManager {
     sitemap.writeln('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
     sitemap.writeln('        xmlns:xhtml="http://www.w3.org/1999/xhtml">');
 
-    final String? firstLang = languages.isNotEmpty ? languages.first : null;
+    final String? firstLang = languages.firstOrNull;
 
     for (final cleanPage in uniqueCleanPages) {
       String priority = "0.8";
