@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'src/utils/url_helper_facade.dart' as url_helper;
 
@@ -24,6 +25,7 @@ part 'src/models/seo_html.dart';
 part 'src/traversal/widget_tree_processor.dart';
 part 'src/easy_seo_config.dart';
 part 'src/widgets/easy_seo.dart';
+part 'src/widgets/easy_seo_interactive_overlay.dart';
 part 'src/widgets/config/easy_seo_config_widget.dart';
 part 'src/widgets/wrappers/seo_base_wrapper.dart';
 part 'src/widgets/wrappers/seo_text_wrapper.dart';

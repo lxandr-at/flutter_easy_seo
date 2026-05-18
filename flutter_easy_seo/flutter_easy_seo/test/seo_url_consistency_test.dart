@@ -170,6 +170,51 @@ void main() {
     });
   });
 
+  group('Interactive Mode Overlay', () {
+    testWidgets('EasySEOInteractiveOverlay is shown when enableInteractiveMode is true', (WidgetTester tester) async {
+      EasySEOManager.instance.init(
+        enableInteractiveMode: true,
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: EasySEOPage(
+            title: 'Interactive Test',
+            child: const Scaffold(body: Text('Content')),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // The overlay widget should be visible
+      expect(find.byType(EasySEOInteractiveOverlay), findsOneWidget);
+      expect(find.text('Generate HTML'), findsOneWidget);
+      expect(find.text('Generate Sitemap'), findsOneWidget);
+    });
+
+    testWidgets('EasySEOInteractiveOverlay is NOT shown when enableInteractiveMode is false',
+        (WidgetTester tester) async {
+      EasySEOManager.instance.init(
+        enableInteractiveMode: false,
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: EasySEOPage(
+            title: 'Interactive Test',
+            child: const Scaffold(body: Text('Content')),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // The overlay widget should NOT be visible
+      expect(find.byType(EasySEOInteractiveOverlay), findsNothing);
+    });
+  });
+
   group('Sitemap XML Consistency', () {
     test('generateSitemapContent output matches resolved alternate tags', () {
       final sitemap = EasySEOManager.instance.generateSitemapContent();

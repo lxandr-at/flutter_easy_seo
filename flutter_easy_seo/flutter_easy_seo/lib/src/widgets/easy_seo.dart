@@ -290,6 +290,28 @@ class _EasySEOPageState extends State<EasySEOPage> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return ValueListenableBuilder<bool>(
+      valueListenable: EasySEOManager.instance.enableInteractiveMode,
+      builder: (context, enabled, child) {
+        if (!enabled) return child!;
+        return Stack(
+          children: [
+            child!,
+            const Positioned(
+              left: 0,
+              right: 0,
+              bottom: 16,
+              child: Material(
+                type: MaterialType.transparency,
+                child: Center(
+                  child: EasySEOInteractiveOverlay(),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+      child: widget.child,
+    );
   }
 }
