@@ -26,6 +26,9 @@ class EasySEOManager {
   List<String> supportedLanguages = const [];
   List<String> pages = const [];
   List<EasySEOHeadTag> headTags = const [];
+  List<String> dynamicPathPatterns = const [];
+
+  final Set<String> _gatheredPages = {};
 
   EasySEOOnGenerateCallback? onGenerate;
 
@@ -51,6 +54,18 @@ class EasySEOManager {
   void register(String path, EasySEOPageController controller) {
     debugPrint('📦 [EasySEO] Registering: $path');
     _stack.add((path: path, controller: controller));
+
+    final parsed = parsePath(path);
+    if (shouldGather(parsed.pagePath)) {
+      String pagePath = parsed.pagePath;
+      if (pagePath.isNotEmpty && !pagePath.startsWith('/')) {
+        pagePath = '/$pagePath';
+      }
+      if (pagePath == '/') {
+        pagePath = '';
+      }
+      _gatheredPages.add(pagePath);
+    }
   }
 
   void unregister(EasySEOPageController controller) {
@@ -77,7 +92,53 @@ class EasySEOManager {
 
   /// Internal cleanup for tests
   @visibleForTesting
-  void clear() => _stack.clear();
+  void clear() {
+    _stack.clear();
+    _gatheredPages.clear();
+  }
+
+  /// Checks if a page path matches any registered dynamic path pattern.
+  bool shouldGather(String pagePath) {
+    String cleanPagePath = pagePath.trim();
+    if (cleanPagePath.isNotEmpty && !cleanPagePath.startsWith('/')) {
+      cleanPagePath = '/$cleanPagePath';
+    }
+
+    for (final pattern in dynamicPathPatterns) {
+      String cleanTemplate = pattern.trim();
+      if (cleanTemplate.isNotEmpty && !cleanTemplate.startsWith('/')) {
+        cleanTemplate = '/$cleanTemplate';
+      }
+
+      final segments = cleanTemplate.split('/');
+      final regexSegments = segments.map((segment) {
+        if (segment.startsWith(':')) {
+          return r'[^/]+';
+        } else {
+          return RegExp.escape(segment);
+        }
+      });
+
+      final finalRegex = RegExp('^' + regexSegments.join('/') + r'$');
+      if (finalRegex.hasMatch(cleanPagePath)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Manually add a dynamic route path to the gathered list
+  void addGatheredPage(String path) {
+    final parsed = parsePath(path);
+    String pagePath = parsed.pagePath;
+    if (pagePath.isNotEmpty && !pagePath.startsWith('/')) {
+      pagePath = '/$pagePath';
+    }
+    if (pagePath == '/') {
+      pagePath = '';
+    }
+    _gatheredPages.add(pagePath);
+  }
   // ------ EasySEO widget registry ----------
 
   /// Initialize the settings.
@@ -95,6 +156,7 @@ class EasySEOManager {
     List<String> supportedLanguages = const [],
     List<String> pages = const [],
     List<EasySEOHeadTag> headTags = const [],
+    List<String> dynamicPathPatterns = const [],
     String? Function(BuildContext)? pathProvider,
     String? Function(BuildContext)? urlProvider,
   }) {
@@ -110,6 +172,7 @@ class EasySEOManager {
     this.supportedLanguages = supportedLanguages;
     this.pages = pages;
     this.headTags = headTags;
+    this.dynamicPathPatterns = dynamicPathPatterns;
     this.pathProvider = pathProvider;
     this.urlProvider = urlProvider;
   }
@@ -167,6 +230,13 @@ class EasySEOManager {
       uniqueCleanPages.add(cp);
     }
 
+    for (final gp in _gatheredPages) {
+      String cp = gp.trim();
+      if (cp.isNotEmpty && !cp.startsWith('/')) cp = '/$cp';
+      if (cp == '/') cp = '';
+      uniqueCleanPages.add(cp);
+    }
+
     final List<String> allRoutes = [];
 
     for (final cleanPage in uniqueCleanPages) {
@@ -193,6 +263,13 @@ class EasySEOManager {
     final Set<String> uniqueCleanPages = {};
     for (final p in rawPages) {
       String cp = p.trim();
+      if (cp.isNotEmpty && !cp.startsWith('/')) cp = '/$cp';
+      if (cp == '/') cp = '';
+      uniqueCleanPages.add(cp);
+    }
+
+    for (final gp in _gatheredPages) {
+      String cp = gp.trim();
       if (cp.isNotEmpty && !cp.startsWith('/')) cp = '/$cp';
       if (cp == '/') cp = '';
       uniqueCleanPages.add(cp);

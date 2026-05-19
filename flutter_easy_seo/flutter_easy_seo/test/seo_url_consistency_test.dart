@@ -270,4 +270,70 @@ void main() {
           contains('<xhtml:link rel="alternate" hreflang="x-default" href="https://preisvergleich.lxandr.at/"/>'));
     });
   });
+
+  group('Dynamic Route Gathering & Regex Pattern Matching', () {
+    setUp(() {
+      EasySEOManager.instance.clear();
+      EasySEOManager.instance.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de', 'en', 'fr'],
+        pages: ['/'],
+        dynamicPathPatterns: ['/compare/:id', '/products/:productId'],
+      );
+    });
+
+    test('shouldGather accurately matches colon-placeholders using compiled RegExp', () {
+      final manager = EasySEOManager.instance;
+
+      // Matching patterns
+      expect(manager.shouldGather('/compare/123'), isTrue);
+      expect(manager.shouldGather('/compare/shoes-abc'), isTrue);
+      expect(manager.shouldGather('/products/hat-456'), isTrue);
+
+      // Non-matching patterns
+      expect(manager.shouldGather('/compare/123/edit'), isFalse);
+      expect(manager.shouldGather('/compare'), isFalse);
+      expect(manager.shouldGather('/other/123'), isFalse);
+      expect(manager.shouldGather('/products/shoes/456'), isFalse);
+    });
+
+    test('addGatheredPage manually appends matching route with alternates to sitemap', () {
+      final manager = EasySEOManager.instance;
+      manager.addGatheredPage('/en/compare/999');
+
+      final sitemap = manager.generateSitemapContent();
+      expect(sitemap, contains('<loc>https://preisvergleich.lxandr.at/en/compare/999</loc>'));
+      expect(
+          sitemap,
+          contains(
+              '<xhtml:link rel="alternate" hreflang="de" href="https://preisvergleich.lxandr.at/de/compare/999"/>'));
+      expect(
+          sitemap,
+          contains(
+              '<xhtml:link rel="alternate" hreflang="fr" href="https://preisvergleich.lxandr.at/fr/compare/999"/>'));
+    });
+
+    test('register() automatically gathers matching paths during walkthrough', () {
+      final manager = EasySEOManager.instance;
+      final controller = EasySEOPageController();
+
+      // Register non-matching page path
+      manager.register('/de/other/route', controller);
+      expect(manager.getAllRoutes(), isNot(contains('/de/other/route')));
+
+      // Register matching page path in DE language
+      manager.register('/de/compare/555', controller);
+
+      final allRoutes = manager.getAllRoutes();
+      expect(allRoutes, contains('/de/compare/555'));
+      expect(allRoutes, contains('/en/compare/555'));
+      expect(allRoutes, contains('/fr/compare/555'));
+
+      // Sitemap should contain the DE, EN, and FR alternatives for compare/555
+      final sitemap = manager.generateSitemapContent();
+      expect(sitemap, contains('<loc>https://preisvergleich.lxandr.at/de/compare/555</loc>'));
+      expect(sitemap, contains('<loc>https://preisvergleich.lxandr.at/en/compare/555</loc>'));
+      expect(sitemap, contains('<loc>https://preisvergleich.lxandr.at/fr/compare/555</loc>'));
+    });
+  });
 }
