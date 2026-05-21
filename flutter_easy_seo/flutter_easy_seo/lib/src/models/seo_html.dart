@@ -187,18 +187,24 @@ class SEOHtml {
 
   bool get _isVoid => _voidElements.contains(tag);
 
-  /// Recursively renders this element and all its [children] to an HTML string.
-  String toHtmlString() {
+  /// Recursively renders this element and all its [children] to an HTML string with formatting.
+  String toHtmlString({int indentLevel = 0}) {
+    final indent = '  ' * indentLevel;
     if (tag.isEmpty) {
       final buffer = StringBuffer();
-      if (content != null) buffer.write(content);
+      if (content != null) {
+        buffer.write(indent);
+        buffer.writeln(content);
+      }
       for (final child in children) {
-        buffer.write(child.toHtmlString());
+        buffer.write(child.toHtmlString(indentLevel: indentLevel));
       }
       return buffer.toString();
     }
 
-    final buffer = StringBuffer('<$tag');
+    final buffer = StringBuffer();
+    buffer.write(indent);
+    buffer.write('<$tag');
 
     if (attributes != null) {
       for (final entry in attributes!.entries) {
@@ -211,19 +217,32 @@ class SEOHtml {
     }
 
     if (_isVoid) {
-      buffer.write(' />');
+      buffer.write(' />\n');
       return buffer.toString();
     }
 
     buffer.write('>');
 
-    if (content != null) buffer.write(content);
+    final hasSubElements = children.isNotEmpty || (content != null && content!.contains('\n'));
 
-    for (final child in children) {
-      buffer.write(child.toHtmlString());
+    if (hasSubElements) {
+      buffer.writeln();
+      if (content != null && content!.isNotEmpty) {
+        buffer.write('  ' * (indentLevel + 1));
+        buffer.writeln(content);
+      }
+      for (final child in children) {
+        buffer.write(child.toHtmlString(indentLevel: indentLevel + 1));
+      }
+      buffer.write(indent);
+      buffer.write('</$tag>\n');
+    } else {
+      if (content != null) {
+        buffer.write(content);
+      }
+      buffer.write('</$tag>\n');
     }
 
-    buffer.write('</$tag>');
     return buffer.toString();
   }
 

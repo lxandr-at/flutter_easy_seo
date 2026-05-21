@@ -1,8 +1,6 @@
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 mixin URLHelperBase {
-  /// Platform-specific implementation to get the raw URL
-  String? get rawCurrentUrl;
 
   /// Platform-specific implementation to get the raw path
   String get rawCurrentPath;

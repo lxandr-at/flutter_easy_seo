@@ -1,7 +1,20 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class EasySEOInteractiveOverlay extends StatelessWidget {
+class EasySEOInteractiveOverlay extends StatefulWidget {
   const EasySEOInteractiveOverlay({super.key});
+
+  @override
+  State<EasySEOInteractiveOverlay> createState() => _EasySEOInteractiveOverlayState();
+}
+
+class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
+  late bool _isMinimized;
+
+  @override
+  void initState() {
+    super.initState();
+    _isMinimized = EasySEOManager.instance.interactiveMinimized;
+  }
 
   void _showResultDialog(
     BuildContext context,
@@ -56,10 +69,12 @@ class EasySEOInteractiveOverlay extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: const Color(0xFF2A2A2A)),
                     ),
-                    child: Scrollbar(
+                    child: RawScrollbar(
                       controller: scrollController,
                       thickness: 8.0,
                       radius: const Radius.circular(4),
+                      thumbColor: Colors.white.withAlpha(128),
+                      minThumbLength: 40,
                       child: SingleChildScrollView(
                         controller: scrollController,
                         physics: const BouncingScrollPhysics(),
@@ -169,8 +184,55 @@ class EasySEOInteractiveOverlay extends StatelessWidget {
     );
   }
 
+  Widget _buildMinimized(BuildContext context) {
+    return Tooltip(
+      message: 'Expand EasySEO Overlay',
+      child: InkWell(
+        onTap: () => setState(() {
+          _isMinimized = false;
+          EasySEOManager.instance.interactiveMinimized = false;
+        }),
+        borderRadius: BorderRadius.circular(28),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF2C3E50), Color(0xFF0F2027)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(128),
+                blurRadius: 15,
+                spreadRadius: 2,
+                offset: const Offset(0, 5),
+              ),
+            ],
+            border: Border.all(
+              color: Colors.white.withAlpha(38),
+              width: 1.5,
+            ),
+          ),
+          child: const Icon(
+            Icons.troubleshoot,
+            color: Color(0xFF00D2FF),
+            size: 26,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_isMinimized) {
+      return _buildMinimized(context);
+    }
+
     final manager = EasySEOManager.instance;
     return AnimatedBuilder(
       animation: Listenable.merge([
@@ -213,6 +275,45 @@ class EasySEOInteractiveOverlay extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Header Row with Title and Minimize Button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: const [
+                          Icon(Icons.analytics, color: Color(0xFF00D2FF), size: 16),
+                          SizedBox(width: 8),
+                          Text(
+                            'EasySEO Interactive Panel',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Outfit',
+                            ),
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        constraints: const BoxConstraints(),
+                        padding: EdgeInsets.zero,
+                        icon: const Icon(Icons.close_fullscreen, color: Colors.white70, size: 16),
+                        tooltip: 'Minimize Panel',
+                        onPressed: () => setState(() {
+                          _isMinimized = true;
+                          EasySEOManager.instance.interactiveMinimized = true;
+                        }),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  // Elegant separator
+                  Container(
+                    height: 1,
+                    width: double.infinity,
+                    color: Colors.white.withAlpha(20),
+                  ),
+                  const SizedBox(height: 12),
                   // Row 1: Settings Toggles
                   Wrap(
                     spacing: 8,
@@ -250,7 +351,7 @@ class EasySEOInteractiveOverlay extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  // Elegant responsive separator
+                  // Elegant separator
                   Container(
                     height: 1,
                     width: double.infinity,

@@ -32,18 +32,20 @@ class EasySEOPage extends StatefulWidget {
   final List<String> includeGlobals;
   final Future? whenDone;
   final ChangeNotifier? generateOnChanged;
+  final int rank;
 
-  const EasySEOPage(
-      {super.key,
-      required this.child,
-      required this.title,
-      this.description,
-      this.disabled = false,
-      this.headTags = const [],
-      this.serviceInfo,
-      this.includeGlobals = const [],
-      this.whenDone,
-      this.generateOnChanged});
+  const EasySEOPage({super.key,
+    required this.child,
+    required this.title,
+    this.description,
+    this.disabled = false,
+    this.headTags = const [],
+    this.serviceInfo,
+    this.includeGlobals = const [],
+    this.whenDone,
+    this.generateOnChanged,
+    this.rank = 0
+  });
 
   @override
   State<EasySEOPage> createState() => _EasySEOPageState();
@@ -55,6 +57,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
   late final EasySEOLiveOutput _liveHandler;
   late final url_helper.URLHelper _urlHelper;
   late final EasySEOPageController _controller;
+  SeoRouteKey? _currentRouteKey;
 
   @override
   void initState() {
@@ -78,9 +81,8 @@ class _EasySEOPageState extends State<EasySEOPage> {
     _controller._attach(
       onGenerate: _generateHTML,
     );
-    // 2. Register this instance with the global singleton
-    // Because it's added last, it becomes the 'activeController'
-    EasySEOManager.instance.register(_getCurrentPath(), _controller);
+    // registering with EasySEOManager is done in build()
+    // because the context at this point gets the old route path
 
     // auto-generate on mount
     _generate();
@@ -89,7 +91,9 @@ class _EasySEOPageState extends State<EasySEOPage> {
   @override
   void dispose() {
     // 3. Clean up the registry to allow the previous page to regain authority
-    EasySEOManager.instance.unregister(_controller);
+    if (_currentRouteKey != null) {
+      EasySEOManager.instance.unregister(_currentRouteKey!);
+    }
     super.dispose();
   }
 
@@ -266,33 +270,16 @@ class _EasySEOPageState extends State<EasySEOPage> {
     return _urlHelper.getCurrentPath();
   }
 
-  String? _getCurrentUrl() {
-    if (EasySEOManager.instance.urlProvider != null) {
-      final url = EasySEOManager.instance.urlProvider!(context);
-      if (url != null) return url;
-    }
-
-    final baseUrl = EasySEOManager.instance.baseUrl;
-    if (baseUrl != null && baseUrl.isNotEmpty) {
-      return EasySEOManager.instance.formatFullUrl(_getCurrentPath());
-    }
-
-    return _urlHelper.rawCurrentUrl;
-  }
-
-  Map<String, String> _getAlternateUrls() {
-    // If we have a path provider, we should use it for alternates too
-    if (EasySEOManager.instance.pathProvider != null) {
-      return _urlHelper.getAlternateUrls(pathOverride: _getCurrentPath());
-    }
-    return _urlHelper.getAlternateUrls();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: EasySEOManager.instance.enableInteractiveMode,
       builder: (context, enabled, child) {
+        // 2. Register this instance with the global singleton
+        // Because it's added last, it becomes the 'activeController'
+        _currentRouteKey = SeoRouteKey(path: _getCurrentPath(), rank: widget.rank);
+        EasySEOManager.instance.register(_currentRouteKey!, _controller);
+
         if (!enabled) return child!;
         return Stack(
           children: [

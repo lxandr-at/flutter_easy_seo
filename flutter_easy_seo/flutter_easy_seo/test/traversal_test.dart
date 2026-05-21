@@ -47,7 +47,9 @@ void main() {
 
     expect(html, contains('<h1>Main Title</h1>'));
     expect(html, contains('<p>Some description</p>'));
-    expect(html, contains('<li><a href="/details"><p>View Details</p></a></li>'));
+    expect(html, contains('<li>'));
+    expect(html, contains('<a href="/details">'));
+    expect(html, contains('<p>View Details</p>'));
     expect(html, contains('<img src="https://example.com/image.png" alt="Test Image" />'));
   });
 

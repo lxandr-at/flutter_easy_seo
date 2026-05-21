@@ -30,7 +30,7 @@ class SEOWidgetTreeProcessor {
 
     final buffer = StringBuffer();
     for (final node in roots) {
-      _serialize(node, buffer);
+      _serialize(node, buffer, 1);
     }
     return buffer.toString();
   }
@@ -57,8 +57,8 @@ class SEOWidgetTreeProcessor {
     String content = '';
     String closeTag = '';
     String tagName = '';
-    String prependedTags = '';
-    String appendedTags = '';
+    final prependedTags = <SEOHtml>[];
+    final appendedTags = <SEOHtml>[];
     String appendBeforeTag = '';
     String appendBeforeContent = '';
     String appendAfterContent = '';
@@ -89,12 +89,8 @@ class SEOWidgetTreeProcessor {
       }
 
       if (widget is BaseSEOWrapper && widget.additionalTags.isNotEmpty) {
-        prependedTags =
-            widget.additionalTags.where((t) => _headingPriority.containsKey(t.tag)).map((t) => t.toHtmlString()).join();
-        appendedTags = widget.additionalTags
-            .where((t) => !_headingPriority.containsKey(t.tag))
-            .map((t) => t.toHtmlString())
-            .join();
+        prependedTags.addAll(widget.additionalTags.where((t) => _headingPriority.containsKey(t.tag)));
+        appendedTags.addAll(widget.additionalTags.where((t) => !_headingPriority.containsKey(t.tag)));
 
         // Update ownPriority if additionalTags contain higher priority headings
         for (final tag in widget.additionalTags) {
@@ -110,7 +106,7 @@ class SEOWidgetTreeProcessor {
         final jsonLd = widget.isBreadcrumb
             ? SEOHtmlJsonLd.breadcrumbList(subtreeNavLinks)
             : SEOHtmlJsonLd.siteNavigation(subtreeNavLinks);
-        appendedTags += jsonLd.toHtmlString();
+        appendedTags.add(jsonLd);
       }
     }
 
@@ -166,34 +162,126 @@ class SEOWidgetTreeProcessor {
     return indexed.map((e) => e.node).toList();
   }
 
-  void _serialize(_HtmlNode node, StringBuffer buffer) {
-    if (node.appendBeforeTag.isNotEmpty) buffer.write(node.appendBeforeTag);
+  void _serialize(_HtmlNode node, StringBuffer buffer, int indentLevel) {
+    if (!node.generatesHtml) return;
+
+    final indent = '  ' * indentLevel;
+
+    if (node.appendBeforeTag.isNotEmpty) {
+      buffer.write(indent);
+      buffer.writeln(node.appendBeforeTag);
+    }
 
     if (node.openTag.isNotEmpty) {
-      buffer.write(node.openTag);
-      if (!node.openTag.endsWith('>')) {
-        buffer.write('>');
-      }
       if (node.openTag.endsWith('/')) {
         // It's a void tag, no content or children or close tag
-        if (node.appendAfterTag.isNotEmpty) buffer.write(node.appendAfterTag);
+        buffer.write(indent);
+        buffer.write(node.openTag);
+        if (!node.openTag.endsWith('>')) {
+          buffer.write('>');
+        }
+        buffer.writeln();
+        
+        if (node.appendAfterTag.isNotEmpty) {
+          buffer.write(indent);
+          buffer.writeln(node.appendAfterTag);
+        }
         return;
       }
     }
 
-    if (node.appendBeforeContent.isNotEmpty) buffer.write(node.appendBeforeContent);
-    if (node.additionalPrependedTags.isNotEmpty) buffer.write(node.additionalPrependedTags);
-    if (node.content.isNotEmpty) buffer.write(node.content);
+    final hasSubElements = node.children.any((c) => c.generatesHtml) ||
+        node.additionalPrependedTags.isNotEmpty ||
+        node.additionalAppendedTags.isNotEmpty ||
+        node.appendBeforeContent.isNotEmpty ||
+        node.appendAfterContent.isNotEmpty ||
+        node.content.contains('\n');
 
-    for (final child in node.children) {
-      _serialize(child, buffer);
+    if (node.openTag.isNotEmpty) {
+      if (hasSubElements) {
+        buffer.write(indent);
+        buffer.write(node.openTag);
+        if (!node.openTag.endsWith('>')) {
+          buffer.write('>');
+        }
+        buffer.writeln();
+
+        if (node.appendBeforeContent.isNotEmpty) {
+          buffer.write('  ' * (indentLevel + 1));
+          buffer.writeln(node.appendBeforeContent);
+        }
+        if (node.additionalPrependedTags.isNotEmpty) {
+          for (final tag in node.additionalPrependedTags) {
+            buffer.write(tag.toHtmlString(indentLevel: indentLevel + 1));
+          }
+        }
+        if (node.content.isNotEmpty) {
+          buffer.write('  ' * (indentLevel + 1));
+          buffer.writeln(node.content);
+        }
+
+        for (final child in node.children) {
+          _serialize(child, buffer, indentLevel + 1);
+        }
+
+        if (node.appendAfterContent.isNotEmpty) {
+          buffer.write('  ' * (indentLevel + 1));
+          buffer.writeln(node.appendAfterContent);
+        }
+        if (node.additionalAppendedTags.isNotEmpty) {
+          for (final tag in node.additionalAppendedTags) {
+            buffer.write(tag.toHtmlString(indentLevel: indentLevel + 1));
+          }
+        }
+
+        buffer.write(indent);
+        buffer.writeln(node.closeTag);
+      } else {
+        // No sub-elements: keep simple on a single line!
+        buffer.write(indent);
+        buffer.write(node.openTag);
+        if (!node.openTag.endsWith('>')) {
+          buffer.write('>');
+        }
+        buffer.write(node.content);
+        buffer.write(node.closeTag);
+        buffer.writeln();
+      }
+    } else {
+      // Transparent node: no openTag
+      if (node.appendBeforeContent.isNotEmpty) {
+        buffer.write(indent);
+        buffer.writeln(node.appendBeforeContent);
+      }
+      if (node.additionalPrependedTags.isNotEmpty) {
+        for (final tag in node.additionalPrependedTags) {
+          buffer.write(tag.toHtmlString(indentLevel: indentLevel));
+        }
+      }
+      if (node.content.isNotEmpty) {
+        buffer.write(indent);
+        buffer.writeln(node.content);
+      }
+
+      for (final child in node.children) {
+        _serialize(child, buffer, indentLevel);
+      }
+
+      if (node.appendAfterContent.isNotEmpty) {
+        buffer.write(indent);
+        buffer.writeln(node.appendAfterContent);
+      }
+      if (node.additionalAppendedTags.isNotEmpty) {
+        for (final tag in node.additionalAppendedTags) {
+          buffer.write(tag.toHtmlString(indentLevel: indentLevel));
+        }
+      }
     }
 
-    if (node.appendAfterContent.isNotEmpty) buffer.write(node.appendAfterContent);
-    if (node.additionalAppendedTags.isNotEmpty) buffer.write(node.additionalAppendedTags);
-
-    if (node.closeTag.isNotEmpty) buffer.write(node.closeTag);
-    if (node.appendAfterTag.isNotEmpty) buffer.write(node.appendAfterTag);
+    if (node.appendAfterTag.isNotEmpty) {
+      buffer.write(indent);
+      buffer.writeln(node.appendAfterTag);
+    }
   }
 }
 
@@ -207,8 +295,8 @@ class _HtmlNode {
   final String tagName;
   final List<_HtmlNode> children;
   final int priority;
-  final String additionalPrependedTags;
-  final String additionalAppendedTags;
+  final List<SEOHtml> additionalPrependedTags;
+  final List<SEOHtml> additionalAppendedTags;
   final List<SEONavItem> navLinks;
   final String appendBeforeTag;
   final String appendBeforeContent;
@@ -222,14 +310,31 @@ class _HtmlNode {
     required this.tagName,
     required this.children,
     required this.priority,
-    this.additionalPrependedTags = '',
-    this.additionalAppendedTags = '',
+    this.additionalPrependedTags = const [],
+    this.additionalAppendedTags = const [],
     this.navLinks = const [],
     this.appendBeforeTag = '',
     this.appendBeforeContent = '',
     this.appendAfterContent = '',
     this.appendAfterTag = '',
   });
+
+  bool get generatesHtml {
+    if (openTag.isNotEmpty ||
+        content.isNotEmpty ||
+        appendBeforeTag.isNotEmpty ||
+        appendAfterTag.isNotEmpty ||
+        appendBeforeContent.isNotEmpty ||
+        appendAfterContent.isNotEmpty ||
+        additionalPrependedTags.isNotEmpty ||
+        additionalAppendedTags.isNotEmpty) {
+      return true;
+    }
+    for (final child in children) {
+      if (child.generatesHtml) return true;
+    }
+    return false;
+  }
 }
 
 /// Page metadata extracted from EasySEO widget
@@ -241,6 +346,7 @@ class SEOPageMetadata {
   String generateMetadata() {
     final buffer = StringBuffer();
     for (var tag in headTags) {
+      buffer.write('  ');
       buffer.writeln(tag.toHtml());
     }
     return buffer.toString();

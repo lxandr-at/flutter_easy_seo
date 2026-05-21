@@ -15,3 +15,9 @@
 ## Formatting
 - Use Markdown headers for file names only.
 - Code blocks must include 2026-standard null safety and documentation comments only where logic is non-obvious.
+
+## Process Governance (Orchestration Constraints)
+- **Design-First Requirement:** For tasks involving structural changes, generate a technical design document (TDD) as a primary artifact. Seek explicit approval on the TDD before spawning sub-agents for implementation.
+- **Artifact-Only Merging:** Sub-agents must submit changes as discrete, tagged artifacts. Do not auto-merge to the main workspace until the "Review Board" has cleared the artifact status.
+- **Verification Loop:** Every architectural change must include a corresponding automated test case or validation script before the task is marked "Complete."
+- **Constraint Compliance:** If a requested task contradicts the established architectural pattern (e.g., non-root widget placement, standard PWA caching), reject the task and propose a compliant implementation path.

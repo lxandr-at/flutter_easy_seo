@@ -277,8 +277,7 @@ void main() {
       EasySEOManager.instance.init(
         baseUrl: 'https://preisvergleich.lxandr.at',
         supportedLanguages: ['de', 'en', 'fr'],
-        pages: ['/'],
-        dynamicPathPatterns: ['/compare/:id', '/products/:productId'],
+        pages: ['/', 'compare/:id', 'products/:productId'],
       );
     });
 
@@ -318,11 +317,11 @@ void main() {
       final controller = EasySEOPageController();
 
       // Register non-matching page path
-      manager.register('/de/other/route', controller);
+      manager.register(SeoRouteKey(path: '/de/other/route'), controller);
       expect(manager.getAllRoutes(), isNot(contains('/de/other/route')));
 
       // Register matching page path in DE language
-      manager.register('/de/compare/555', controller);
+      manager.register(SeoRouteKey(path: '/de/compare/555'), controller);
 
       final allRoutes = manager.getAllRoutes();
       expect(allRoutes, contains('/de/compare/555'));
@@ -334,6 +333,28 @@ void main() {
       expect(sitemap, contains('<loc>https://preisvergleich.lxandr.at/de/compare/555</loc>'));
       expect(sitemap, contains('<loc>https://preisvergleich.lxandr.at/en/compare/555</loc>'));
       expect(sitemap, contains('<loc>https://preisvergleich.lxandr.at/fr/compare/555</loc>'));
+    });
+
+    test(
+        'pages list containing dynamic routes with colons automatically filters them out of static URLs and treats them as dynamic patterns',
+        () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de', 'en'],
+        pages: ['/', 'compare/:productId'], // Accidentally put dynamic pattern here
+      );
+
+      // Verify that 'compare/:productId' was filtered out of static pages list
+      expect(manager.pages, isNot(contains('compare/:productId')));
+      expect(manager.pages, contains('/'));
+
+      // Verify that 'compare/:productId' was automatically registered as a dynamic path pattern
+      expect(manager.dynamicPathPatterns, contains('compare/:productId'));
+
+      // Verify that the sitemap never literally contains the placeholder :productId
+      final sitemap = manager.generateSitemapContent();
+      expect(sitemap, isNot(contains(':productId')));
     });
   });
 }

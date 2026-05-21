@@ -2,8 +2,48 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 typedef EasySEOOnGenerateCallback = void Function(EasySEOGenerationResult generatedData);
 
-/// Private registry entry type
-typedef _SeoRegistryEntry = ({String path, EasySEOPageController controller});
+class SeoRouteKey implements Comparable<SeoRouteKey> {
+  final String path;
+  final int rank;
+
+  const SeoRouteKey({
+    required this.path,
+    this.rank = 0,
+  });
+
+  int get _slashCount => '/'.allMatches(path).length;
+
+  @override
+  int compareTo(SeoRouteKey other) {
+    // 1. Primary Sort: Slash Count (Deeper sub-routes always move to the back)
+    final slashCompare = _slashCount.compareTo(other._slashCount);
+    if (slashCompare != 0) return slashCompare;
+
+    // 2. Secondary Sort: Path String Length
+    final lengthCompare = path.length.compareTo(other.path.length);
+    if (lengthCompare != 0) return lengthCompare;
+
+    // 3. Tertiary Sort: Rank (Acts as the ultimate tie-breaker for identical paths)
+    // Moves 0 before 1 when the paths match perfectly
+    final rankCompare = rank.compareTo(other.rank);
+    if (rankCompare != 0) return rankCompare;
+
+    // 4. Absolute Fallback: Alphabetical to prevent different sibling routes
+    // from overwriting each other in memory
+    return path.compareTo(other.path);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is SeoRouteKey && rank == other.rank && path == other.path;
+
+  @override
+  int get hashCode => rank.hashCode ^ path.hashCode;
+
+  @override
+  String toString() => '$path [Rank: $rank]';
+}
 
 class EasySEOManager {
   // singleton
@@ -20,6 +60,7 @@ class EasySEOManager {
   final ValueNotifier<bool> disableOnGenerate = ValueNotifier(false);
   final ValueNotifier<bool> enableInteractiveMode = ValueNotifier(false);
   final ValueNotifier<bool> showResultDialog = ValueNotifier(true);
+  bool interactiveMinimized = false;
 
   String? baseUrl;
   SEOServiceInfo? serviceInfo;
@@ -35,27 +76,23 @@ class EasySEOManager {
   /// Optional provider to get the current path from the context (e.g. from GoRouter)
   String? Function(BuildContext)? pathProvider;
 
-  /// Optional provider to get the current full URL from the context
-  String? Function(BuildContext)? urlProvider;
-
   // This is now directly accessible via EasySEOConfig.instance.globals
   final Map<String, BuildContext> globals = {};
 
   // ------ EasySEO widget registry ----------
   // The stack of registered controllers
-  final List<_SeoRegistryEntry> _stack = [];
+  // Using splay tree to sort depth of EasySEOPage controllers
+  // so that it does not rely on mounting order.
+  final _stack = SplayTreeMap<SeoRouteKey, EasySEOPageController>((key1, key2) => key1.compareTo(key2));
 
   /// Returns the controller that currently has authority (the deepest/newest one)
-  EasySEOPageController? get activeController => _stack.lastOrNull?.controller;
+  EasySEOPageController? get activeController => _stack.values.lastOrNull;
 
-  /// Returns the path associated with the currently active SEO widget
-  String? get currentPath => _stack.lastOrNull?.path;
+  void register(SeoRouteKey key, EasySEOPageController controller) {
+    debugPrint('📦 [EasySEO] Registering: $key');
+    _stack[key] = controller;
 
-  void register(String path, EasySEOPageController controller) {
-    debugPrint('📦 [EasySEO] Registering: $path');
-    _stack.add((path: path, controller: controller));
-
-    final parsed = parsePath(path);
+    final parsed = parsePath(key.path);
     if (shouldGather(parsed.pagePath)) {
       String pagePath = parsed.pagePath;
       if (pagePath.isNotEmpty && !pagePath.startsWith('/')) {
@@ -68,13 +105,15 @@ class EasySEOManager {
     }
   }
 
-  void unregister(EasySEOPageController controller) {
-    debugPrint('🗑️ [EasySEO] Unregistering controller');
-    _stack.removeWhere((entry) => entry.controller == controller);
+  void unregister(SeoRouteKey key) {
+    debugPrint('🗑️ [EasySEO] Unregistering controller: $key, ${_stack.length}');
+    _stack.remove(key);
+    debugPrint('🗑️ [EasySEO] Unregistering controller: $key, ${_stack.length}');
   }
 
   /// Global trigger for the headless test or automated syncs
   Future<EasySEOGenerationResult> generateActive() async {
+    debugPrint('🗑️ [EasySEO] generateActive() for: ${_stack.keys.lastOrNull ?? "unknown"}');
     final controller = activeController;
     if (controller == null) return SeoSkipped("No active EasySEO controller found in registry.");
     return await controller.generate();
@@ -90,11 +129,11 @@ class EasySEOManager {
     return controller.isReady();
   }
 
-  /// Internal cleanup for tests
   @visibleForTesting
   void clear() {
     _stack.clear();
     _gatheredPages.clear();
+    interactiveMinimized = false;
   }
 
   /// Checks if a page path matches any registered dynamic path pattern.
@@ -156,9 +195,7 @@ class EasySEOManager {
     List<String> supportedLanguages = const [],
     List<String> pages = const [],
     List<EasySEOHeadTag> headTags = const [],
-    List<String> dynamicPathPatterns = const [],
     String? Function(BuildContext)? pathProvider,
-    String? Function(BuildContext)? urlProvider,
   }) {
     this.enabled.value = enabled;
     this.enableFileOutput.value = enableFileOutput;
@@ -170,11 +207,25 @@ class EasySEOManager {
     this.baseUrl = baseUrl;
     this.serviceInfo = serviceInfo;
     this.supportedLanguages = supportedLanguages;
-    this.pages = pages;
     this.headTags = headTags;
-    this.dynamicPathPatterns = dynamicPathPatterns;
     this.pathProvider = pathProvider;
-    this.urlProvider = urlProvider;
+
+    // Automatically extract any dynamic patterns containing colons from the pages list
+    final List<String> staticPages = [];
+    final List<String> extractedDynamicPatterns = [];
+
+    for (final p in pages) {
+      if (p.contains(':')) {
+        if (!extractedDynamicPatterns.contains(p)) {
+          extractedDynamicPatterns.add(p);
+        }
+      } else {
+        staticPages.add(p);
+      }
+    }
+
+    this.pages = staticPages;
+    this.dynamicPathPatterns = extractedDynamicPatterns;
   }
 
   /// Helper to check if any SEO output is active
@@ -224,6 +275,7 @@ class EasySEOManager {
 
     final Set<String> uniqueCleanPages = {};
     for (final p in rawPages) {
+      if (p.contains(':')) continue;
       String cp = p.trim();
       if (cp.isNotEmpty && !cp.startsWith('/')) cp = '/$cp';
       if (cp == '/') cp = '';
@@ -262,6 +314,7 @@ class EasySEOManager {
 
     final Set<String> uniqueCleanPages = {};
     for (final p in rawPages) {
+      if (p.contains(':')) continue;
       String cp = p.trim();
       if (cp.isNotEmpty && !cp.startsWith('/')) cp = '/$cp';
       if (cp == '/') cp = '';
