@@ -53,12 +53,14 @@ extension SEOWidgetExtension on Widget {
 
   Widget seoNavLink({
     required String path,
+    required String text,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
     return SEONavLinkWrapper(
       path: path,
+      text: text,
       className: className,
       attributes: attributes,
       additionalTags: additionalTags,
@@ -129,11 +131,24 @@ extension SEOWidgetExtension on Widget {
     );
   }
 
-  Widget seoProduct(String productName, {List<SEOHtml> additionalTags = const []}) {
+  Widget seoProduct(
+    String productName,
+    {
+      String? href,
+      SEOHtml Function(String? content, {Map<String, String>? attributes,List<SEOHtml> children,}) headingBuilder = SEOHtml.h1,
+      List<SEOHtml> additionalTags = const []
+    }
+  ) {
     return SEOArticleWrapper(
       attributes: const {'itemscope': null, 'itemtype': "https://schema.org/Product"},
       additionalTags: [
-        SEOHtml.h3(productName, attributes: {'itemprop': "name"}),
+        headingBuilder(
+            href == null ? productName : '',
+            attributes: {'itemprop': "name"},
+            children: [
+              if (href != null)
+                SEOHtml.a(content: productName, href: href, attributes: {'itemprop': "url"})
+            ]),
         ...additionalTags
       ],
       child: this,

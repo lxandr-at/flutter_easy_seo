@@ -28,12 +28,12 @@ class HomePage extends StatelessWidget {
               NavigationRailDestination(
                 icon: const Icon(Icons.home_outlined),
                 selectedIcon: const Icon(Icons.home),
-                label: const Text('Home').seoNavLink(path: "/"),
+                label: const Text('Home').seoNavLink(path: "/", text: 'Home'),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.business_outlined),
                 selectedIcon: const Icon(Icons.business),
-                label: const Text('Services').seoNavLink(path: "/services"),
+                label: const Text('Services').seoNavLink(path: "/services", text: 'Services'),
               ),
             ],
           ).seo(label: 'Main Navigation'),
@@ -176,11 +176,10 @@ class HomePage extends StatelessWidget {
                         const SizedBox(height: 12),
                         Column(
                           children: [
-                            const Text('Home').seoNavLink(path: '/'),
-                            const Text('Services')
-                                .seoNavLink(path: '/services'),
-                            const Text('Contact').seoNavLink(path: '/contact'),
-                            const Text('About').seoNavLink(path: '/about'),
+                            const Text('Home').seoNavLink(path: '/', text: 'Home'),
+                            const Text('Services').seoNavLink(path: '/services', text: 'Services'),
+                            const Text('Contact').seoNavLink(path: '/contact', text: 'Contact'),
+                            const Text('About').seoNavLink(path: '/about', text: 'About'),
                           ],
                         ).seoNav(label: 'Footer Navigation'),
                       ],

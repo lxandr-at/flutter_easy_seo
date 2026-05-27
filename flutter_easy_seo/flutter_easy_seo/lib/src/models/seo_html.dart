@@ -122,8 +122,9 @@ class SEOHtml {
           'itemtype': 'https://schema.org/PropertyValue',
         },
         children = [
-          SEOHtml.span(size, attributes: {'itemprop': 'value'}),
-          SEOHtml.span(unit, attributes: {'itemprop': 'unitText'}),
+          SEOHtml.meta(attributes: {'itemprop': 'name', 'content': 'weight'}),
+          SEOHtml.span(size, attributes: {'itemprop': 'value', 'content': size}),
+          SEOHtml.span(unit, attributes: {'itemprop': 'unitText', 'content': unit}),
         ];
 
   // Helper for AggregateOffer
@@ -143,13 +144,17 @@ class SEOHtml {
         ...info.individualOffers.map((offer) {
           return SEOHtml.div(
             attributes: {
-              'itemprop': 'offers',
               'itemscope': '',
               'itemtype': 'https://schema.org/Offer',
             },
             children: [
               SEOHtml.meta(attributes: {'itemprop': 'price', 'content': offer['price'].toString()}),
               SEOHtml.meta(attributes: {'itemprop': 'priceCurrency', 'content': info.currency}),
+              SEOHtml.meta(attributes: {'itemprop': 'itemCondition', 'content': "https://schema.org/NewCondition"}),
+              SEOHtml.meta(attributes: {
+                'itemprop': 'availability',
+                'content': (offer["availability"] ?? true) ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+              }),
               SEOHtml.div(
                 attributes: {
                   'itemprop': 'seller',
