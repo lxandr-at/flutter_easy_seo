@@ -30,7 +30,7 @@ class EasySEOPage extends StatefulWidget {
   final List<EasySEOHeadTag> headTags;
   final SEOServiceInfo? serviceInfo;
   final List<String> includeGlobals;
-  final Future? whenDone;
+  final Future<void> Function()? whenDone;
   final ChangeNotifier? generateOnChanged;
   final int rank;
 
@@ -66,15 +66,6 @@ class _EasySEOPageState extends State<EasySEOPage> {
     _fileHandler = EasySEOFileOutput();
     _liveHandler = EasySEOLiveOutput();
     _urlHelper = url_helper.URLHelper();
-    if (widget.whenDone != null) {
-      _controller._setReady(false);
-      widget.whenDone!.whenComplete(() => _controller._setReady(true));
-    }
-
-    if (widget.generateOnChanged != null) {
-      debugPrint("EasySEO: calling gen in generateOnChanged()");
-      widget.generateOnChanged!.addListener(() => _generate());
-    }
 
     // register this state method with the controller so that
     // the EasySEOManager can call it
@@ -83,6 +74,21 @@ class _EasySEOPageState extends State<EasySEOPage> {
     );
     // registering with EasySEOManager is done in build()
     // because the context at this point gets the old route path
+
+    _initSEO();
+  }
+
+  Future<void> _initSEO() async {
+    if (widget.whenDone != null) {
+      _controller._setReady(false);
+      await widget.whenDone!();
+      _controller._setReady(true);
+    }
+
+    if (widget.generateOnChanged != null) {
+      debugPrint("EasySEO: calling gen in generateOnChanged()");
+      widget.generateOnChanged!.addListener(() => _generate());
+    }
 
     // auto-generate on mount
     _generate();
@@ -97,15 +103,14 @@ class _EasySEOPageState extends State<EasySEOPage> {
     super.dispose();
   }
 
-  void _generate() {
+  void _generate() async {
     if (widget.whenDone != null) {
-      widget.whenDone!.then((_) {
+      await widget.whenDone!();
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          debugPrint("EasySEO: calling gen in initState() after whenDone");
-          _generateHTML();
-        });
+        debugPrint("EasySEO: calling gen in initState() after whenDone");
+        _generateHTML();
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
