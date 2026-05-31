@@ -5,6 +5,8 @@ import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easy_seo/flutter_easy_seo.dart' show URLHelper;
+import 'package:flutter_easy_seo/src/utils/url_helper_base.dart' show URLHelperBase;
 
 import 'src/utils/url_helper_facade.dart' as url_helper;
 

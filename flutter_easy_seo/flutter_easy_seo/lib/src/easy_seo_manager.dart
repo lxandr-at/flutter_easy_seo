@@ -138,32 +138,7 @@ class EasySEOManager {
 
   /// Checks if a page path matches any registered dynamic path pattern.
   bool shouldGather(String pagePath) {
-    String cleanPagePath = pagePath.trim();
-    if (cleanPagePath.isNotEmpty && !cleanPagePath.startsWith('/')) {
-      cleanPagePath = '/$cleanPagePath';
-    }
-
-    for (final pattern in dynamicPathPatterns) {
-      String cleanTemplate = pattern.trim();
-      if (cleanTemplate.isNotEmpty && !cleanTemplate.startsWith('/')) {
-        cleanTemplate = '/$cleanTemplate';
-      }
-
-      final segments = cleanTemplate.split('/');
-      final regexSegments = segments.map((segment) {
-        if (segment.startsWith(':')) {
-          return r'[^/]+';
-        } else {
-          return RegExp.escape(segment);
-        }
-      });
-
-      final finalRegex = RegExp('^' + regexSegments.join('/') + r'$');
-      if (finalRegex.hasMatch(cleanPagePath)) {
-        return true;
-      }
-    }
-    return false;
+    return dynamicPathPatterns.any((pattern) => URLHelper().isPathMatch(pagePath, pattern));
   }
 
   /// Manually add a dynamic route path to the gathered list
