@@ -159,10 +159,10 @@ class SEOHtml {
             children: [
               SEOHtml.meta(attributes: {'itemprop': 'price', 'content': offer['price'].toString()}),
               SEOHtml.meta(attributes: {'itemprop': 'priceCurrency', 'content': info.currency}),
-              SEOHtml.meta(attributes: {'itemprop': 'itemCondition', 'content': "https://schema.org/NewCondition"}),
-              SEOHtml.meta(attributes: {
+              SEOHtml.link(attributes: {'itemprop': 'itemCondition', 'href': "https://schema.org/NewCondition"}),
+              SEOHtml.link(attributes: {
                 'itemprop': 'availability',
-                'content': (offer["availability"] ?? true) ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+                'href': (offer["availability"] ?? true) ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
               }),
               SEOHtml.div(
                 attributes: {
