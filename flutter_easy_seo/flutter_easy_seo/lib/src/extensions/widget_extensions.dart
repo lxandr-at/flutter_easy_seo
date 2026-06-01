@@ -134,7 +134,7 @@ extension SEOWidgetExtension on Widget {
   Widget seoProduct(
     String productName,
     {
-      String? href,
+      String? path,
       SEOHtml Function(String? content, {Map<String, String>? attributes,List<SEOHtml> children,}) headingBuilder = SEOHtml.h1,
       List<SEOHtml> additionalTags = const []
     }
@@ -143,11 +143,11 @@ extension SEOWidgetExtension on Widget {
       attributes: const {'itemscope': null, 'itemtype': "https://schema.org/Product"},
       additionalTags: [
         headingBuilder(
-            href == null ? productName : '',
+            path == null ? productName : '',
             attributes: {'itemprop': "name"},
             children: [
-              if (href != null)
-                SEOHtml.a(content: productName, href: href, attributes: {'itemprop': "url"})
+              if (path != null)
+                SEOHtml.a(content: productName, relativePath: path, attributes: {'itemprop': "url"})
             ]),
         ...additionalTags
       ],

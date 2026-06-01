@@ -26,29 +26,31 @@ class SEOHtml {
   final String? content;
   final Map<String, String>? attributes;
   final List<SEOHtml> children;
+  final String? relativePath;
 
   const SEOHtml({
     required this.tag,
     this.content,
     this.attributes,
     this.children = const [],
+    this.relativePath,
   });
 
   // Text-centric tags (content is a required positional argument, though it accepts null)
-  const SEOHtml.h1(this.content, {this.attributes, this.children = const []}) : tag = 'h1';
-  const SEOHtml.h2(this.content, {this.attributes, this.children = const []}) : tag = 'h2';
-  const SEOHtml.h3(this.content, {this.attributes, this.children = const []}) : tag = 'h3';
-  const SEOHtml.h4(this.content, {this.attributes, this.children = const []}) : tag = 'h4';
-  const SEOHtml.h5(this.content, {this.attributes, this.children = const []}) : tag = 'h5';
-  const SEOHtml.h6(this.content, {this.attributes, this.children = const []}) : tag = 'h6';
-  const SEOHtml.p(this.content, {this.attributes, this.children = const []}) : tag = 'p';
+  const SEOHtml.h1(this.content, {this.attributes, this.children = const []}) : tag = 'h1', relativePath = null;
+  const SEOHtml.h2(this.content, {this.attributes, this.children = const []}) : tag = 'h2', relativePath = null;
+  const SEOHtml.h3(this.content, {this.attributes, this.children = const []}) : tag = 'h3', relativePath = null;
+  const SEOHtml.h4(this.content, {this.attributes, this.children = const []}) : tag = 'h4', relativePath = null;
+  const SEOHtml.h5(this.content, {this.attributes, this.children = const []}) : tag = 'h5', relativePath = null;
+  const SEOHtml.h6(this.content, {this.attributes, this.children = const []}) : tag = 'h6', relativePath = null;
+  const SEOHtml.p(this.content, {this.attributes, this.children = const []}) : tag = 'p', relativePath = null;
 
   // Structural and semantic tags (content is named since they often just wrap children)
-  const SEOHtml.div({this.content, this.attributes, this.children = const []}) : tag = 'div';
-  const SEOHtml.span(this.content, {this.attributes, this.children = const []}) : tag = 'span';
-  const SEOHtml.section({this.content, this.attributes, this.children = const []}) : tag = 'section';
-  const SEOHtml.article({this.content, this.attributes, this.children = const []}) : tag = 'article';
-  const SEOHtml.aside({this.content, this.attributes, this.children = const []}) : tag = 'aside';
+  const SEOHtml.div({this.content, this.attributes, this.children = const []}) : tag = 'div', relativePath = null;
+  const SEOHtml.span(this.content, {this.attributes, this.children = const []}) : tag = 'span', relativePath = null;
+  const SEOHtml.section({this.content, this.attributes, this.children = const []}) : tag = 'section', relativePath = null;
+  const SEOHtml.article({this.content, this.attributes, this.children = const []}) : tag = 'article', relativePath = null;
+  const SEOHtml.aside({this.content, this.attributes, this.children = const []}) : tag = 'aside', relativePath = null;
   factory SEOHtml.header({
     String? h1,
     String? p,
@@ -61,21 +63,22 @@ class SEOHtml {
     if (h1 != null) list.insert(0, SEOHtml.h1(h1));
     return SEOHtml(tag: 'header', content: content, attributes: attributes, children: list);
   }
-  const SEOHtml.main({this.content, this.attributes, this.children = const []}) : tag = 'main';
-  const SEOHtml.footer({this.content, this.attributes, this.children = const []}) : tag = 'footer';
-  const SEOHtml.nav({this.content, this.attributes, this.children = const []}) : tag = 'nav';
-  const SEOHtml.figure({this.content, this.attributes, this.children = const []}) : tag = 'figure';
-  const SEOHtml.time({this.content, this.attributes, this.children = const []}) : tag = 'time';
+  const SEOHtml.main({this.content, this.attributes, this.children = const []}) : tag = 'main', relativePath = null;
+  const SEOHtml.footer({this.content, this.attributes, this.children = const []}) : tag = 'footer', relativePath = null;
+  const SEOHtml.nav({this.content, this.attributes, this.children = const []}) : tag = 'nav', relativePath = null;
+  const SEOHtml.figure({this.content, this.attributes, this.children = const []}) : tag = 'figure', relativePath = null;
+  const SEOHtml.time({this.content, this.attributes, this.children = const []}) : tag = 'time', relativePath = null;
 
   // List tags
-  const SEOHtml.ul({this.content, this.attributes, this.children = const []}) : tag = 'ul';
-  const SEOHtml.ol({this.content, this.attributes, this.children = const []}) : tag = 'ol';
-  const SEOHtml.li({this.content, this.attributes, this.children = const []}) : tag = 'li';
+  const SEOHtml.ul({this.content, this.attributes, this.children = const []}) : tag = 'ul', relativePath = null;
+  const SEOHtml.ol({this.content, this.attributes, this.children = const []}) : tag = 'ol', relativePath = null;
+  const SEOHtml.li({this.content, this.attributes, this.children = const []}) : tag = 'li', relativePath = null;
 
   // Link and media tags
   factory SEOHtml.a({
     String? href,
     String? path,
+    String? relativePath,
     String? content,
     List<SEOHtml> children = const [],
     Map<String, String> attributes = const {},
@@ -89,29 +92,34 @@ class SEOHtml {
       tag: 'a',
       content: content,
       children: children,
+      relativePath: relativePath,
       attributes: {
         ...attributes,
-        'href': finalHref,
+        if (finalHref.isNotEmpty) 'href': finalHref,
       },
     );
   }
   const SEOHtml.img({this.attributes})
       : tag = 'img',
         content = null,
-        children = const [];
+        children = const [],
+        relativePath = null;
 
   // Metadata tags
   const SEOHtml.script({this.content, this.attributes})
       : tag = 'script',
-        children = const [];
+        children = const [],
+        relativePath = null;
   const SEOHtml.meta({this.attributes})
       : tag = 'meta',
         content = null,
-        children = const [];
+        children = const [],
+        relativePath = null;
   const SEOHtml.link({this.attributes})
       : tag = 'link',
         content = null,
-        children = const [];
+        children = const [],
+        relativePath = null;
 
   SEOHtml.sizeUnit(String size, String unit)
       : tag = 'p',
@@ -125,7 +133,8 @@ class SEOHtml {
           SEOHtml.meta(attributes: {'itemprop': 'name', 'content': 'weight'}),
           SEOHtml.span(size, attributes: {'itemprop': 'value', 'content': size}),
           SEOHtml.span(unit, attributes: {'itemprop': 'unitText', 'content': unit}),
-        ];
+        ],
+        relativePath = null;
 
   // Helper for AggregateOffer
   /// assumes 'price' and 'seller' in individualOffers
@@ -252,6 +261,34 @@ class SEOHtml {
   }
 
   String _escapeAttr(String value) => value.replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+
+  /// Dynamically resolves relative path to an absolute URL during traversal.
+  SEOHtml resolve(BuildContext context) {
+    String? resolvedHref;
+    Map<String, String>? resolvedAttributes = attributes != null ? Map.from(attributes!) : null;
+
+    if (relativePath != null) {
+      final currentPath = EasySEOManager.instance.getCurrentPath(context);
+      final urls = EasySEOManager.instance.resolveSeoUrls(currentPath);
+      final baseUrl = urls.canonicalUrl;
+      final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
+      final cleanPath = relativePath!.startsWith('/') ? relativePath! : '/$relativePath';
+      resolvedHref = '$cleanBase$cleanPath';
+
+      resolvedAttributes ??= {};
+      resolvedAttributes['href'] = resolvedHref;
+    }
+
+    final resolvedChildren = children.map((c) => c.resolve(context)).toList();
+
+    return SEOHtml(
+      tag: tag,
+      content: content,
+      attributes: resolvedAttributes,
+      children: resolvedChildren,
+      relativePath: relativePath,
+    );
+  }
 }
 
 /// Represents an item in a navigation menu for JSON-LD generation

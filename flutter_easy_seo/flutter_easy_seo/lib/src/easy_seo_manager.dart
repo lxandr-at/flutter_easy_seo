@@ -153,6 +153,35 @@ class EasySEOManager {
     }
     _gatheredPages.add(pagePath);
   }
+
+  /// Extracts all URLs from the given HTML string (e.g. href attributes)
+  /// and gathers them if they match any registered dynamic path patterns.
+  void gatherFromHtml(String html) {
+    final hrefRegex = RegExp(r'href="([^"]+)"');
+    final matches = hrefRegex.allMatches(html);
+    for (final match in matches) {
+      final href = match.group(1);
+      if (href != null && href.isNotEmpty) {
+        final uri = Uri.tryParse(href);
+        if (uri != null) {
+          final path = uri.path;
+          final parsed = parsePath(path);
+          if (shouldGather(parsed.pagePath)) {
+            addGatheredPage(path);
+          }
+        }
+      }
+    }
+  }
+  /// Returns the current active path, prioritizing the pathProvider with the given [context]
+  /// and falling back to URLHelper's current browser path.
+  String getCurrentPath(BuildContext context) {
+    if (pathProvider != null) {
+      final path = pathProvider!(context);
+      if (path != null) return path;
+    }
+    return URLHelper().getCurrentPath();
+  }
   // ------ EasySEO widget registry ----------
 
   /// Initialize the settings.
@@ -244,17 +273,19 @@ class EasySEOManager {
   }
 
   /// Returns a list of all routes that can be built from supportedLanguages and pages.
-  List<String> getAllRoutes() {
+  List<String> getAllRoutes({bool gatheredOnly = false}) {
     final languages = UnmodifiableListView(supportedLanguages);
     final List<String> rawPages = pages.isEmpty ? [''] : pages;
 
     final Set<String> uniqueCleanPages = {};
-    for (final p in rawPages) {
-      if (p.contains(':')) continue;
-      String cp = p.trim();
-      if (cp.isNotEmpty && !cp.startsWith('/')) cp = '/$cp';
-      if (cp == '/') cp = '';
-      uniqueCleanPages.add(cp);
+    if (!gatheredOnly) {
+      for (final p in rawPages) {
+        if (p.contains(':')) continue;
+        String cp = p.trim();
+        if (cp.isNotEmpty && !cp.startsWith('/')) cp = '/$cp';
+        if (cp == '/') cp = '';
+        uniqueCleanPages.add(cp);
+      }
     }
 
     for (final gp in _gatheredPages) {

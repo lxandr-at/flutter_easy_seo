@@ -213,6 +213,9 @@ class _EasySEOPageState extends State<EasySEOPage> {
 
     final bodyContent = _processor.processWidgetTree(rootElement, widget.includeGlobals);
 
+    // Extract dynamic route URLs from generated HTML content and add them to gathered pages
+    EasySEOManager.instance.gatherFromHtml(bodyContent);
+
     // Use page metadata from EasySEO widget
     final metadata = SEOPageMetadata(headTags: _allDistinctHeadTags);
     final headContent = metadata.generateMetadata();
@@ -268,11 +271,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
   }
 
   String _getCurrentPath() {
-    if (EasySEOManager.instance.pathProvider != null) {
-      final path = EasySEOManager.instance.pathProvider!(context);
-      if (path != null) return path;
-    }
-    return _urlHelper.getCurrentPath();
+    return EasySEOManager.instance.getCurrentPath(context);
   }
 
   @override

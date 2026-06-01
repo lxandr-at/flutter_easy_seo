@@ -89,11 +89,12 @@ class SEOWidgetTreeProcessor {
       }
 
       if (widget is BaseSEOWrapper && widget.additionalTags.isNotEmpty) {
-        prependedTags.addAll(widget.additionalTags.where((t) => _headingPriority.containsKey(t.tag)));
-        appendedTags.addAll(widget.additionalTags.where((t) => !_headingPriority.containsKey(t.tag)));
+        final resolvedTags = widget.additionalTags.map((t) => t.resolve(element)).toList();
+        prependedTags.addAll(resolvedTags.where((t) => _headingPriority.containsKey(t.tag)));
+        appendedTags.addAll(resolvedTags.where((t) => !_headingPriority.containsKey(t.tag)));
 
-        // Update ownPriority if additionalTags contain higher priority headings
-        for (final tag in widget.additionalTags) {
+        // Update ownPriority if resolvedTags contain higher priority headings
+        for (final tag in resolvedTags) {
           final tagPriority = _headingPriority[tag.tag] ?? 6;
           if (tagPriority < ownPriority) {
             ownPriority = tagPriority;
