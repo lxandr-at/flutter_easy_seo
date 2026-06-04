@@ -13,7 +13,13 @@ class SEOFigureWrapper extends BaseSEOWrapper {
   final String? _caption;
 
   @override
-  String get tagName => 'figure';
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    return _buildSimpleTag(tag: 'figure', children: children, context: context);
+  }
 
   @override
   State<StatefulWidget> createState() => _SEOFigureWrapperState();

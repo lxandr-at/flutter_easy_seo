@@ -10,7 +10,13 @@ class SEOListItemWrapper extends BaseSEOWrapper {
   });
 
   @override
-  String get tagName => 'li';
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    return _buildSimpleTag(tag: 'li', children: children, context: context);
+  }
 
   @override
   State<StatefulWidget> createState() => _SEOListItemWrapperState();

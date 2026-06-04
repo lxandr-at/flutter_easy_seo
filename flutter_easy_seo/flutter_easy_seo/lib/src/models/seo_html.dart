@@ -201,6 +201,16 @@ class SEOHtml {
 
   bool get _isVoid => _voidElements.contains(tag);
 
+  /// True when children contain at least one node that produces visible output
+  /// (i.e. has a non-empty tag, content, or recursively has such children).
+  /// Empty transparent containers are ignored so parents can keep inline formatting.
+  bool get _hasRealChildren {
+    for (final child in children) {
+      if (child.tag.isNotEmpty || child.content != null || child._hasRealChildren) return true;
+    }
+    return false;
+  }
+
   /// Recursively renders this element and all its [children] to an HTML string with formatting.
   String toHtmlString({int indentLevel = 0}) {
     final indent = '  ' * indentLevel;
@@ -237,7 +247,7 @@ class SEOHtml {
 
     buffer.write('>');
 
-    final hasSubElements = children.isNotEmpty || (content != null && content!.contains('\n'));
+    final hasSubElements = _hasRealChildren || (content != null && content!.contains('\n'));
 
     if (hasSubElements) {
       buffer.writeln();

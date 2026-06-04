@@ -15,10 +15,23 @@ class SEOImageWrapper extends BaseSEOWrapper {
   });
 
   @override
-  String get tagName => 'img';
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    final attrs = <String, String>{};
+    if (className != null) attrs['class'] = className!;
+    if (attributes != null) {
+      for (final e in attributes!.entries) {
+        if (e.value != null && e.value!.isNotEmpty) {
+          attrs[e.key] = e.value!;
+        } else {
+          attrs[e.key] = '';
+        }
+      }
+    }
 
-  @override
-  Map<String, String> get additionalAttributes {
     String? extractedSrc = src;
     if (extractedSrc == null) {
       if (child is Image) {
@@ -28,10 +41,10 @@ class SEOImageWrapper extends BaseSEOWrapper {
         }
       }
     }
-    return {
-      if (extractedSrc != null) 'src': extractedSrc,
-      if (alt != null) 'alt': alt!,
-    };
+    if (extractedSrc != null) attrs['src'] = extractedSrc;
+    if (alt != null) attrs['alt'] = alt!;
+
+    return SEOHtml.img(attributes: attrs.isNotEmpty ? attrs : null);
   }
 
   @override

@@ -10,7 +10,13 @@ class SEOMainWrapper extends BaseSEOWrapper {
   });
 
   @override
-  String get tagName => 'main';
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    return _buildSimpleTag(tag: 'main', children: children, context: context);
+  }
 
   @override
   State<StatefulWidget> createState() => _SEOMainWrapperState();

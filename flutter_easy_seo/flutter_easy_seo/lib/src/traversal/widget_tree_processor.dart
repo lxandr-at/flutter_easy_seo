@@ -3,7 +3,6 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 class SEOWidgetTreeProcessor {
   SEOPageMetadata? _metadata;
 
-  /// Priority order for heading tags. Lower value = output first.
   static const _headingPriority = {
     'h1': 0,
     'h2': 1,
@@ -16,329 +15,96 @@ class SEOWidgetTreeProcessor {
   String processWidgetTree(Element rootElement, List<String> includeGlobals) {
     _metadata = null;
 
-    final roots = <_HtmlNode>[];
+    final roots = <SEOHtml>[];
 
-    // add widget info from outside of the root
-    for (var name in includeGlobals) {
+    for (final name in includeGlobals) {
       final element = EasySEOManager.instance.globals[name] as Element?;
       if (element != null && element.mounted) {
-        roots.add(_buildNode(element, 0));
+        roots.add(_buildSeoHtml(element).html);
       }
     }
 
-    roots.add(_buildNode(rootElement, 0));
+    roots.add(_buildSeoHtml(rootElement).html);
 
-    final buffer = StringBuffer();
-    for (final node in roots) {
-      _serialize(node, buffer, 1);
-    }
-    return buffer.toString();
+    return roots.map((r) => r.toHtmlString()).join();
   }
 
   SEOPageMetadata? get metadata => _metadata;
 
-  /// Recursively builds an [_HtmlNode] tree. Children at each level are
-  /// collected first, then sorted by heading priority before being stored.
-  _HtmlNode _buildNode(Element element, int level) {
+  _BuildResult _buildSeoHtml(Element element) {
     final widget = element.widget;
-    final children = _collectChildren(element, level);
 
-    // Collect navLinks from children
-    final List<SEONavItem> subtreeNavLinks = [];
-    for (final child in children) {
-      subtreeNavLinks.addAll(child.navLinks);
-    }
+    final childResults = <_BuildResult>[];
+    element.visitChildren((child) {
+      childResults.add(_buildSeoHtml(child));
+    });
 
-    // Sort children by THEIR bubbled priority
-    final sortedChildren = _sortedChildren(children);
-
-    int ownPriority = 6;
-    String openTag = '';
-    String content = '';
-    String closeTag = '';
-    String tagName = '';
-    final prependedTags = <SEOHtml>[];
-    final appendedTags = <SEOHtml>[];
-    String appendBeforeTag = '';
-    String appendBeforeContent = '';
-    String appendAfterContent = '';
-    String appendAfterTag = '';
-
-    if (widget is SEOWrapper) {
-      final wrapper = widget as SEOWrapper;
-      tagName = widget is BaseSEOWrapper ? widget.tagName : '';
-      ownPriority = _headingPriority[tagName] ?? 6;
-
-      if (widget is BaseSEOWrapper) {
-        openTag = widget.getRawOpenTag();
-        closeTag = widget.getRawCloseTag();
-        appendBeforeTag = widget.appendBeforeTag;
-        appendBeforeContent = widget.appendBeforeContent;
-        appendAfterContent = widget.appendAfterContent;
-        appendAfterTag = widget.appendAfterTag;
-      } else {
-        openTag = wrapper.getOpenTag();
-        closeTag = wrapper.getCloseTag();
-      }
-
-      content = wrapper.getContent();
-
-      // If it's a NavLink, add it to our list
-      if (widget is SEONavLinkWrapper) {
-        subtreeNavLinks.add(SEONavItem(text: widget.text ?? '', url: widget.path));
-      }
-
-      if (widget is BaseSEOWrapper && widget.additionalTags.isNotEmpty) {
-        final resolvedTags = widget.additionalTags.map((t) => t.resolve(element)).toList();
-        prependedTags.addAll(resolvedTags.where((t) => _headingPriority.containsKey(t.tag)));
-        appendedTags.addAll(resolvedTags.where((t) => !_headingPriority.containsKey(t.tag)));
-
-        // Update ownPriority if resolvedTags contain higher priority headings
-        for (final tag in resolvedTags) {
-          final tagPriority = _headingPriority[tag.tag] ?? 6;
-          if (tagPriority < ownPriority) {
-            ownPriority = tagPriority;
-          }
-        }
-      }
-
-      // If it's a Nav, generate JSON-LD from collected links
-      if (widget is SEONavWrapper && subtreeNavLinks.isNotEmpty) {
-        final jsonLd = widget.isBreadcrumb
-            ? SEOHtmlJsonLd.breadcrumbList(subtreeNavLinks)
-            : SEOHtmlJsonLd.siteNavigation(subtreeNavLinks);
-        appendedTags.add(jsonLd);
-      }
-    }
-
-    // Bubble up priority: take the minimum (highest importance)
-    // of own priority and all children priorities.
-    int bubbledPriority = ownPriority;
-    for (final child in sortedChildren) {
+    final navItems = <SEONavItem>[];
+    int bubbledPriority = 6;
+    for (final child in childResults) {
+      navItems.addAll(child.navItems);
       if (child.priority < bubbledPriority) {
         bubbledPriority = child.priority;
       }
     }
 
-    return _HtmlNode(
-      openTag: openTag,
-      content: content,
-      closeTag: closeTag,
-      tagName: tagName,
-      children: sortedChildren,
-      priority: bubbledPriority,
-      additionalPrependedTags: prependedTags,
-      additionalAppendedTags: appendedTags,
-      navLinks: subtreeNavLinks,
-      appendBeforeTag: appendBeforeTag,
-      appendBeforeContent: appendBeforeContent,
-      appendAfterContent: appendAfterContent,
-      appendAfterTag: appendAfterTag,
+    final sortedChildResults = _sortByPriority(childResults);
+
+    if (widget is SEOWrapper) {
+      final wrapper = widget as SEOWrapper;
+
+      if (wrapper is SEONavLinkWrapper) {
+        navItems.add(SEONavItem(text: wrapper.text ?? '', url: wrapper.path));
+      }
+
+      final html = wrapper.toSEOHtml(
+        children: sortedChildResults.map((r) => r.html).toList(),
+        navItems: navItems,
+        context: element,
+      );
+
+      int ownPriority = _headingPriority[html.tag] ?? 6;
+      if (ownPriority < bubbledPriority) {
+        bubbledPriority = ownPriority;
+      }
+
+      return _BuildResult(
+        html,
+        wrapper is SEONavWrapper ? const [] : navItems,
+        bubbledPriority,
+      );
+    }
+
+    return _BuildResult(
+      SEOHtml(tag: '', children: sortedChildResults.map((r) => r.html).toList()),
+      navItems,
+      bubbledPriority,
     );
   }
 
-  List<_HtmlNode> _collectChildren(Element element, int level) {
-    final nodes = <_HtmlNode>[];
-    element.visitChildren((child) {
-      nodes.add(_buildNode(child, level + 1));
-    });
-    return nodes;
-  }
-
-  /// Stable sort: heading tags (h1–h6) come first in priority order;
-  /// all other siblings preserve their original relative order.
-  static List<_HtmlNode> _sortedChildren(List<_HtmlNode> nodes) {
+  static List<_BuildResult> _sortByPriority(List<_BuildResult> nodes) {
     final indexed = List.generate(
       nodes.length,
       (i) => (index: i, node: nodes[i]),
     );
 
     indexed.sort((a, b) {
-      if (a.node.priority != b.node.priority) {
-        return a.node.priority.compareTo(b.node.priority);
-      }
+      if (a.node.priority != b.node.priority) return a.node.priority.compareTo(b.node.priority);
       return a.index.compareTo(b.index);
     });
 
     return indexed.map((e) => e.node).toList();
   }
-
-  void _serialize(_HtmlNode node, StringBuffer buffer, int indentLevel) {
-    if (!node.generatesHtml) return;
-
-    final indent = '  ' * indentLevel;
-
-    if (node.appendBeforeTag.isNotEmpty) {
-      buffer.write(indent);
-      buffer.writeln(node.appendBeforeTag);
-    }
-
-    if (node.openTag.isNotEmpty) {
-      if (node.openTag.endsWith('/')) {
-        // It's a void tag, no content or children or close tag
-        buffer.write(indent);
-        buffer.write(node.openTag);
-        if (!node.openTag.endsWith('>')) {
-          buffer.write('>');
-        }
-        buffer.writeln();
-        
-        if (node.appendAfterTag.isNotEmpty) {
-          buffer.write(indent);
-          buffer.writeln(node.appendAfterTag);
-        }
-        return;
-      }
-    }
-
-    final hasSubElements = node.children.any((c) => c.generatesHtml) ||
-        node.additionalPrependedTags.isNotEmpty ||
-        node.additionalAppendedTags.isNotEmpty ||
-        node.appendBeforeContent.isNotEmpty ||
-        node.appendAfterContent.isNotEmpty ||
-        node.content.contains('\n');
-
-    if (node.openTag.isNotEmpty) {
-      if (hasSubElements) {
-        buffer.write(indent);
-        buffer.write(node.openTag);
-        if (!node.openTag.endsWith('>')) {
-          buffer.write('>');
-        }
-        buffer.writeln();
-
-        if (node.appendBeforeContent.isNotEmpty) {
-          buffer.write('  ' * (indentLevel + 1));
-          buffer.writeln(node.appendBeforeContent);
-        }
-        if (node.additionalPrependedTags.isNotEmpty) {
-          for (final tag in node.additionalPrependedTags) {
-            buffer.write(tag.toHtmlString(indentLevel: indentLevel + 1));
-          }
-        }
-        if (node.content.isNotEmpty) {
-          buffer.write('  ' * (indentLevel + 1));
-          buffer.writeln(node.content);
-        }
-
-        for (final child in node.children) {
-          _serialize(child, buffer, indentLevel + 1);
-        }
-
-        if (node.appendAfterContent.isNotEmpty) {
-          buffer.write('  ' * (indentLevel + 1));
-          buffer.writeln(node.appendAfterContent);
-        }
-        if (node.additionalAppendedTags.isNotEmpty) {
-          for (final tag in node.additionalAppendedTags) {
-            buffer.write(tag.toHtmlString(indentLevel: indentLevel + 1));
-          }
-        }
-
-        buffer.write(indent);
-        buffer.writeln(node.closeTag);
-      } else {
-        // No sub-elements: keep simple on a single line!
-        buffer.write(indent);
-        buffer.write(node.openTag);
-        if (!node.openTag.endsWith('>')) {
-          buffer.write('>');
-        }
-        buffer.write(node.content);
-        buffer.write(node.closeTag);
-        buffer.writeln();
-      }
-    } else {
-      // Transparent node: no openTag
-      if (node.appendBeforeContent.isNotEmpty) {
-        buffer.write(indent);
-        buffer.writeln(node.appendBeforeContent);
-      }
-      if (node.additionalPrependedTags.isNotEmpty) {
-        for (final tag in node.additionalPrependedTags) {
-          buffer.write(tag.toHtmlString(indentLevel: indentLevel));
-        }
-      }
-      if (node.content.isNotEmpty) {
-        buffer.write(indent);
-        buffer.writeln(node.content);
-      }
-
-      for (final child in node.children) {
-        _serialize(child, buffer, indentLevel);
-      }
-
-      if (node.appendAfterContent.isNotEmpty) {
-        buffer.write(indent);
-        buffer.writeln(node.appendAfterContent);
-      }
-      if (node.additionalAppendedTags.isNotEmpty) {
-        for (final tag in node.additionalAppendedTags) {
-          buffer.write(tag.toHtmlString(indentLevel: indentLevel));
-        }
-      }
-    }
-
-    if (node.appendAfterTag.isNotEmpty) {
-      buffer.write(indent);
-      buffer.writeln(node.appendAfterTag);
-    }
-  }
 }
 
-/// Intermediate representation of a single HTML element produced during
-/// widget tree traversal. Children are already sorted by the time a node
-/// is created.
-class _HtmlNode {
-  final String openTag;
-  final String content;
-  final String closeTag;
-  final String tagName;
-  final List<_HtmlNode> children;
+class _BuildResult {
+  final SEOHtml html;
+  final List<SEONavItem> navItems;
   final int priority;
-  final List<SEOHtml> additionalPrependedTags;
-  final List<SEOHtml> additionalAppendedTags;
-  final List<SEONavItem> navLinks;
-  final String appendBeforeTag;
-  final String appendBeforeContent;
-  final String appendAfterContent;
-  final String appendAfterTag;
 
-  const _HtmlNode({
-    required this.openTag,
-    required this.content,
-    required this.closeTag,
-    required this.tagName,
-    required this.children,
-    required this.priority,
-    this.additionalPrependedTags = const [],
-    this.additionalAppendedTags = const [],
-    this.navLinks = const [],
-    this.appendBeforeTag = '',
-    this.appendBeforeContent = '',
-    this.appendAfterContent = '',
-    this.appendAfterTag = '',
-  });
-
-  bool get generatesHtml {
-    if (openTag.isNotEmpty ||
-        content.isNotEmpty ||
-        appendBeforeTag.isNotEmpty ||
-        appendAfterTag.isNotEmpty ||
-        appendBeforeContent.isNotEmpty ||
-        appendAfterContent.isNotEmpty ||
-        additionalPrependedTags.isNotEmpty ||
-        additionalAppendedTags.isNotEmpty) {
-      return true;
-    }
-    for (final child in children) {
-      if (child.generatesHtml) return true;
-    }
-    return false;
-  }
+  const _BuildResult(this.html, this.navItems, [this.priority = 6]);
 }
 
-/// Page metadata extracted from EasySEO widget
 class SEOPageMetadata {
   final List<EasySEOHeadTag> headTags;
 
@@ -346,7 +112,7 @@ class SEOPageMetadata {
 
   String generateMetadata() {
     final buffer = StringBuffer();
-    for (var tag in headTags) {
+    for (final tag in headTags) {
       buffer.write('  ');
       buffer.writeln(tag.toHtml());
     }
@@ -354,7 +120,6 @@ class SEOPageMetadata {
   }
 }
 
-/// Generates complete HTML document from widget tree content and metadata
 class SEOHtmlDocumentGenerator {
   static String generateFullDocument({
     required String bodyContent,

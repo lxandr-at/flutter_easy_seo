@@ -15,14 +15,15 @@ class SEOHeaderWrapper extends BaseSEOWrapper {
   final String? p;
 
   @override
-  String get tagName => 'header';
-
-  @override
-  List<SEOHtml> get additionalTags {
-    final tags = <SEOHtml>[...super.additionalTags];
-    if (p != null) tags.insert(0, SEOHtml.p(p!));
-    if (h1 != null) tags.insert(0, SEOHtml.h1(h1!));
-    return tags;
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    final allChildren = <SEOHtml>[...children];
+    if (p != null) allChildren.insert(0, SEOHtml.p(p!));
+    if (h1 != null) allChildren.insert(0, SEOHtml.h1(h1!));
+    return _buildSimpleTag(tag: 'header', children: allChildren, context: context);
   }
 
   @override

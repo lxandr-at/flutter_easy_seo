@@ -16,13 +16,24 @@ class SEONavWrapper extends BaseSEOWrapper {
   });
 
   @override
-  String get tagName => 'nav';
-
-  @override
-  String get appendBeforeContent => '<ul>';
-
-  @override
-  String get appendAfterContent => '</ul>';
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    final allChildren = <SEOHtml>[
+      SEOHtml.ul(children: children),
+    ];
+    if (navItems.isNotEmpty) {
+      allChildren.add(isBreadcrumb
+          ? SEOHtmlJsonLd.breadcrumbList(navItems)
+          : SEOHtmlJsonLd.siteNavigation(navItems));
+    }
+    return SEOHtml.nav(
+      attributes: _buildAttributes(),
+      children: allChildren,
+    );
+  }
 
   @override
   State<StatefulWidget> createState() => _SEONavWrapperState();

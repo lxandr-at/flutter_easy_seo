@@ -11,7 +11,13 @@ class SEOAsideWrapper extends BaseSEOWrapper {
   });
 
   @override
-  String get tagName => 'aside';
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    return _buildSimpleTag(tag: 'aside', children: children, context: context);
+  }
 
   @override
   State<StatefulWidget> createState() => _SEOAsideWrapperState();

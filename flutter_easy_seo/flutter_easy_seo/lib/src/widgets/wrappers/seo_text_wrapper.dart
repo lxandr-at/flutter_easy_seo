@@ -17,10 +17,14 @@ class SEOTextWrapper extends BaseSEOWrapper {
   final String? text;
 
   @override
-  String get tagName => textType.name;
-
-  @override
-  String getContent() => text ?? _extractTextFromChild(child);
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    final content = this.text ?? _extractTextFromChild(child);
+    return _buildSimpleTag(tag: textType.name, content: content, children: children, context: context);
+  }
 
   String _extractTextFromChild(Widget widgetChild) {
     if (widgetChild is Text) return widgetChild.data ?? '';

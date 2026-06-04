@@ -15,7 +15,13 @@ class SEOCustomWrapper extends BaseSEOWrapper {
   });
 
   @override
-  String get tagName => tag ?? 'div';
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    return _buildSimpleTag(tag: tag ?? 'div', children: children, context: context);
+  }
 
   @override
   State<StatefulWidget> createState() => _SEOCustomWrapperState();

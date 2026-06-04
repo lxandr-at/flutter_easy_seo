@@ -1,9 +1,11 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 abstract class SEOWrapper {
-  String getOpenTag();
-  String getCloseTag();
-  String getContent();
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  });
 }
 
 abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
@@ -23,79 +25,50 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
   final List<SEOHtml> _additionalTags;
   List<SEOHtml> get additionalTags => _additionalTags;
 
-  static const _voidElements = {
-    'img',
-    'br',
-    'hr',
-    'meta',
-    'link',
-    'input',
-    'source',
-    'area',
-    'base',
-    'col',
-    'embed',
-    'param',
-    'track',
-    'wbr',
-  };
-
-  String get tagName;
-
-  bool get _isVoid => BaseSEOWrapper._voidElements.contains(tagName);
-
-  String get appendBeforeContent => "";
-
-  String get appendAfterContent => "";
-
-  String get appendBeforeTag => "";
-
-  String get appendAfterTag => "";
-
   Map<String, String> get additionalAttributes => {};
 
-  @override
-  String getContent() => "";
+  static const _headingPriority = {
+    'h1': 0, 'h2': 1, 'h3': 2, 'h4': 3, 'h5': 4, 'h6': 5,
+  };
 
-  @override
-  String getOpenTag({Map<String, String> overrideAttributes = const {}}) {
-    return '$appendBeforeTag${getRawOpenTag(overrideAttributes: overrideAttributes)}>$appendBeforeContent';
+  @protected
+  SEOHtml _buildSimpleTag({
+    required String tag,
+    required List<SEOHtml> children,
+    required BuildContext context,
+    String? content,
+  }) {
+    final resolvedAdditional = additionalTags.map((t) => t.resolve(context)).toList();
+    final headTags = resolvedAdditional.where((t) => _headingPriority.containsKey(t.tag)).toList();
+    headTags.sort((a, b) => (_headingPriority[a.tag] ?? 6).compareTo(_headingPriority[b.tag] ?? 6));
+    final otherTags = resolvedAdditional.where((t) => !_headingPriority.containsKey(t.tag)).toList();
+
+    return SEOHtml(
+      tag: tag,
+      content: content,
+      attributes: _buildAttributes(),
+      children: [
+        ...headTags,
+        ...children,
+        ...otherTags,
+      ],
+    );
   }
 
-  String getRawOpenTag({Map<String, String> overrideAttributes = const {}}) {
-    if (tagName.isEmpty) return '';
-    final buffer = StringBuffer('<$tagName');
-    Map<String, String?> allAttributes = {};
-    if (className != null) {
-      allAttributes["class"] = className!;
-    }
-    allAttributes.addAll(additionalAttributes);
+  Map<String, String>? _buildAttributes() {
+    final attrs = <String, String>{};
+    if (className != null) attrs['class'] = className!;
+    attrs.addAll(additionalAttributes);
     if (attributes != null) {
-      allAttributes.addAll(attributes!);
-    }
-    allAttributes.addAll(overrideAttributes);
-    for (final entry in allAttributes.entries) {
-      if (entry.value != null && entry.value!.isNotEmpty) {
-        buffer.write(' ${entry.key}="${entry.value}"');
-      } else {
-        buffer.write(' ${entry.key}');
+      for (final e in attributes!.entries) {
+        if (e.value != null && e.value!.isNotEmpty) {
+          attrs[e.key] = e.value!;
+        } else {
+          attrs[e.key] = '';
+        }
       }
     }
-    if (_isVoid) {
-      buffer.write(' /');
-    }
-    return buffer.toString();
-  }
-
-  @override
-  String getCloseTag() {
-    return '$appendAfterContent${getRawCloseTag()}$appendAfterTag';
-  }
-
-  String getRawCloseTag() {
-    if (tagName.isEmpty) return '';
-    if (_isVoid) return '';
-    return '</$tagName>';
+    return attrs.isNotEmpty ? attrs : null;
   }
 }
 
@@ -103,25 +76,14 @@ abstract class BaseSEOWrapperState<T extends BaseSEOWrapper> extends State<T> {
   @override
   void initState() {
     super.initState();
-    // Register the WIDGET instance, not the state
     if (widget.globalName != null) {
       EasySEOManager.instance.globals[widget.globalName!] = context;
     }
   }
 
-  // @override
-  // void dispose() {
-  //   // CLEANUP: Remove this widget from globals when it leaves the tree
-  //   if (widget.globalName != null) {
-  //     EasySEOConfig.instance.globals.remove(widget.globalName);
-  //   }
-  //   super.dispose();
-  // }
-
   @override
   void didUpdateWidget(T oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Re-register to ensure EasySEOConfig has the most recent 'widget' instance
     if (widget.globalName != null) {
       EasySEOManager.instance.globals[widget.globalName!] = context;
     }

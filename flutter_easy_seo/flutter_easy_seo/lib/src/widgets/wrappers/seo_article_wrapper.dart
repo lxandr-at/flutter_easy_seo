@@ -11,7 +11,13 @@ class SEOArticleWrapper extends BaseSEOWrapper {
   });
 
   @override
-  String get tagName => 'article';
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    return _buildSimpleTag(tag: 'article', children: children, context: context);
+  }
 
   @override
   State<StatefulWidget> createState() => _SEOArticleWrapperState();

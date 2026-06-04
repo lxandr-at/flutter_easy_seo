@@ -13,7 +13,13 @@ class SEOContainerWrapper extends BaseSEOWrapper {
   final String _tag;
 
   @override
-  String get tagName => _tag;
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    return _buildSimpleTag(tag: _tag, children: children, context: context);
+  }
 
   @override
   State<StatefulWidget> createState() => _SEOContainerWrapperState();

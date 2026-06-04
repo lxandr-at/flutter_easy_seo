@@ -13,19 +13,17 @@ class SEOTimeWrapper extends BaseSEOWrapper {
   final DateTime _dateTime;
 
   @override
-  String get tagName => 'time';
+  Map<String, String> get additionalAttributes => {
+    'datetime': _dateTime.toIso8601String(),
+  };
 
   @override
-  String getOpenTag({Map<String, String> overrideAttributes = const {}}) {
-    final buffer = StringBuffer('<time datetime="${_dateTime.toIso8601String()}"');
-    if (className != null) buffer.write(' class="$className"');
-    if (attributes != null) {
-      for (final entry in attributes!.entries) {
-        buffer.write(' ${entry.key}="${entry.value}"');
-      }
-    }
-    buffer.write('>');
-    return buffer.toString();
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    return _buildSimpleTag(tag: 'time', children: children, context: context);
   }
 
   @override

@@ -10,7 +10,13 @@ class SEOFormWrapper extends BaseSEOWrapper {
   });
 
   @override
-  String get tagName => 'form';
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    return _buildSimpleTag(tag: 'form', children: children, context: context);
+  }
 
   @override
   State<StatefulWidget> createState() => _SEOFormWrapperState();
