@@ -1,12 +1,12 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class EasySEOPageController {
-  FutureOr<EasySEOGenerationResult> Function()? _onGenerate;
+  FutureOr<EasySEOGenerationResult> Function({SEORenderMode? mode})? _onGenerate;
   bool _isReady = true;
 
   // The State calls this to "register" its internal methods
   void _attach({
-    required FutureOr<EasySEOGenerationResult> Function() onGenerate,
+    required FutureOr<EasySEOGenerationResult> Function({SEORenderMode? mode}) onGenerate,
   }) {
     _onGenerate = onGenerate;
   }
@@ -14,9 +14,9 @@ class EasySEOPageController {
   void _setReady(bool ready) => _isReady = ready;
 
   // Public API
-  FutureOr<EasySEOGenerationResult> generate() async {
+  FutureOr<EasySEOGenerationResult> generate({SEORenderMode? mode}) async {
     if (_onGenerate == null) return SeoFailure("Controller generate() not attached to an EasySEOPage function!");
-    return await _onGenerate!();
+    return await _onGenerate!(mode: mode);
   }
 
   bool isReady() => _isReady;
@@ -33,6 +33,7 @@ class EasySEOPage extends StatefulWidget {
   final Future<void> Function()? whenDone;
   final ChangeNotifier? generateOnChanged;
   final int rank;
+  final SEORenderMode? renderMode;
 
   const EasySEOPage({super.key,
     required this.child,
@@ -44,7 +45,8 @@ class EasySEOPage extends StatefulWidget {
     this.includeGlobals = const [],
     this.whenDone,
     this.generateOnChanged,
-    this.rank = 0
+    this.rank = 0,
+    this.renderMode,
   });
 
   @override
@@ -195,7 +197,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
     return EasySEOManager.instance.activeController == _controller;
   }
 
-  EasySEOGenerationResult _generateHTML() {
+  EasySEOGenerationResult _generateHTML({SEORenderMode? mode}) {
     // do nothing if not the active (top level) EasySEOPage widget
     if (!_isActiveController()) {
       return SeoSkipped("not the active (top level) EasySEOPage widget");
@@ -211,7 +213,8 @@ class _EasySEOPageState extends State<EasySEOPage> {
       return SeoMissingRoot("rootElement is null, skipping generation");
     }
 
-    final bodyContent = _processor.processWidgetTree(rootElement, widget.includeGlobals);
+    final effectiveMode = mode ?? widget.renderMode ?? EasySEOManager.instance.renderMode.value;
+    final bodyContent = _processor.processWidgetTree(rootElement, widget.includeGlobals, mode: effectiveMode);
 
     // Extract dynamic route URLs from generated HTML content and add them to gathered pages
     EasySEOManager.instance.gatherFromHtml(bodyContent);

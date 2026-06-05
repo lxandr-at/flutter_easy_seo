@@ -60,6 +60,7 @@ class EasySEOManager {
   final ValueNotifier<bool> disableOnGenerate = ValueNotifier(false);
   final ValueNotifier<bool> enableInteractiveMode = ValueNotifier(false);
   final ValueNotifier<bool> showResultDialog = ValueNotifier(true);
+  final ValueNotifier<SEORenderMode> renderMode = ValueNotifier(SEORenderMode.full);
   bool interactiveMinimized = false;
 
   String? baseUrl;
@@ -112,11 +113,11 @@ class EasySEOManager {
   }
 
   /// Global trigger for the headless test or automated syncs
-  Future<EasySEOGenerationResult> generateActive() async {
+  Future<EasySEOGenerationResult> generateActive({SEORenderMode? mode}) async {
     debugPrint('🗑️ [EasySEO] generateActive() for: ${_stack.keys.lastOrNull ?? "unknown"}');
     final controller = activeController;
     if (controller == null) return SeoSkipped("No active EasySEO controller found in registry.");
-    return await controller.generate();
+    return await controller.generate(mode: mode);
   }
 
   bool seoPageIsReady() {
@@ -193,6 +194,7 @@ class EasySEOManager {
     bool disableOnGenerate = false,
     bool enableInteractiveMode = false,
     bool showResultDialog = true,
+    SEORenderMode? renderMode,
     EasySEOOnGenerateCallback? onGenerate,
     String? baseUrl,
     SEOServiceInfo? serviceInfo,
@@ -207,6 +209,7 @@ class EasySEOManager {
     this.disableOnGenerate.value = disableOnGenerate;
     this.enableInteractiveMode.value = enableInteractiveMode;
     this.showResultDialog.value = showResultDialog;
+    if (renderMode != null) this.renderMode.value = renderMode;
     this.onGenerate = onGenerate;
     this.baseUrl = baseUrl;
     this.serviceInfo = serviceInfo;

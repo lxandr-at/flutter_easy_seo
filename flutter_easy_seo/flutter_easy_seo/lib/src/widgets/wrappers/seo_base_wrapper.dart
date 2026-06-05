@@ -15,6 +15,7 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
     this.className,
     this.attributes,
     this.globalName,
+    this.jsonLd,
     List<SEOHtml> additionalTags = const [],
   }) : _additionalTags = additionalTags;
 
@@ -22,6 +23,7 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
   final String? className;
   final Map<String, String?>? attributes;
   final String? globalName;
+  final Map<String, dynamic>? jsonLd;
   final List<SEOHtml> _additionalTags;
   List<SEOHtml> get additionalTags => _additionalTags;
 
@@ -47,6 +49,7 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
       tag: tag,
       content: content,
       attributes: _buildAttributes(),
+      jsonLd: jsonLd,
       children: [
         ...headTags,
         ...children,

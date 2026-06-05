@@ -16,7 +16,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
     _isMinimized = EasySEOManager.instance.interactiveMinimized;
   }
 
-  void _showResultDialog(
+  void _showSitemapDialog(
     BuildContext context,
     String title,
     String content,
@@ -184,6 +184,24 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
     );
   }
 
+  void _showHtmlPreviewDialog(
+    BuildContext context,
+    String title,
+    SeoSuccess result,
+    String fileName,
+    String contentType,
+  ) {
+    showDialog(
+      context: context,
+      builder: (_) => _SeoPreviewDialog(
+        title: title,
+        initialResult: result,
+        fileName: fileName,
+        contentType: contentType,
+      ),
+    );
+  }
+
   Widget _buildMinimized(BuildContext context) {
     return Tooltip(
       message: 'Expand EasySEO Overlay',
@@ -240,6 +258,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
         manager.enableLiveOutput,
         manager.enableFileOutput,
         manager.showResultDialog,
+        manager.renderMode,
       ]),
       builder: (context, _) {
         return LayoutBuilder(
@@ -348,6 +367,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
                         onChanged: (val) => manager.showResultDialog.value = val,
                         tooltip: 'Show results popup dialog after generation',
                       ),
+                      _buildModeDropdown(),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -371,13 +391,13 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
                         onPressed: () async {
                           final result = await EasySEOManager.instance.generateActive();
                           if (context.mounted) {
-                            if (result case SeoSuccess(:final fullHtml)) {
+                            if (result case SeoSuccess _) {
                               if (manager.showResultDialog.value) {
                                 final fileHandler = EasySEOFileOutput();
-                                _showResultDialog(
+                                _showHtmlPreviewDialog(
                                   context,
                                   'Generated HTML Page',
-                                  fullHtml,
+                                  result,
                                   fileHandler.getSanitizedPath(),
                                   'text/html',
                                 );
@@ -418,7 +438,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
                               fileHandler.saveSitemap(sitemap);
                             }
                             if (manager.showResultDialog.value) {
-                              _showResultDialog(
+                              _showSitemapDialog(
                                 context,
                                 'Generated sitemap.xml',
                                 sitemap,
@@ -518,6 +538,322 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModeDropdown() {
+    final manager = EasySEOManager.instance;
+    const labels = {
+      SEORenderMode.htmlOnly: 'HTML Only',
+      SEORenderMode.microdata: 'Microdata',
+      SEORenderMode.jsonLdOnly: 'JSON-LD Only',
+      SEORenderMode.full: 'Full',
+      SEORenderMode.microdataAndJsonLd: 'Microdata+JSON-LD',
+    };
+    return Tooltip(
+      message: 'Set global SEORenderMode',
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.white.withAlpha(10),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withAlpha(20), width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.style, color: Color(0xFF00D2FF), size: 14),
+            const SizedBox(width: 4),
+            DropdownButton<SEORenderMode>(
+              value: manager.renderMode.value,
+              isDense: true,
+              dropdownColor: const Color(0xFF2C3E50),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Outfit',
+              ),
+              underline: const SizedBox(),
+              items: SEORenderMode.values.map((mode) {
+                return DropdownMenuItem<SEORenderMode>(
+                  value: mode,
+                  child: Padding(
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      labels[mode] ?? mode.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontFamily: 'Outfit',
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: (mode) {
+                if (mode != null) {
+                  manager.renderMode.value = mode;
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SeoPreviewDialog extends StatefulWidget {
+  final String title;
+  final String fileName;
+  final String contentType;
+  final SeoSuccess initialResult;
+
+  const _SeoPreviewDialog({
+    required this.title,
+    required this.initialResult,
+    required this.fileName,
+    required this.contentType,
+  });
+
+  @override
+  State<_SeoPreviewDialog> createState() => _SeoPreviewDialogState();
+}
+
+class _SeoPreviewDialogState extends State<_SeoPreviewDialog> {
+  late SEORenderMode _selectedMode;
+  late SeoSuccess _currentResult;
+  bool _isRegenerating = false;
+
+  static const _modeLabels = {
+    SEORenderMode.htmlOnly: 'HTML Only',
+    SEORenderMode.microdata: 'Microdata',
+    SEORenderMode.jsonLdOnly: 'JSON-LD Only',
+    SEORenderMode.full: 'Full',
+    SEORenderMode.microdataAndJsonLd: 'Microdata+JSON-LD',
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedMode = EasySEOManager.instance.renderMode.value;
+    _currentResult = widget.initialResult;
+  }
+
+  Future<void> _onModeChanged(SEORenderMode mode) async {
+    if (mode == _selectedMode) return;
+    _selectedMode = mode;
+    setState(() => _isRegenerating = true);
+    final result = await EasySEOManager.instance.generateActive(mode: mode);
+    if (mounted && result is SeoSuccess) {
+      setState(() {
+        _currentResult = result;
+        _isRegenerating = false;
+      });
+    } else if (mounted) {
+      setState(() => _isRegenerating = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scrollController = ScrollController();
+    final showDownloadButton = !EasySEOManager.instance.enableFileOutput.value;
+
+    return Dialog(
+      backgroundColor: const Color(0xFF1E1E1E),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Color(0xFF333333), width: 1.5),
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.7,
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Outfit',
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white70),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: SEORenderMode.values.map((mode) => _buildModeChip(mode)).toList(),
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF121212),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFF2A2A2A)),
+                ),
+                child: _isRegenerating
+                    ? const Center(
+                        child: CircularProgressIndicator(color: Color(0xFF00D2FF)),
+                      )
+                    : RawScrollbar(
+                        controller: scrollController,
+                        thickness: 8.0,
+                        radius: const Radius.circular(4),
+                        thumbColor: Colors.white.withAlpha(128),
+                        minThumbLength: 40,
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          physics: const BouncingScrollPhysics(),
+                          child: Container(
+                            width: double.infinity,
+                            constraints: const BoxConstraints(minHeight: 0),
+                            child: SelectableText(
+                              _currentResult.fullHtml,
+                              style: const TextStyle(
+                                color: Color(0xFFE0E0E0),
+                                fontFamily: 'Courier',
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (showDownloadButton) ...[
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00D2FF),
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    ),
+                    onPressed: () {
+                      final fileHandler = EasySEOFileOutput();
+                      if (widget.fileName == 'sitemap.xml') {
+                        fileHandler.saveSitemap(_currentResult.fullHtml);
+                      } else {
+                        fileHandler.saveHTMLFile(_currentResult.fullHtml);
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: const [
+                              Icon(Icons.download_done, color: Colors.greenAccent),
+                              SizedBox(width: 8),
+                              Text('File download triggered!'),
+                            ],
+                          ),
+                          backgroundColor: const Color(0xFF1E1E1E),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.file_download, size: 18),
+                    label: const Text(
+                      'Download',
+                      style: TextStyle(fontFamily: 'Outfit', fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                ],
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2196F3),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: _currentResult.fullHtml));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: const [
+                            Icon(Icons.check_circle, color: Colors.greenAccent),
+                            SizedBox(width: 8),
+                            Text('Copied to clipboard!'),
+                          ],
+                        ),
+                        backgroundColor: const Color(0xFF1E1E1E),
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.copy, size: 18),
+                  label: const Text(
+                    'Copy All',
+                    style: TextStyle(fontFamily: 'Outfit', fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModeChip(SEORenderMode mode) {
+    final isSelected = mode == _selectedMode;
+    final label = _modeLabels[mode] ?? mode.name;
+    return Tooltip(
+      message: 'Switch to $label mode',
+      child: InkWell(
+        onTap: _isRegenerating ? null : () => _onModeChanged(mode),
+        borderRadius: BorderRadius.circular(20),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFF00D2FF).withAlpha(38) : Colors.white.withAlpha(10),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected ? const Color(0xFF00D2FF).withAlpha(102) : Colors.white.withAlpha(20),
+              width: 1,
+            ),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Colors.white60,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Outfit',
+            ),
+          ),
         ),
       ),
     );

@@ -10,16 +10,10 @@ extension SEOStringExtension on String {
   SEOHtml get seoP => SEOHtml.p(this);
   SEOHtml get seoBrand => SEOHtml.p(
         "",
-        attributes: {
-          'itemprop': 'brand',
-          'itemscope': '',
-          'itemtype': 'https://schema.org/Brand',
+        attributes: {'itemprop': 'brand'},
+        jsonLd: {
+          '@type': 'Brand',
+          'name': this,
         },
-        children: [
-          SEOHtml.span(
-            this,
-            attributes: {'itemprop': "name"},
-          ),
-        ],
       );
 }

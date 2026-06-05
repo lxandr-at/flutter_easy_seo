@@ -12,7 +12,7 @@ class SEOWidgetTreeProcessor {
     'h6': 5,
   };
 
-  String processWidgetTree(Element rootElement, List<String> includeGlobals) {
+  String processWidgetTree(Element rootElement, List<String> includeGlobals, {SEORenderMode mode = SEORenderMode.microdataAndJsonLd}) {
     _metadata = null;
 
     final roots = <SEOHtml>[];
@@ -26,7 +26,7 @@ class SEOWidgetTreeProcessor {
 
     roots.add(_buildSeoHtml(rootElement).html);
 
-    return roots.map((r) => r.toHtmlString()).join();
+    return roots.map((r) => r.toHtmlString(mode: mode)).join();
   }
 
   SEOPageMetadata? get metadata => _metadata;
@@ -64,6 +64,12 @@ class SEOWidgetTreeProcessor {
       );
 
       int ownPriority = _headingPriority[html.tag] ?? 6;
+      for (final child in html.children) {
+        final childPrio = _headingPriority[child.tag];
+        if (childPrio != null && childPrio < ownPriority) {
+          ownPriority = childPrio;
+        }
+      }
       if (ownPriority < bubbledPriority) {
         bubbledPriority = ownPriority;
       }

@@ -141,6 +141,11 @@ extension SEOWidgetExtension on Widget {
   ) {
     return SEOArticleWrapper(
       attributes: const {'itemscope': null, 'itemtype': "https://schema.org/Product"},
+      jsonLd: {
+        '@type': 'Product',
+        'name': productName,
+        // url is extracted from the child <a itemprop="url"> by _extractMicrodataValue()
+      },
       additionalTags: [
         headingBuilder(
             path == null ? productName : '',
@@ -157,10 +162,11 @@ extension SEOWidgetExtension on Widget {
 
   Widget seoBrand(String brandName) {
     return SEOTextWrapper(
-      attributes: const {'itemprop': "brand", 'itemscope': null, 'itemtype': "https://schema.org/Brand"},
-      additionalTags: [
-        SEOHtml.span(brandName, attributes: {'itemprop': "name"})
-      ],
+      attributes: const {'itemprop': "brand"},
+      jsonLd: {
+        '@type': 'Brand',
+        'name': brandName,
+      },
       child: this,
     );
   }

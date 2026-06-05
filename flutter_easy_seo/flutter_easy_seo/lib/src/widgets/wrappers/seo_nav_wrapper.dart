@@ -21,17 +21,16 @@ class SEONavWrapper extends BaseSEOWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    final allChildren = <SEOHtml>[
-      SEOHtml.ul(children: children),
-    ];
-    if (navItems.isNotEmpty) {
-      allChildren.add(isBreadcrumb
-          ? SEOHtmlJsonLd.breadcrumbList(navItems)
-          : SEOHtmlJsonLd.siteNavigation(navItems));
-    }
     return SEOHtml.nav(
       attributes: _buildAttributes(),
-      children: allChildren,
+      jsonLd: navItems.isNotEmpty
+          ? (isBreadcrumb
+              ? SEOHtmlJsonLd.breadcrumbListData(navItems)
+              : SEOHtmlJsonLd.siteNavigationData(navItems))
+          : null,
+      children: [
+        SEOHtml.ul(children: children),
+      ],
     );
   }
 

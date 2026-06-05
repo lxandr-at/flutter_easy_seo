@@ -10,6 +10,7 @@ class SEOTextWrapper extends BaseSEOWrapper {
     super.className,
     super.attributes,
     super.additionalTags,
+    super.jsonLd,
     this.text,
   });
 

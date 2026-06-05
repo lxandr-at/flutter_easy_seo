@@ -8,6 +8,7 @@ class SEOArticleWrapper extends BaseSEOWrapper {
     super.attributes,
     super.globalName,
     super.additionalTags,
+    super.jsonLd,
   });
 
   @override
