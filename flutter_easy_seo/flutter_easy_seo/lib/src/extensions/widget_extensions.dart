@@ -103,6 +103,15 @@ extension SEOWidgetExtension on Widget {
     );
   }
 
+  Widget seoMain({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+    return SEOMainWrapper(
+      className: className,
+      attributes: attributes,
+      additionalTags: additionalTags,
+      child: this,
+    );
+  }
+
   Widget seoList({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
     return SEOListWrapper(
       className: className,
@@ -173,5 +182,64 @@ extension SEOWidgetExtension on Widget {
 
   Widget seoImage({String? name, String? url}) {
     return SEOImageWrapper(alt: name, src: url, attributes: {'itemprop': "image"}, child: this);
+  }
+
+  Widget seoAside({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+    return SEOAsideWrapper(
+      className: className,
+      attributes: attributes,
+      additionalTags: additionalTags,
+      child: this,
+    );
+  }
+
+  Widget seoContainer({String tag = 'div', String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+    return SEOContainerWrapper(
+      tag: tag,
+      className: className,
+      attributes: attributes,
+      additionalTags: additionalTags,
+      child: this,
+    );
+  }
+
+  Widget seoFigure({String? caption, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+    return SEOFigureWrapper(
+      caption: caption,
+      className: className,
+      attributes: attributes,
+      additionalTags: additionalTags,
+      child: this,
+    );
+  }
+
+  Widget seoForm({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+    return SEOFormWrapper(
+      className: className,
+      attributes: attributes,
+      additionalTags: additionalTags,
+      child: this,
+    );
+  }
+
+  Widget seoNav({String? label, bool isBreadcrumb = false, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+    return SEONavWrapper(
+      label: label,
+      isBreadcrumb: isBreadcrumb,
+      className: className,
+      attributes: attributes,
+      additionalTags: additionalTags,
+      child: this,
+    );
+  }
+
+  Widget seoTime({required DateTime dateTime, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+    return SEOTimeWrapper(
+      dateTime: dateTime,
+      className: className,
+      attributes: attributes,
+      additionalTags: additionalTags,
+      child: this,
+    );
   }
 }

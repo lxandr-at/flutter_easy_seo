@@ -1,0 +1,420 @@
+part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
+
+class EasySEOInteractiveOverlay extends StatefulWidget {
+  const EasySEOInteractiveOverlay({super.key});
+
+  @override
+  State<EasySEOInteractiveOverlay> createState() => _EasySEOInteractiveOverlayState();
+}
+
+class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
+  late bool _isMinimized;
+
+  @override
+  void initState() {
+    super.initState();
+    _isMinimized = EasySEOManager.instance.interactiveMinimized;
+  }
+
+  void _showSitemapDialog(
+    BuildContext context,
+    String title,
+    String content,
+    String fileName,
+    String contentType,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final scrollController = ScrollController();
+        return _SeoDialog(
+          title: title,
+          content: _SeoCodeDisplay(text: content, scrollController: scrollController),
+          actions: [_SeoDialogActions(content: content, fileName: fileName)],
+        );
+      },
+    );
+  }
+
+  void _showHtmlPreviewDialog(
+    BuildContext context,
+    String title,
+    SeoSuccess result,
+    String fileName,
+    String contentType,
+  ) {
+    showDialog(
+      context: context,
+      builder: (_) => _SeoPreviewDialog(
+        title: title,
+        initialResult: result,
+        fileName: fileName,
+        contentType: contentType,
+      ),
+    );
+  }
+
+  Widget _buildMinimized(BuildContext context) {
+    return Tooltip(
+      message: 'Expand EasySEO Overlay',
+      child: InkWell(
+        onTap: () => setState(() {
+          _isMinimized = false;
+          EasySEOManager.instance.interactiveMinimized = false;
+        }),
+        borderRadius: BorderRadius.circular(28),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF2C3E50), Color(0xFF0F2027)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(128),
+                blurRadius: 15,
+                spreadRadius: 2,
+                offset: const Offset(0, 5),
+              ),
+            ],
+            border: Border.all(
+              color: Colors.white.withAlpha(38),
+              width: 1.5,
+            ),
+          ),
+          child: const Icon(
+            Icons.troubleshoot,
+            color: Color(0xFF00D2FF),
+            size: 26,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isMinimized) {
+      return _buildMinimized(context);
+    }
+
+    final manager = EasySEOManager.instance;
+    return AnimatedBuilder(
+      animation: Listenable.merge([
+        manager.disableOnGenerate,
+        manager.enableLiveOutput,
+        manager.enableFileOutput,
+        manager.showResultDialog,
+        manager.renderMode,
+      ]),
+      builder: (context, _) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isNarrow = constraints.maxWidth < 600;
+
+            return Container(
+              constraints: const BoxConstraints(maxWidth: 680),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF2C3E50), Color(0xFF0F2027)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(128),
+                    blurRadius: 15,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+                border: Border.all(
+                  color: Colors.white.withAlpha(38),
+                  width: 1.5,
+                ),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: isNarrow ? 12 : 20,
+                vertical: isNarrow ? 10 : 16,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Header Row with Title and Minimize Button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: const [
+                          Icon(Icons.analytics, color: Color(0xFF00D2FF), size: 16),
+                          SizedBox(width: 8),
+                          Text(
+                            'EasySEO Interactive Panel',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Outfit',
+                            ),
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        constraints: const BoxConstraints(),
+                        padding: EdgeInsets.zero,
+                        icon: const Icon(Icons.close_fullscreen, color: Colors.white70, size: 16),
+                        tooltip: 'Minimize Panel',
+                        onPressed: () => setState(() {
+                          _isMinimized = true;
+                          EasySEOManager.instance.interactiveMinimized = true;
+                        }),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  // Elegant separator
+                  Container(
+                    height: 1,
+                    width: double.infinity,
+                    color: Colors.white.withAlpha(20),
+                  ),
+                  const SizedBox(height: 12),
+                  // Row 1: Settings Toggles
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      _buildToggle(
+                        label: 'Auto Gen',
+                        value: !manager.disableOnGenerate.value,
+                        icon: Icons.sync,
+                        onChanged: (val) => manager.disableOnGenerate.value = !val,
+                        tooltip: 'Automatically trigger SEO generation on page load',
+                      ),
+                      _buildToggle(
+                        label: 'Live Out',
+                        value: manager.enableLiveOutput.value,
+                        icon: Icons.bolt,
+                        onChanged: (val) => manager.enableLiveOutput.value = val,
+                        tooltip: 'Inject SEO tags dynamically in DOM',
+                      ),
+                      _buildToggle(
+                        label: 'File Out',
+                        value: manager.enableFileOutput.value,
+                        icon: Icons.file_download,
+                        onChanged: (val) => manager.enableFileOutput.value = val,
+                        tooltip: 'Automatically download generated HTML and sitemap files',
+                      ),
+                      _buildToggle(
+                        label: 'Show Popup',
+                        value: manager.showResultDialog.value,
+                        icon: Icons.visibility,
+                        onChanged: (val) => manager.showResultDialog.value = val,
+                        tooltip: 'Show results popup dialog after generation',
+                      ),
+                      _buildModeDropdown(),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  // Elegant separator
+                  Container(
+                    height: 1,
+                    width: double.infinity,
+                    color: Colors.white.withAlpha(25),
+                  ),
+                  const SizedBox(height: 12),
+                  // Row 2: Action Buttons
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 10,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      _buildButton(
+                        context: context,
+                        label: 'Generate HTML',
+                        icon: Icons.code,
+                        onPressed: () async {
+                          final result = await EasySEOManager.instance.generateActive();
+                          if (context.mounted) {
+                            if (result case SeoSuccess _) {
+                              if (manager.showResultDialog.value) {
+                                final fileHandler = EasySEOFileOutput();
+                                _showHtmlPreviewDialog(
+                                  context,
+                                  'Generated HTML Page',
+                                  result,
+                                  fileHandler.getSanitizedPath(),
+                                  'text/html',
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('HTML generated successfully!')),
+                                );
+                              }
+                            } else if (result case SeoFailure(:final error)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Generation failed: $error')),
+                              );
+                            } else if (result case SeoSkipped(:final reason)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Generation skipped: $reason')),
+                              );
+                            } else if (result case SeoMissingRoot(:final message)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Missing root element: $message')),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                      _buildButton(
+                        context: context,
+                        label: 'Generate Sitemap',
+                        icon: Icons.account_tree,
+                        onPressed: () {
+                          final sitemap = EasySEOManager.instance.generateSitemapContent();
+                          if (sitemap.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Sitemap is empty. Check your baseUrl and pages!')),
+                            );
+                          } else {
+                            if (manager.enableFileOutput.value) {
+                              final fileHandler = EasySEOFileOutput();
+                              fileHandler.saveSitemap(sitemap);
+                            }
+                            if (manager.showResultDialog.value) {
+                              _showSitemapDialog(
+                                context,
+                                'Generated sitemap.xml',
+                                sitemap,
+                                'sitemap.xml',
+                                'text/xml',
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Sitemap generated successfully!')),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildToggle({
+    required String label,
+    required bool value,
+    required IconData icon,
+    required ValueChanged<bool> onChanged,
+    required String tooltip,
+  }) {
+    return _SeoChip(
+      label: label,
+      icon: icon,
+      isSelected: value,
+      onTap: () => onChanged(!value),
+      tooltip: tooltip,
+    );
+  }
+
+  Widget _buildButton({
+    required BuildContext context,
+    required String label,
+    required IconData icon,
+    required VoidCallback onPressed,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: const Color(0xFF00D2FF), size: 18),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                fontFamily: 'Outfit',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModeDropdown() {
+    final manager = EasySEOManager.instance;
+    return Tooltip(
+      message: 'Set global SEORenderMode',
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.white.withAlpha(10),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withAlpha(20), width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.style, color: Color(0xFF00D2FF), size: 14),
+            const SizedBox(width: 4),
+            DropdownButton<SEORenderMode>(
+              value: manager.renderMode.value,
+              isDense: true,
+              dropdownColor: const Color(0xFF2C3E50),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Outfit',
+              ),
+              underline: const SizedBox(),
+              items: SEORenderMode.values.map((mode) {
+                return DropdownMenuItem<SEORenderMode>(
+                  value: mode,
+                  child: Padding(
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      _seoRenderModeLabels[mode] ?? mode.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontFamily: 'Outfit',
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: (mode) {
+                if (mode != null) {
+                  manager.renderMode.value = mode;
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
