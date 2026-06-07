@@ -9,6 +9,7 @@ class SEOTextWrapper extends BaseSEOWrapper {
     this.textType = SEOTextType.p,
     super.className,
     super.attributes,
+    super.globalName,
     super.additionalTags,
     super.jsonLd,
     this.text,

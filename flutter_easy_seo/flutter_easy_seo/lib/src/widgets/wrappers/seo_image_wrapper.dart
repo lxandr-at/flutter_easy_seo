@@ -9,6 +9,7 @@ class SEOImageWrapper extends BaseSEOWrapper {
     required super.child,
     super.className,
     super.attributes,
+    super.globalName,
     super.additionalTags,
     this.alt,
     this.src,

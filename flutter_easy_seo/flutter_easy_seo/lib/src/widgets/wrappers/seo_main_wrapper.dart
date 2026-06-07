@@ -6,6 +6,7 @@ class SEOMainWrapper extends BaseSEOWrapper {
     required super.child,
     super.className,
     super.attributes,
+    super.globalName,
     super.additionalTags,
   });
 

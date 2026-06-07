@@ -8,6 +8,7 @@ class SEOHeaderWrapper extends BaseSEOWrapper {
     this.p,
     super.className,
     super.attributes,
+    super.globalName,
     super.additionalTags,
   });
 

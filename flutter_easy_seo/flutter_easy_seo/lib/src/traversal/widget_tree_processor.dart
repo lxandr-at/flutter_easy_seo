@@ -2,6 +2,7 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class SEOWidgetTreeProcessor {
   SEOPageMetadata? _metadata;
+  Set<String>? _skipGlobals;
 
   static const _headingPriority = {
     'h1': 0,
@@ -24,7 +25,9 @@ class SEOWidgetTreeProcessor {
       }
     }
 
+    _skipGlobals = includeGlobals.toSet();
     roots.add(_buildSeoHtml(rootElement).html);
+    _skipGlobals = null;
 
     return roots.map((r) => r.toHtmlString(mode: mode)).join();
   }
@@ -36,6 +39,13 @@ class SEOWidgetTreeProcessor {
 
     final childResults = <_BuildResult>[];
     element.visitChildren((child) {
+      final childWidget = child.widget;
+      if (childWidget is BaseSEOWrapper &&
+          childWidget.globalName != null &&
+          _skipGlobals != null &&
+          _skipGlobals!.contains(childWidget.globalName)) {
+        return;
+      }
       childResults.add(_buildSeoHtml(child));
     });
 

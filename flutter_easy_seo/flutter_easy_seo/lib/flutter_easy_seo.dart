@@ -47,5 +47,6 @@ part 'src/widgets/wrappers/seo_image_wrapper.dart';
 part 'src/widgets/wrappers/seo_header_wrapper.dart';
 part 'src/widgets/wrappers/seo_form_wrapper.dart';
 part 'src/widgets/wrappers/seo_figure_wrapper.dart';
+part 'src/widgets/wrappers/seo_footer_wrapper.dart';
 part 'src/widgets/wrappers/seo_custom_wrapper.dart';
 part 'src/widgets/wrappers/seo_nav_link_wrapper.dart';

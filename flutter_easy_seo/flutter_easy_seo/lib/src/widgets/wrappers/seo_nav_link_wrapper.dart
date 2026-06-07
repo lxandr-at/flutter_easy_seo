@@ -9,6 +9,7 @@ class SEONavLinkWrapper extends BaseSEOWrapper {
     required super.child,
     super.className,
     super.attributes,
+    super.globalName,
     super.additionalTags,
     required this.path,
     this.text,

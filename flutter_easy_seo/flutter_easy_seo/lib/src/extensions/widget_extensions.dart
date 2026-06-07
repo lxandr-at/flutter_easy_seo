@@ -7,6 +7,7 @@ extension SEOWidgetExtension on Widget {
     String? tag,
     String? className,
     Map<String, String>? attributes,
+    String? globalName,
     List<SEOHtml> additionalTags = const [],
   }) {
     return SEOCustomWrapper(
@@ -14,6 +15,7 @@ extension SEOWidgetExtension on Widget {
       tag: tag,
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
@@ -24,6 +26,7 @@ extension SEOWidgetExtension on Widget {
     String? className,
     Map<String, String>? attributes,
     String? text,
+    String? globalName,
     List<SEOHtml> additionalTags = const [],
   }) {
     return SEOTextWrapper(
@@ -31,31 +34,33 @@ extension SEOWidgetExtension on Widget {
       className: className,
       attributes: attributes,
       text: text,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoH1({String? text, List<SEOHtml> additionalTags = const []}) =>
-      seoText(textType: SEOTextType.h1, text: text, additionalTags: additionalTags);
-  Widget seoH2({String? text, List<SEOHtml> additionalTags = const []}) =>
-      seoText(textType: SEOTextType.h2, text: text, additionalTags: additionalTags);
-  Widget seoH3({String? text, List<SEOHtml> additionalTags = const []}) =>
-      seoText(textType: SEOTextType.h3, text: text, additionalTags: additionalTags);
-  Widget seoH4({String? text, List<SEOHtml> additionalTags = const []}) =>
-      seoText(textType: SEOTextType.h4, text: text, additionalTags: additionalTags);
-  Widget seoH5({String? text, List<SEOHtml> additionalTags = const []}) =>
-      seoText(textType: SEOTextType.h5, text: text, additionalTags: additionalTags);
-  Widget seoH6({String? text, List<SEOHtml> additionalTags = const []}) =>
-      seoText(textType: SEOTextType.h6, text: text, additionalTags: additionalTags);
-  Widget seoP({String? text, List<SEOHtml> additionalTags = const []}) =>
-      seoText(textType: SEOTextType.p, text: text, additionalTags: additionalTags);
+  Widget seoH1({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
+      seoText(textType: SEOTextType.h1, text: text, globalName: globalName, additionalTags: additionalTags);
+  Widget seoH2({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
+      seoText(textType: SEOTextType.h2, text: text, globalName: globalName, additionalTags: additionalTags);
+  Widget seoH3({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
+      seoText(textType: SEOTextType.h3, text: text, globalName: globalName, additionalTags: additionalTags);
+  Widget seoH4({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
+      seoText(textType: SEOTextType.h4, text: text, globalName: globalName, additionalTags: additionalTags);
+  Widget seoH5({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
+      seoText(textType: SEOTextType.h5, text: text, globalName: globalName, additionalTags: additionalTags);
+  Widget seoH6({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
+      seoText(textType: SEOTextType.h6, text: text, globalName: globalName, additionalTags: additionalTags);
+  Widget seoP({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
+      seoText(textType: SEOTextType.p, text: text, globalName: globalName, additionalTags: additionalTags);
 
   Widget seoNavLink({
     required String path,
     required String text,
     String? className,
     Map<String, String>? attributes,
+    String? globalName,
     List<SEOHtml> additionalTags = const [],
   }) {
     return SEONavLinkWrapper(
@@ -63,6 +68,7 @@ extension SEOWidgetExtension on Widget {
       text: text,
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
@@ -73,6 +79,7 @@ extension SEOWidgetExtension on Widget {
     String? p,
     String? className,
     Map<String, String>? attributes,
+    String? globalName,
     List<SEOHtml> additionalTags = const [],
   }) {
     return SEOHeaderWrapper(
@@ -80,61 +87,69 @@ extension SEOWidgetExtension on Widget {
       p: p,
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoSection({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoSection({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOSectionWrapper(
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoArticle({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoArticle({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOArticleWrapper(
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoMain({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoMain({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOMainWrapper(
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoList({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoList({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOListWrapper(
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoListItem({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoListItem({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOListItemWrapper(
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
   Widget seoHtml({
+    String? globalName,
     List<SEOHtml> additionalTags = const [],
   }) {
     return SEOCustomWrapper(
       tag: "",
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
@@ -145,7 +160,8 @@ extension SEOWidgetExtension on Widget {
     {
       String? path,
       SEOHtml Function(String? content, {Map<String, String>? attributes,List<SEOHtml> children,}) headingBuilder = SEOHtml.h1,
-      List<SEOHtml> additionalTags = const []
+      List<SEOHtml> additionalTags = const [],
+      String? globalName,
     }
   ) {
     return SEOArticleWrapper(
@@ -153,8 +169,8 @@ extension SEOWidgetExtension on Widget {
       jsonLd: {
         '@type': 'Product',
         'name': productName,
-        // url is extracted from the child <a itemprop="url"> by _extractMicrodataValue()
       },
+      globalName: globalName,
       additionalTags: [
         headingBuilder(
             path == null ? productName : '',
@@ -169,75 +185,92 @@ extension SEOWidgetExtension on Widget {
     );
   }
 
-  Widget seoBrand(String brandName) {
+  Widget seoBrand(String brandName, {String? globalName}) {
     return SEOTextWrapper(
       attributes: const {'itemprop': "brand"},
       jsonLd: {
         '@type': 'Brand',
         'name': brandName,
       },
+      globalName: globalName,
       child: this,
     );
   }
 
-  Widget seoImage({String? name, String? url}) {
-    return SEOImageWrapper(alt: name, src: url, attributes: {'itemprop': "image"}, child: this);
+  Widget seoImage({String? name, String? url, String? globalName}) {
+    return SEOImageWrapper(alt: name, src: url, attributes: {'itemprop': "image"}, globalName: globalName, child: this);
   }
 
-  Widget seoAside({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoAside({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOAsideWrapper(
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoContainer({String tag = 'div', String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoContainer({String tag = 'div', String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOContainerWrapper(
       tag: tag,
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoFigure({String? caption, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoFigure({String? caption, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOFigureWrapper(
       caption: caption,
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoForm({String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoForm({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOFormWrapper(
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoNav({String? label, bool isBreadcrumb = false, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoFooter({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+    return SEOFooterWrapper(
+      className: className,
+      attributes: attributes,
+      globalName: globalName,
+      additionalTags: additionalTags,
+      child: this,
+    );
+  }
+
+  Widget seoNav({String? label, bool isBreadcrumb = false, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEONavWrapper(
       label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );
   }
 
-  Widget seoTime({required DateTime dateTime, String? className, Map<String, String>? attributes, List<SEOHtml> additionalTags = const []}) {
+  Widget seoTime({required DateTime dateTime, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOTimeWrapper(
       dateTime: dateTime,
       className: className,
       attributes: attributes,
+      globalName: globalName,
       additionalTags: additionalTags,
       child: this,
     );

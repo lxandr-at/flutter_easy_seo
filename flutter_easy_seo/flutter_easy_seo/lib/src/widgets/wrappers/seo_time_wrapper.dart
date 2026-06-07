@@ -6,6 +6,7 @@ class SEOTimeWrapper extends BaseSEOWrapper {
     required super.child,
     super.className,
     super.attributes,
+    super.globalName,
     super.additionalTags,
     required DateTime dateTime,
   }) : _dateTime = dateTime;

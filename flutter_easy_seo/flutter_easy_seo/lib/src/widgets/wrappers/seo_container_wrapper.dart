@@ -7,6 +7,7 @@ class SEOContainerWrapper extends BaseSEOWrapper {
     String tag = 'div',
     super.className,
     super.attributes,
+    super.globalName,
     super.additionalTags,
   }) : _tag = tag;
 

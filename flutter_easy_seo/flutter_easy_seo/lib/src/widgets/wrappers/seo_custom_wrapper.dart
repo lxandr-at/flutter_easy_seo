@@ -11,6 +11,7 @@ class SEOCustomWrapper extends BaseSEOWrapper {
     this.tag,
     super.className,
     super.attributes,
+    super.globalName,
     super.additionalTags,
   });
 
