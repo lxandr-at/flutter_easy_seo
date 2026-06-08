@@ -9,9 +9,11 @@ class SEOTimeWrapper extends BaseSEOWrapper {
     super.globalName,
     super.additionalTags,
     required DateTime dateTime,
+    this.text,
   }) : _dateTime = dateTime;
 
   final DateTime _dateTime;
+  final String? text;
 
   @override
   Map<String, String> get additionalAttributes => {
@@ -24,7 +26,7 @@ class SEOTimeWrapper extends BaseSEOWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return _buildSimpleTag(tag: 'time', children: children, context: context);
+    return _buildSimpleTag(tag: 'time', children: children, context: context, content: text);
   }
 
   @override

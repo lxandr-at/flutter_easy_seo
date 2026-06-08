@@ -86,8 +86,24 @@ class SEOHtml {
       : tag = 'nav', relativePath = null;
   const SEOHtml.figure({this.content, this.attributes, this.children = const [], this.jsonLd})
       : tag = 'figure', relativePath = null;
-  const SEOHtml.time({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'time', relativePath = null;
+  factory SEOHtml.time({
+    String? text,
+    Map<String, String>? attributes,
+    List<SEOHtml> children = const [],
+    Map<String, dynamic>? jsonLd,
+    required DateTime dateTime,
+  }) {
+    return SEOHtml(
+      tag: 'time',
+      content: text,
+      children: children,
+      jsonLd: jsonLd,
+      attributes: {
+        ...?attributes,
+        'datetime': dateTime.toIso8601String(),
+      },
+    );
+  }
 
   // List tags
   const SEOHtml.ul({this.content, this.attributes, this.children = const [], this.jsonLd})

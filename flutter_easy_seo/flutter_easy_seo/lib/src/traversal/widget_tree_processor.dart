@@ -16,20 +16,22 @@ class SEOWidgetTreeProcessor {
   String processWidgetTree(Element rootElement, List<String> includeGlobals, {SEORenderMode mode = SEORenderMode.microdataAndJsonLd}) {
     _metadata = null;
 
-    final roots = <SEOHtml>[];
+    final rootResults = <_BuildResult>[];
 
     for (final name in includeGlobals) {
       final element = EasySEOManager.instance.globals[name] as Element?;
       if (element != null && element.mounted) {
-        roots.add(_buildSeoHtml(element).html);
+        rootResults.add(_buildSeoHtml(element));
       }
     }
 
     _skipGlobals = includeGlobals.toSet();
-    roots.add(_buildSeoHtml(rootElement).html);
+    rootResults.add(_buildSeoHtml(rootElement));
     _skipGlobals = null;
 
-    return roots.map((r) => r.toHtmlString(mode: mode)).join();
+    rootResults.sort((a, b) => a.order.compareTo(b.order));
+
+    return rootResults.map((r) => r.html.toHtmlString(mode: mode)).join();
   }
 
   SEOPageMetadata? get metadata => _metadata;
@@ -74,6 +76,7 @@ class SEOWidgetTreeProcessor {
       );
 
       int ownPriority = _headingPriority[html.tag] ?? 6;
+      int ownOrder = html.tag == 'footer' ? 1 : 0;
       for (final child in html.children) {
         final childPrio = _headingPriority[child.tag];
         if (childPrio != null && childPrio < ownPriority) {
@@ -88,6 +91,7 @@ class SEOWidgetTreeProcessor {
         html,
         wrapper is SEONavWrapper ? const [] : navItems,
         bubbledPriority,
+        ownOrder,
       );
     }
 
@@ -98,6 +102,12 @@ class SEOWidgetTreeProcessor {
     );
   }
 
+  static int _compareOrder(_BuildResult a, _BuildResult b) {
+    if (a.order != b.order) return a.order.compareTo(b.order);
+    if (a.priority != b.priority) return a.priority.compareTo(b.priority);
+    return 0;
+  }
+
   static List<_BuildResult> _sortByPriority(List<_BuildResult> nodes) {
     final indexed = List.generate(
       nodes.length,
@@ -105,7 +115,8 @@ class SEOWidgetTreeProcessor {
     );
 
     indexed.sort((a, b) {
-      if (a.node.priority != b.node.priority) return a.node.priority.compareTo(b.node.priority);
+      final cmp = _compareOrder(a.node, b.node);
+      if (cmp != 0) return cmp;
       return a.index.compareTo(b.index);
     });
 
@@ -117,8 +128,9 @@ class _BuildResult {
   final SEOHtml html;
   final List<SEONavItem> navItems;
   final int priority;
+  final int order;
 
-  const _BuildResult(this.html, this.navItems, [this.priority = 6]);
+  const _BuildResult(this.html, this.navItems, [this.priority = 6, this.order = 0]);
 }
 
 class SEOPageMetadata {

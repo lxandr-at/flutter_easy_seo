@@ -265,9 +265,10 @@ extension SEOWidgetExtension on Widget {
     );
   }
 
-  Widget seoTime({required DateTime dateTime, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget seoTime({required DateTime dateTime, String? text, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return SEOTimeWrapper(
       dateTime: dateTime,
+      text: text,
       className: className,
       attributes: attributes,
       globalName: globalName,
