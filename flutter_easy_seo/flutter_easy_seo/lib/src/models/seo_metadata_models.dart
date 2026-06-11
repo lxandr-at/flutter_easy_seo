@@ -242,7 +242,12 @@ class SEOOfferInfo {
     required this.offerCount,
     this.currency = "EUR",
     this.individualOffers = const [],
+    this.validThrough,
+    this.validFrom,
   });
+
+  final DateTime? validThrough;
+  final DateTime? validFrom;
 }
 
 /// Helper to bundle common Apple PWA tags

@@ -19,7 +19,12 @@ class SEOFigureWrapper extends BaseSEOWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return _buildSimpleTag(tag: 'figure', children: children, context: context);
+    final allChildren = [
+      ...children,
+      if (_caption != null)
+        SEOHtml.figcaption(content: _caption),
+    ];
+    return _buildSimpleTag(tag: 'figure', children: allChildren, context: context);
   }
 
   @override

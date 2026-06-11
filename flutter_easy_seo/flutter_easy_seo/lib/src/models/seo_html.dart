@@ -86,6 +86,8 @@ class SEOHtml {
       : tag = 'nav', relativePath = null;
   const SEOHtml.figure({this.content, this.attributes, this.children = const [], this.jsonLd})
       : tag = 'figure', relativePath = null;
+  const SEOHtml.figcaption({this.content, this.attributes, this.children = const [], this.jsonLd})
+      : tag = 'figcaption', relativePath = null;
   factory SEOHtml.time({
     String? text,
     Map<String, String>? attributes,
@@ -483,6 +485,17 @@ class SEOHtml {
       if (!useMicrodataAttrs && valStr.startsWith('https://schema.org/')) {
         return const [];
       }
+      final dt = DateTime.tryParse(valStr);
+      if (dt != null) {
+        final formatted = '${dt.day.toString().padLeft(2, '0')}.${dt.month.toString().padLeft(2, '0')}.${dt.year}';
+        return [
+          SEOHtml.time(
+            text: formatted,
+            dateTime: dt,
+            attributes: useMicrodataAttrs ? {'itemprop': prop} : {'class': prop},
+          ),
+        ];
+      }
       if (useMicrodataAttrs) {
         return [SEOHtml.meta(attributes: {'itemprop': prop, 'content': valStr})];
       } else {
@@ -571,6 +584,10 @@ class SEOHtml {
               '@type': 'Organization',
               'name': offer['seller'].toString(),
             },
+            if (info.validThrough != null)
+              'validThrough': info.validThrough!.toIso8601String(),
+            if (info.validFrom != null)
+              'validFrom': info.validFrom!.toIso8601String(),
           };
         }).toList(),
       },
