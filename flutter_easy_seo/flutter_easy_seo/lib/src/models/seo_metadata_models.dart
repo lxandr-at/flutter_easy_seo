@@ -1,14 +1,19 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-/// Base class for any tag inside the <head>
-abstract class EasySEOHeadTag {
+/// Interface for anything that can contribute one or more [EasySEOHeadTag]s.
+abstract class EasySEOHeadTagSource {
+  List<EasySEOHeadTag> toHeadTags();
+}
+
+/// Base class for any tag inside the `<head>` section.
+abstract class EasySEOHeadTag implements EasySEOHeadTagSource {
   final String tagName;
   final Map<String, String> attributes;
 
   const EasySEOHeadTag(this.tagName, this.attributes);
 
   /// Returns a unique identifier for this tag type (e.g., "meta:description")
-  /// to prevent duplicates in the <head>.
+  /// to prevent duplicates in the `<head>` section.
   String get key {
     final String? name = attributes['name'];
     final String? property = attributes['property'];
@@ -65,6 +70,9 @@ abstract class EasySEOHeadTag {
 
     return isVoid ? openTag : '$openTag</$tagName>';
   }
+
+  @override
+  List<EasySEOHeadTag> toHeadTags() => [this];
 }
 
 class EasySEOTitleTag extends EasySEOHeadTag {
@@ -105,28 +113,63 @@ class EasySEOMetaTag extends EasySEOHeadTag {
       EasySEOMetaTag({'name': 'apple-mobile-web-app-title', 'content': title});
 }
 
-/// Specialized class for Open Graph (Social Media)
-class EasySEOOgTag extends EasySEOMetaTag {
-  // OG tags use 'property' instead of 'name'
-  EasySEOOgTag(String type, String content) : super({'property': 'og:$type', 'content': content});
+/// Open Graph meta tags. Each non-null parameter produces a `<meta property="og:...">` tag.
+class EasySEOOgTags implements EasySEOHeadTagSource {
+  final String? title;
+  final String? description;
+  final String? imageUrl;
+  final String? url;
+  final String? type;
+  final String? siteName;
 
-  factory EasySEOOgTag.title(String title) => EasySEOOgTag('title', title);
-  factory EasySEOOgTag.description(String description) => EasySEOOgTag('description', description);
-  factory EasySEOOgTag.image(String imageUrl) => EasySEOOgTag('image', imageUrl);
-  factory EasySEOOgTag.url(String url) => EasySEOOgTag('url', url);
-  factory EasySEOOgTag.type({String type = 'website'}) => EasySEOOgTag('type', type);
-  factory EasySEOOgTag.siteName(String name) => EasySEOOgTag('site_name', name);
+  const EasySEOOgTags({
+    this.title,
+    this.description,
+    this.imageUrl,
+    this.url,
+    this.type,
+    this.siteName,
+  });
+
+  @override
+  List<EasySEOHeadTag> toHeadTags() {
+    final tags = <EasySEOHeadTag>[];
+    if (title != null) tags.add(EasySEOMetaTag({'property': 'og:title', 'content': title!}));
+    if (description != null) tags.add(EasySEOMetaTag({'property': 'og:description', 'content': description!}));
+    if (imageUrl != null) tags.add(EasySEOMetaTag({'property': 'og:image', 'content': imageUrl!}));
+    if (url != null) tags.add(EasySEOMetaTag({'property': 'og:url', 'content': url!}));
+    if (type != null) tags.add(EasySEOMetaTag({'property': 'og:type', 'content': type!}));
+    if (siteName != null) tags.add(EasySEOMetaTag({'property': 'og:site_name', 'content': siteName!}));
+    return tags;
+  }
 }
 
-/// Specialized class for Twitter Cards
-class EasySEOTwitterTag extends EasySEOMetaTag {
-  // Twitter tags use 'name' but prefixed with 'twitter:'
-  EasySEOTwitterTag(String type, String content) : super({'name': 'twitter:$type', 'content': content});
-  factory EasySEOTwitterTag.card({String type = 'summary_large_image'}) => EasySEOTwitterTag('card', type);
-  factory EasySEOTwitterTag.site(String handle) => EasySEOTwitterTag('site', handle);
-  factory EasySEOTwitterTag.title(String title) => EasySEOTwitterTag('title', title);
-  factory EasySEOTwitterTag.description(String description) => EasySEOTwitterTag('description', description);
-  factory EasySEOTwitterTag.image(String imageUrl) => EasySEOTwitterTag('image', imageUrl);
+/// Twitter Card meta tags. Each non-null parameter produces a `<meta name="twitter:...">` tag.
+class EasySEOTwitterTags implements EasySEOHeadTagSource {
+  final String? card;
+  final String? site;
+  final String? title;
+  final String? description;
+  final String? image;
+
+  const EasySEOTwitterTags({
+    this.card = 'summary_large_image',
+    this.site,
+    this.title,
+    this.description,
+    this.image,
+  });
+
+  @override
+  List<EasySEOHeadTag> toHeadTags() {
+    final tags = <EasySEOHeadTag>[];
+    if (card != null) tags.add(EasySEOMetaTag({'name': 'twitter:card', 'content': card!}));
+    if (site != null) tags.add(EasySEOMetaTag({'name': 'twitter:site', 'content': site!}));
+    if (title != null) tags.add(EasySEOMetaTag({'name': 'twitter:title', 'content': title!}));
+    if (description != null) tags.add(EasySEOMetaTag({'name': 'twitter:description', 'content': description!}));
+    if (image != null) tags.add(EasySEOMetaTag({'name': 'twitter:image', 'content': image!}));
+    return tags;
+  }
 }
 
 class EasySEOLinkTag extends EasySEOHeadTag {
@@ -197,7 +240,7 @@ class EasySEOScriptTag extends EasySEOHeadTag {
   }
 }
 
-class SEOServiceInfo {
+class SEOServiceInfo implements EasySEOHeadTagSource {
   final String serviceType;
   final String providerName;
   final String brandLogoUrl;
@@ -227,6 +270,10 @@ class SEOServiceInfo {
       providerUrl: providerUrl ?? this.providerUrl,
     );
   }
+
+  @override
+  List<EasySEOHeadTag> toHeadTags() =>
+      [EasySEOScriptTag(SEOHtmlJsonLd.service(this))];
 }
 
 class SEOOfferInfo {
@@ -250,17 +297,25 @@ class SEOOfferInfo {
   final DateTime? validFrom;
 }
 
-/// Helper to bundle common Apple PWA tags
-List<EasySEOHeadTag> appleHeadTags({
-  required String title,
-  required String iconHref,
-  String statusBarStyle = 'black-translucent',
-  bool isWebAppCapable = true,
-}) {
-  return [
-    EasySEOMetaTag.appleWebAppTitle(title),
-    EasySEOLinkTag.appleTouchIcon(iconHref),
-    EasySEOMetaTag.appleMobileWebAppCapable(capable: isWebAppCapable),
-    EasySEOMetaTag.appleStatusBarStyle(style: statusBarStyle),
-  ];
+/// Bundle of common Apple PWA head tags.
+class EasySEOAppleHeadTags implements EasySEOHeadTagSource {
+  final String title;
+  final String iconUrl;
+  final String statusBarStyle;
+  final bool isWebAppCapable;
+
+  const EasySEOAppleHeadTags({
+    required this.title,
+    required this.iconUrl,
+    this.statusBarStyle = 'black-translucent',
+    this.isWebAppCapable = true,
+  });
+
+  @override
+  List<EasySEOHeadTag> toHeadTags() => [
+        EasySEOMetaTag.appleWebAppTitle(title),
+        EasySEOLinkTag.appleTouchIcon(iconUrl),
+        EasySEOMetaTag.appleMobileWebAppCapable(capable: isWebAppCapable),
+        EasySEOMetaTag.appleStatusBarStyle(style: statusBarStyle),
+      ];
 }

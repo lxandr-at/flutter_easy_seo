@@ -27,7 +27,7 @@ final _router = GoRouter(
         title: 'SaaS Platform - Home',
         description: 'The best SaaS platform for modern businesses.',
         headTags: [
-          EasySEOTwitterTag.card(), // default type is 'summary_large_image'
+          EasySEOTwitterTags()
         ],
         child: const HomePage(),
       ),
@@ -38,7 +38,7 @@ final _router = GoRouter(
         title: 'Our Services | SaaS Platform',
         description: 'Explore our comprehensive suite of services.',
         headTags: [
-          EasySEOTwitterTag.card(), // default type is 'summary_large_image'
+          EasySEOTwitterTags()
         ],
         child: const ServicesPage(),
       ),

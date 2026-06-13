@@ -22,13 +22,30 @@ class EasySEOPageController {
   bool isReady() => _isReady;
 }
 
+/// A widget that manages SEO metadata, dynamic tag insertion, and HTML output generation for a specific page.
+///
+/// `EasySEOPage` wraps a page's widget tree, analyzes its content dynamically, resolves
+/// canonical and alternate URLs, and compiles the result into a fully semantic HTML structure.
+///
+/// ### Parameters:
+/// * [child] - The widget tree of the page content to render and inspect.
+/// * [title] - The canonical page title, which automatically generates `<title>`, `og:title`,
+///   `twitter:title`, and `name="title"` metadata tags.
+/// * [description] - An optional page description, which automatically constructs `description`,
+///   `og:description`, and `twitter:description` metadata tags.
+/// * [disabled] - When set to `true`, disables SEO generation locally for this specific page.
+/// * [headTags] - Custom page-level tags or sources ([EasySEOHeadTagSource]) to inject into the document `<head>`, overriding globals.
+/// * [includeGlobals] - Global tags or selector keywords that should be processed in the widget hierarchy.
+/// * [whenDone] - An optional async callback hook executed before generation to ensure all async state (e.g., APIs) is resolved.
+/// * [generateOnChanged] - A [ChangeNotifier] listener that triggers a metadata regeneration when notified.
+/// * [rank] - Numeric rank value used by [EasySEOManager] to sort overlapping route keys and resolve route conflicts.
+/// * [renderMode] - Custom [SEORenderMode] configuration to override the global rendering mode.
 class EasySEOPage extends StatefulWidget {
   final Widget child;
   final bool disabled;
   final String title;
   final String? description;
-  final List<EasySEOHeadTag> headTags;
-  final SEOServiceInfo? serviceInfo;
+  final List<EasySEOHeadTagSource> headTags;
   final List<String> includeGlobals;
   final Future<void> Function()? whenDone;
   final ChangeNotifier? generateOnChanged;
@@ -41,7 +58,6 @@ class EasySEOPage extends StatefulWidget {
     this.description,
     this.disabled = false,
     this.headTags = const [],
-    this.serviceInfo,
     this.includeGlobals = const [],
     this.whenDone,
     this.generateOnChanged,
@@ -145,21 +161,22 @@ class _EasySEOPageState extends State<EasySEOPage> {
     String currentTitle = widget.title;
     addTag(EasySEOTitleTag(currentTitle));
     addTag(EasySEOMetaTag.title(currentTitle));
-    addTag(EasySEOOgTag.title(currentTitle));
-    addTag(EasySEOTwitterTag.title(currentTitle));
-    if (widget.description != null) {
-      addTag(EasySEOMetaTag.description(widget.description!));
-      addTag(EasySEOOgTag.description(widget.description!));
-      addTag(EasySEOTwitterTag.description(widget.description!));
-    }
 
     // default url and alternate tags
     final currentPath = _getCurrentPath();
     final urls = EasySEOManager.instance.resolveSeoUrls(currentPath);
     final fullUrl = urls.canonicalUrl;
-
-    addTag(EasySEOOgTag.url(fullUrl));
     addTag(EasySEOLinkTag.canonical(fullUrl));
+
+    for (final tag in EasySEOOgTags(title: currentTitle, url: fullUrl, description: widget.description).toHeadTags()) {
+      addTag(tag);
+    }
+    for (final tag in EasySEOTwitterTags(title: currentTitle, description: widget.description).toHeadTags()) {
+      addTag(tag);
+    }
+    if (widget.description != null) {
+      addTag(EasySEOMetaTag.description(widget.description!));
+    }
 
     if (urls.alternateUrls.isNotEmpty) {
       urls.alternateUrls.forEach((lang, url) {
@@ -170,23 +187,17 @@ class _EasySEOPageState extends State<EasySEOPage> {
       }
     }
 
-    // add json-ld service tag if provided
-    final serviceInfo = widget.serviceInfo ?? EasySEOManager.instance.serviceInfo;
-    if (serviceInfo != null) {
-      SEOServiceInfo finalInfo = serviceInfo;
-      if (finalInfo.providerUrl == null) {
-        finalInfo = finalInfo.copyWith(providerUrl: fullUrl);
+    // flatten all head tag sources (global + page level)
+    for (final source in [
+      ...EasySEOManager.instance.headTags,
+      ...widget.headTags,
+    ]) {
+      final resolved = (source is SEOServiceInfo && source.providerUrl == null)
+          ? source.copyWith(providerUrl: fullUrl)
+          : source;
+      for (final tag in resolved.toHeadTags()) {
+        addTag(tag);
       }
-      addTag(EasySEOScriptTag(SEOHtmlJsonLd.service(finalInfo)));
-    }
-
-    // add or override global head tags
-    for (var tag in EasySEOManager.instance.headTags) {
-      addTag(tag);
-    }
-    // add or override head tags defined on the page level
-    for (var tag in widget.headTags) {
-      addTag(tag);
     }
 
     // return head tags without duplicates

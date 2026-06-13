@@ -45,6 +45,67 @@ class SeoRouteKey implements Comparable<SeoRouteKey> {
   String toString() => '$path [Rank: $rank]';
 }
 
+/// A singleton manager that serves as the central orchestrator for the `flutter_easy_seo` package.
+///
+/// `EasySEOManager` manages the active lifecycle of SEO pages (which EasySEOPage is currently active), formats URLs,
+/// processes language-based paths, keeps track of dynamic urls, generates standard-compliant XML sitemaps, and exposes global
+/// configurations (e.g. output options, interactive mode, additional `<head>` tags in every generated page, etc.).
+///
+/// ### Core Responsibilities
+/// * **Registry management:** Tracks a registry of page controllers ([EasySEOPageController]) using a sorted
+///   [SplayTreeMap] based on path depth, length, and rank to automatically determine the active rendering context.
+/// * **Sitemap Generation:** Automates the construction of `sitemap.xml` compliant with multi-language
+///   alternate links (`hreflang`) and default index mappings (`x-default`).
+/// * **URL Formatting & Parsing:** Standardizes path structures, extracts language prefixes, and translates
+///   routes into fully qualified URLs.
+/// * **Dynamic Routing:** Extracts and monitors dynamic route matches to gather runtime pages for rendering.
+///
+/// ### Initialization Parameters
+/// Call [init] to configure the global singleton state:
+/// * [enabled] - Globally controls whether SEO generation is active.
+/// * [enableFileOutput] - Writes generated HTML outputs directly to the local storage target.
+/// * [enableLiveOutput] - Injects the generated HTML in the live DOM.
+/// * [disableOnGenerate] - Disables executing the [onGenerate] callback. Set to true in automated widget tests to keep the [onGenerate] config of the app unchanged.
+/// In a widget tester calling a REST endpoint needs to be done slightly differently than in the running flutter app.
+/// * [enableInteractiveMode] - Shows a widget overlay inside the UI layout for debugging purposes and interactive generation of the HTML output.
+/// * [showResultDialog] - Dictates whether a modal dialog is presented in interactiv mode to preview the generated output.
+/// * [renderMode] - The [SEORenderMode] configuration (e.g. html+jsonld, html-only etc.).
+/// * [onGenerate] - Callback invoked when a HTML page is generated. For example, this can be used to send the result to a rest endpoint:
+/// ```dart
+/// onGenerate: (EasySEOGenerationResult result) async {
+///   if (result case SeoSuccess(:final fullHtml, :final currentLanguage, :final path)) {
+///     await SomeRESTService().sendGeneratedData(
+///       html: fullHtml,
+///       language: currentLanguage,
+///       path: '$path/index'
+///     );
+///   }
+/// },
+/// ```
+/// * [baseUrl] - The root domain URL used to build absolute URLs (canonical/alternate links). If it is not provided and the app is run as a web-app,
+/// the url will be retrieved from the current browser url.
+/// * [supportedLanguages] - List of language codes used for prefix-routing structures (e.g. [['en', 'de']]). The first language in the list is considered the default language.
+/// This is taken into account when generating the sitemap.xml file (the root '/' is the same page as '/en').
+/// * [pages] - Set of static and dynamic routes to build the sitemap.
+/// These router are automatically combined with the list of [supportedLanguages] (e.g. [['de']] and [['/products']] results in '/de/products'.
+/// A route is considered dynamic when it contains a pattern like 'products/:id'. All links in generated html content that match such a dynamic route is
+/// collected in a Set that can be retrieved by [getAllRoutes] for processing in a widget tester. All static and dynamic routes are added to the sitemap.xml.
+/// * [headTags] - Global default meta, link, and script tags injected into the document head. For example:
+/// ```dart
+/// headTags: [[
+///   EasySEOAppleHeadTags(title: 'Some Page Title', iconUrl: '/icons/Icon.png'),
+///   EasySEOLinkTag.manifest('manifest.json'),
+///   EasySEOLinkTag.icon("favicon.png"),
+///   EasySEOOgTags(imageUrl: 'https://somepage.com/og_image.png', type: 'website', siteName: 'Some Page Title'),
+///   EasySEOTwitterTags(site: '@somepage')
+/// ]]
+/// ```
+/// * [pathProvider] - Optional delegate to retrieve the current active path from the routing context. If it is not provided and the app is run as a web-app,
+/// the path will be retrieved from the current browser url. If run on a non-web platform (e.g. widget tester, android) the current path must be provided by
+/// this function. For example with GoRouter:
+/// ```dart
+/// pathProvider: (context) => GoRouter.maybeOf(context)?.routerDelegate.currentConfiguration.uri.toString(),
+/// ```
 class EasySEOManager {
   // singleton
   EasySEOManager._internal();
@@ -64,10 +125,9 @@ class EasySEOManager {
   bool interactiveMinimized = false;
 
   String? baseUrl;
-  SEOServiceInfo? serviceInfo;
   List<String> supportedLanguages = const [];
   List<String> pages = const [];
-  List<EasySEOHeadTag> headTags = const [];
+  List<EasySEOHeadTagSource> headTags = const [];
   List<String> dynamicPathPatterns = const [];
 
   final Set<String> _gatheredPages = {};
@@ -197,10 +257,9 @@ class EasySEOManager {
     SEORenderMode? renderMode,
     EasySEOOnGenerateCallback? onGenerate,
     String? baseUrl,
-    SEOServiceInfo? serviceInfo,
     List<String> supportedLanguages = const [],
     List<String> pages = const [],
-    List<EasySEOHeadTag> headTags = const [],
+    List<EasySEOHeadTagSource> headTags = const [],
     String? Function(BuildContext)? pathProvider,
   }) {
     this.enabled.value = enabled;
@@ -212,7 +271,6 @@ class EasySEOManager {
     if (renderMode != null) this.renderMode.value = renderMode;
     this.onGenerate = onGenerate;
     this.baseUrl = baseUrl;
-    this.serviceInfo = serviceInfo;
     this.supportedLanguages = supportedLanguages;
     this.headTags = headTags;
     this.pathProvider = pathProvider;
