@@ -9,7 +9,7 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 ///
 /// Example:
 /// ```dart
-/// SEOSectionWrapper(
+/// EasySEOSectionWrapper(
 ///   additionalTags: [
 ///     SEOHtml(tag: 'h2', content: 'Section Subtitle'),
 ///     SEOHtml(

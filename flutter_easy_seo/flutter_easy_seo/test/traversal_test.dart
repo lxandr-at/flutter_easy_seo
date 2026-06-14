@@ -11,22 +11,22 @@ void main() {
           child: Scaffold(
             body: Column(
               children: [
-                SEOTextWrapper(
+                EasySEOTextWrapper(
                   textType: SEOTextType.h1,
                   child: Text('Main Title'),
                 ),
-                SEOTextWrapper(
+                EasySEOTextWrapper(
                   textType: SEOTextType.p,
                   child: Text('Some description'),
                 ),
-                SEONavLinkWrapper(
+                EasySEONavLinkWrapper(
                   path: '/details',
-                  child: SEOTextWrapper(
+                  child: EasySEOTextWrapper(
                     textType: SEOTextType.p,
                     child: Text('View Details'),
                   ),
                 ),
-                SEOImageWrapper(
+                EasySEOImageWrapper(
                   alt: 'Test Image',
                   src: 'https://example.com/image.png',
                   child: SizedBox(width: 100, height: 100),
@@ -62,9 +62,9 @@ void main() {
           child: Scaffold(
             body: Column(
               children: [
-                SEOTextWrapper(textType: SEOTextType.h2, child: Text('Subtitle')),
-                SEOTextWrapper(textType: SEOTextType.p, child: Text('Body text')),
-                SEOTextWrapper(textType: SEOTextType.h1, child: Text('Main Title')),
+                EasySEOTextWrapper(textType: SEOTextType.h2, child: Text('Subtitle')),
+                EasySEOTextWrapper(textType: SEOTextType.p, child: Text('Body text')),
+                EasySEOTextWrapper(textType: SEOTextType.h1, child: Text('Main Title')),
               ],
             ),
           ),
@@ -100,11 +100,11 @@ void main() {
           child: Scaffold(
             body: Column(
               children: [
-                SEOSectionWrapper(child: Text('Section content')),
+                EasySEOSectionWrapper(child: Text('Section content')),
                 // This Padding (or any non-wrapper widget) will be a container node.
                 Padding(
                   padding: EdgeInsets.all(8),
-                  child: SEOTextWrapper(textType: SEOTextType.h1, child: Text('Deep Title')),
+                  child: EasySEOTextWrapper(textType: SEOTextType.h1, child: Text('Deep Title')),
                 ),
               ],
             ),
@@ -126,7 +126,7 @@ void main() {
     expect(sectionIndex, greaterThanOrEqualTo(0));
 
     // Currently, this will likely FAIL because Padding doesn't have a tagName,
-    // so it's not prioritized over SEOSectionWrapper.
+    // so it's not prioritized over EasySEOSectionWrapper.
     expect(h1Index, lessThan(sectionIndex), reason: 'Deep h1 should move its parent container before the section');
   });
 
@@ -138,7 +138,7 @@ void main() {
           child: Scaffold(
             body: Column(
               children: [
-                SEOSectionWrapper(
+                EasySEOSectionWrapper(
                   additionalTags: [
                     SEOHtml(tag: 'h2', content: 'Section Subtitle'),
                     SEOHtml(
@@ -147,7 +147,7 @@ void main() {
                       content: '{"@type":"Article"}',
                     ),
                   ],
-                  child: SEOTextWrapper(textType: SEOTextType.p, child: Text('Section content')),
+                  child: EasySEOTextWrapper(textType: SEOTextType.p, child: Text('Section content')),
                 ),
               ],
             ),

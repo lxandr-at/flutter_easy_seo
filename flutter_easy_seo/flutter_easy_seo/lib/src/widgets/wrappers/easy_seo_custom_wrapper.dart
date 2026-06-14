@@ -1,10 +1,10 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEOCustomWrapper extends BaseSEOWrapper {
+class EasySEOCustomWrapper extends EasySEOBaseWrapper {
   final Widget Function(BuildContext, Widget)? builder;
   final String? tag;
 
-  const SEOCustomWrapper({
+  const EasySEOCustomWrapper({
     super.key,
     required super.child,
     this.builder,
@@ -25,7 +25,7 @@ class SEOCustomWrapper extends BaseSEOWrapper {
   }
 
   @override
-  State<StatefulWidget> createState() => _SEOCustomWrapperState();
+  State<StatefulWidget> createState() => _EasySEOCustomWrapperState();
 }
 
-class _SEOCustomWrapperState extends BaseSEOWrapperState<SEOCustomWrapper> {}
+class _EasySEOCustomWrapperState extends EasySEOBaseWrapperState<EasySEOCustomWrapper> {}

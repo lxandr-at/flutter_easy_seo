@@ -1,7 +1,7 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEOMainWrapper extends BaseSEOWrapper {
-  const SEOMainWrapper({
+class EasySEOListItemWrapper extends EasySEOBaseWrapper {
+  const EasySEOListItemWrapper({
     super.key,
     required super.child,
     super.className,
@@ -16,11 +16,11 @@ class SEOMainWrapper extends BaseSEOWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return _buildSimpleTag(tag: 'main', children: children, context: context);
+    return _buildSimpleTag(tag: 'li', children: children, context: context);
   }
 
   @override
-  State<StatefulWidget> createState() => _SEOMainWrapperState();
+  State<StatefulWidget> createState() => _EasySEOListItemWrapperState();
 }
 
-class _SEOMainWrapperState extends BaseSEOWrapperState<SEOMainWrapper> {}
+class _EasySEOListItemWrapperState extends EasySEOBaseWrapperState<EasySEOListItemWrapper> {}

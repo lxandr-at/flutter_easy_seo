@@ -29,7 +29,7 @@ void main() {
           title: 'Test Page',
           description: 'Test Description',
           child: const Scaffold(
-            body: SEOTextWrapper(
+            body: EasySEOTextWrapper(
               textType: SEOTextType.h1,
               child: Text('Hello SEO'),
             ),

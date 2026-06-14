@@ -1,6 +1,6 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-abstract class SEOWrapper {
+abstract class EasySEOWrapper {
   SEOHtml toSEOHtml({
     required List<SEOHtml> children,
     required List<SEONavItem> navItems,
@@ -8,8 +8,8 @@ abstract class SEOWrapper {
   });
 }
 
-abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
-  const BaseSEOWrapper({
+abstract class EasySEOBaseWrapper extends StatefulWidget implements EasySEOWrapper {
+  const EasySEOBaseWrapper({
     super.key,
     required this.child,
     this.className,
@@ -75,7 +75,7 @@ abstract class BaseSEOWrapper extends StatefulWidget implements SEOWrapper {
   }
 }
 
-abstract class BaseSEOWrapperState<T extends BaseSEOWrapper> extends State<T> {
+abstract class EasySEOBaseWrapperState<T extends EasySEOBaseWrapper> extends State<T> {
   @override
   void initState() {
     super.initState();

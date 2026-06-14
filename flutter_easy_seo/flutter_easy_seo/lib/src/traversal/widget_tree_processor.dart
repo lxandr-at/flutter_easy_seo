@@ -42,7 +42,7 @@ class SEOWidgetTreeProcessor {
     final childResults = <_BuildResult>[];
     element.visitChildren((child) {
       final childWidget = child.widget;
-      if (childWidget is BaseSEOWrapper &&
+      if (childWidget is EasySEOBaseWrapper &&
           childWidget.globalName != null &&
           _skipGlobals != null &&
           _skipGlobals!.contains(childWidget.globalName)) {
@@ -62,10 +62,10 @@ class SEOWidgetTreeProcessor {
 
     final sortedChildResults = _sortByPriority(childResults);
 
-    if (widget is SEOWrapper) {
-      final wrapper = widget as SEOWrapper;
+    if (widget is EasySEOWrapper) {
+      final wrapper = widget as EasySEOWrapper;
 
-      if (wrapper is SEONavLinkWrapper) {
+      if (wrapper is EasySEONavLinkWrapper) {
         navItems.add(SEONavItem(text: wrapper.text ?? '', url: wrapper.path));
       }
 
@@ -89,7 +89,7 @@ class SEOWidgetTreeProcessor {
 
       return _BuildResult(
         html,
-        wrapper is SEONavWrapper ? const [] : navItems,
+        wrapper is EasySEONavWrapper ? const [] : navItems,
         bubbledPriority,
         ownOrder,
       );

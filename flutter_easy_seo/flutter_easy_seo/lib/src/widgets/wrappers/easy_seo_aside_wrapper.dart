@@ -1,14 +1,13 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEOArticleWrapper extends BaseSEOWrapper {
-  const SEOArticleWrapper({
+class EasySEOAsideWrapper extends EasySEOBaseWrapper {
+  const EasySEOAsideWrapper({
     super.key,
     required super.child,
     super.className,
     super.attributes,
     super.globalName,
     super.additionalTags,
-    super.jsonLd,
   });
 
   @override
@@ -17,11 +16,11 @@ class SEOArticleWrapper extends BaseSEOWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return _buildSimpleTag(tag: 'article', children: children, context: context);
+    return _buildSimpleTag(tag: 'aside', children: children, context: context);
   }
 
   @override
-  State<StatefulWidget> createState() => _SEOArticleWrapperState();
+  State<StatefulWidget> createState() => _EasySEOAsideWrapperState();
 }
 
-class _SEOArticleWrapperState extends BaseSEOWrapperState<SEOArticleWrapper> {}
+class _EasySEOAsideWrapperState extends EasySEOBaseWrapperState<EasySEOAsideWrapper> {}

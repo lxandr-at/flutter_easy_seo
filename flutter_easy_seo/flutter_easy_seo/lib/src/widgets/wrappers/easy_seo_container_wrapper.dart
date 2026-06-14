@@ -1,7 +1,7 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEOContainerWrapper extends BaseSEOWrapper {
-  const SEOContainerWrapper({
+class EasySEOContainerWrapper extends EasySEOBaseWrapper {
+  const EasySEOContainerWrapper({
     super.key,
     required super.child,
     String tag = 'div',
@@ -23,7 +23,7 @@ class SEOContainerWrapper extends BaseSEOWrapper {
   }
 
   @override
-  State<StatefulWidget> createState() => _SEOContainerWrapperState();
+  State<StatefulWidget> createState() => _EasySEOContainerWrapperState();
 }
 
-class _SEOContainerWrapperState extends BaseSEOWrapperState<SEOContainerWrapper> {}
+class _EasySEOContainerWrapperState extends EasySEOBaseWrapperState<EasySEOContainerWrapper> {}

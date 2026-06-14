@@ -35,9 +35,9 @@ class EasySEOPageController {
 ///   `og:description`, and `twitter:description` metadata tags.
 /// * [disabled] - When set to `true`, disables SEO generation locally for this specific page.
 /// * [headTags] - Custom page-level tags or sources ([EasySEOHeadTagSource]) to inject into the document `<head>`, overriding globals.
-/// * [includeGlobals] - Widgets with these [BaseSEOWrapper.globalName] ids are added to the `<body>` tag. Widgets like header, footer
+/// * [includeGlobals] - Widgets with these [EasySEOBaseWrapper.globalName] ids are added to the `<body>` tag. Widgets like header, footer
 /// or navigation may be outside of the widget tree of the [child] widget. For example, when using a [ShellRouter] only the main
-/// content is wrapped in an EasySEOPage widget. Header, footer and navigation are outside and get a [BaseSEOWrapper.globalName] id. When
+/// content is wrapped in an EasySEOPage widget. Header, footer and navigation are outside and get a [EasySEOBaseWrapper.globalName] id. When
 /// added to the [includeGlobals] list, these widget are also contained in the generated SEO html page.
 /// * [whenDone] - An optional async callback hook executed before HTML page generation to ensure all async state (e.g., loading data) is resolved.
 /// For example, waiting for a Riverpod provider that loads product data for a products overview page could look like this:

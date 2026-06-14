@@ -9,7 +9,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SaaS Platform').seoH1,
+        title: const Text('SaaS Platform').easySeoH1,
       ),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,15 +28,15 @@ class HomePage extends StatelessWidget {
               NavigationRailDestination(
                 icon: const Icon(Icons.home_outlined),
                 selectedIcon: const Icon(Icons.home),
-                label: const Text('Home').seoNavLink(path: "/", text: 'Home'),
+                label: const Text('Home').easySeoNavLink(path: "/", text: 'Home'),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.business_outlined),
                 selectedIcon: const Icon(Icons.business),
-                label: const Text('Services').seoNavLink(path: "/services", text: 'Services'),
+                label: const Text('Services').easySeoNavLink(path: "/services", text: 'Services'),
               ),
             ],
-          ).seo(label: 'Main Navigation'),
+          ).easySeo(label: 'Main Navigation'),
           const VerticalDivider(width: 1, thickness: 1),
           Expanded(
             child: SingleChildScrollView(
@@ -62,12 +62,12 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Welcome to Our Platform').seoH2,
+                        const Text('Welcome to Our Platform').easySeoH2,
                         const SizedBox(height: 16),
                         const Text(
                           'Transform your business with our cutting-edge solutions. '
                           'We provide enterprise-grade tools for modern teams.',
-                        ).seoP,
+                        ).easySeoP,
                         const SizedBox(height: 24),
                         ElevatedButton(
                           onPressed: () => context.go('/services'),
@@ -81,7 +81,7 @@ class HomePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ).seo(tag: 'section'),
+                  ).easySeo(tag: 'section'),
 
                   const SizedBox(height: 32),
 
@@ -93,13 +93,13 @@ class HomePage extends StatelessWidget {
                       width: double.infinity,
                       height: 300,
                       fit: BoxFit.cover,
-                    ).seo(alt: 'SaaS Platform Dashboard Overview'),
+                    ).easySeo(alt: 'SaaS Platform Dashboard Overview'),
                   ),
 
                   const SizedBox(height: 32),
 
                   // Features Section
-                  const Text('Our Features').seo(textType: SEOTextType.h2),
+                  const Text('Our Features').easySeo(textType: SEOTextType.h2),
                   const SizedBox(height: 16),
 
                   // Feature Cards Grid
@@ -146,11 +146,11 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       children: [
                         const Text('Ready to get started?')
-                            .seo(textType: SEOTextType.h3),
+                            .easySeo(textType: SEOTextType.h3),
                         const SizedBox(height: 12),
                         const Text(
                           'Join thousands of companies using our platform.',
-                        ).seo(textType: SEOTextType.p),
+                        ).easySeo(textType: SEOTextType.p),
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () => context.go('/services'),
@@ -158,7 +158,7 @@ class HomePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ).seo(tag: 'section'),
+                  ).easySeo(tag: 'section'),
 
                   const SizedBox(height: 32),
 
@@ -172,16 +172,16 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Quick Links').seo(textType: SEOTextType.h4),
+                        const Text('Quick Links').easySeo(textType: SEOTextType.h4),
                         const SizedBox(height: 12),
                         Column(
                           children: [
-                            const Text('Home').seoNavLink(path: '/', text: 'Home'),
-                            const Text('Services').seoNavLink(path: '/services', text: 'Services'),
-                            const Text('Contact').seoNavLink(path: '/contact', text: 'Contact'),
-                            const Text('About').seoNavLink(path: '/about', text: 'About'),
+                            const Text('Home').easySeoNavLink(path: '/', text: 'Home'),
+                            const Text('Services').easySeoNavLink(path: '/services', text: 'Services'),
+                            const Text('Contact').easySeoNavLink(path: '/contact', text: 'Contact'),
+                            const Text('About').easySeoNavLink(path: '/about', text: 'About'),
                           ],
-                        ).seoNav(label: 'Footer Navigation'),
+                        ).easySeoNav(label: 'Footer Navigation'),
                       ],
                     ),
                   ),
@@ -220,7 +220,7 @@ class _FeatureCard extends StatelessWidget {
         children: [
           Icon(icon, size: 40, color: Colors.blue.shade600),
           const SizedBox(height: 12),
-          Text(title).seo(textType: SEOTextType.h3),
+          Text(title).easySeo(textType: SEOTextType.h3),
           const SizedBox(height: 8),
           Text(description),
         ],

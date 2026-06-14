@@ -61,14 +61,14 @@ class ServicesPage extends StatelessWidget {
                       children: [
                         const Text(
                           'Our Services',
-                        ).seo(textType: SEOTextType.h1),
+                        ).easySeo(textType: SEOTextType.h1),
                         const SizedBox(height: 12),
                         const Text(
                           'Discover our comprehensive suite of services designed to help your business grow.',
-                        ).seo(textType: SEOTextType.p),
+                        ).easySeo(textType: SEOTextType.p),
                       ],
                     ),
-                  ).seo(tag: 'section'),
+                  ).easySeo(tag: 'section'),
 
                   const SizedBox(height: 32),
 
@@ -80,13 +80,13 @@ class ServicesPage extends StatelessWidget {
                       width: double.infinity,
                       height: 300,
                       fit: BoxFit.cover,
-                    ).seo(alt: 'Professional Services Team Collaboration'),
+                    ).easySeo(alt: 'Professional Services Team Collaboration'),
                   ),
 
                   const SizedBox(height: 32),
 
                   // Service Details
-                  const Text('What We Offer').seo(textType: SEOTextType.h2),
+                  const Text('What We Offer').easySeo(textType: SEOTextType.h2),
                   const SizedBox(height: 24),
 
                   // Service 1
@@ -106,14 +106,14 @@ class ServicesPage extends StatelessWidget {
                             const SizedBox(width: 12),
                             Expanded(
                                 child: const Text('Data Analytics')
-                                    .seo(textType: SEOTextType.h3)),
+                                    .easySeo(textType: SEOTextType.h3)),
                           ],
                         ),
                         const SizedBox(height: 12),
                         const Text(
                           'Transform raw data into actionable insights with our advanced analytics platform. '
                           'Real-time dashboards, custom reports, and machine learning powered predictions.',
-                        ).seo(textType: SEOTextType.p),
+                        ).easySeo(textType: SEOTextType.p),
                         const SizedBox(height: 12),
                         const Wrap(
                           spacing: 8,
@@ -125,7 +125,7 @@ class ServicesPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ).seo(tag: 'article'),
+                  ).easySeo(tag: 'article'),
 
                   const SizedBox(height: 16),
 
@@ -146,14 +146,14 @@ class ServicesPage extends StatelessWidget {
                             const SizedBox(width: 12),
                             Expanded(
                                 child: const Text('Cloud Infrastructure')
-                                    .seo(textType: SEOTextType.h3)),
+                                    .easySeo(textType: SEOTextType.h3)),
                           ],
                         ),
                         const SizedBox(height: 12),
                         const Text(
                           'Scalable cloud solutions that grow with your business. From startup to enterprise, '
                           'we provide the infrastructure you need to succeed.',
-                        ).seo(textType: SEOTextType.p),
+                        ).easySeo(textType: SEOTextType.p),
                         const SizedBox(height: 12),
                         const Wrap(
                           spacing: 8,
@@ -165,7 +165,7 @@ class ServicesPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ).seo(tag: 'article'),
+                  ).easySeo(tag: 'article'),
 
                   const SizedBox(height: 16),
 
@@ -186,14 +186,14 @@ class ServicesPage extends StatelessWidget {
                             const SizedBox(width: 12),
                             Expanded(
                                 child: const Text('Security & Compliance')
-                                    .seo(textType: SEOTextType.h3)),
+                                    .easySeo(textType: SEOTextType.h3)),
                           ],
                         ),
                         const SizedBox(height: 12),
                         const Text(
                           'Enterprise-grade security with SOC2, GDPR, and HIPAA compliance. '
                           'Protect your data with bank-level encryption and 24/7 monitoring.',
-                        ).seo(textType: SEOTextType.p),
+                        ).easySeo(textType: SEOTextType.p),
                         const SizedBox(height: 12),
                         const Wrap(
                           spacing: 8,
@@ -205,7 +205,7 @@ class ServicesPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ).seo(tag: 'article'),
+                  ).easySeo(tag: 'article'),
 
                   const SizedBox(height: 32),
 
@@ -220,11 +220,11 @@ class ServicesPage extends StatelessWidget {
                     child: Column(
                       children: [
                         const Text('Need a Custom Solution?')
-                            .seo(textType: SEOTextType.h3),
+                            .easySeo(textType: SEOTextType.h3),
                         const SizedBox(height: 12),
                         const Text(
                           'Our team of experts can help design a solution tailored to your specific needs.',
-                        ).seo(textType: SEOTextType.p),
+                        ).easySeo(textType: SEOTextType.p),
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () => context.go('/'),
@@ -232,7 +232,7 @@ class ServicesPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ).seo(tag: 'section'),
+                  ).easySeo(tag: 'section'),
                 ],
               ),
             ),

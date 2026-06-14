@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: EasySEOPage(
             title: 'Some Web Page', 
-            child: Text('Hello World')
+            child: Text('Hello World').easySeoP
           );
         ),
       ),

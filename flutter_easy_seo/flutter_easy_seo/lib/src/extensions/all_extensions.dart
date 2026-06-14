@@ -2,13 +2,13 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 /// Extension for Text widgets to add SEO capabilities
 extension TextSEO on Text {
-  Widget seo({
+  Widget easySeo({
     SEOTextType textType = SEOTextType.p,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEOTextWrapper(
+    return EasySEOTextWrapper(
       textType: textType,
       className: className,
       attributes: attributes,
@@ -17,24 +17,24 @@ extension TextSEO on Text {
     );
   }
 
-  Widget get seoH1 => seo(textType: SEOTextType.h1);
-  Widget get seoH2 => seo(textType: SEOTextType.h2);
-  Widget get seoH3 => seo(textType: SEOTextType.h3);
-  Widget get seoH4 => seo(textType: SEOTextType.h4);
-  Widget get seoH5 => seo(textType: SEOTextType.h5);
-  Widget get seoH6 => seo(textType: SEOTextType.h6);
-  Widget get seoP => seo();
+  Widget get easySeoH1 => easySeo(textType: SEOTextType.h1);
+  Widget get easySeoH2 => easySeo(textType: SEOTextType.h2);
+  Widget get easySeoH3 => easySeo(textType: SEOTextType.h3);
+  Widget get easySeoH4 => easySeo(textType: SEOTextType.h4);
+  Widget get easySeoH5 => easySeo(textType: SEOTextType.h5);
+  Widget get easySeoH6 => easySeo(textType: SEOTextType.h6);
+  Widget get easySeoP => easySeo();
 }
 
 /// Extension for Container widgets to add SEO capabilities
 extension ContainerSEO on Container {
-  Widget seo({
+  Widget easySeo({
     String tag = 'div',
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEOContainerWrapper(
+    return EasySEOContainerWrapper(
       tag: tag,
       className: className,
       attributes: attributes,
@@ -46,14 +46,14 @@ extension ContainerSEO on Container {
 
 /// Extension for Image widgets to add SEO capabilities
 extension ImageSEO on Image {
-  Widget seo({
+  Widget easySeo({
     String? src,
     String? alt,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEOImageWrapper(
+    return EasySEOImageWrapper(
       src: src,
       alt: alt,
       className: className,
@@ -66,7 +66,7 @@ extension ImageSEO on Image {
 
 /// Extension for NavigationRail widgets to add SEO capabilities
 extension NavigationRailSEO on NavigationRail {
-  Widget seo({
+  Widget easySeo({
     String? label,
     bool isBreadcrumb = false,
     String? className,
@@ -74,7 +74,7 @@ extension NavigationRailSEO on NavigationRail {
     String? globalName,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEONavWrapper(
+    return EasySEONavWrapper(
       label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
@@ -88,14 +88,14 @@ extension NavigationRailSEO on NavigationRail {
 
 /// Extension for BottomNavigationBar widgets to add SEO capabilities
 extension BottomNavigationBarSEO on BottomNavigationBar {
-  Widget seo({
+  Widget easySeo({
     String? label,
     bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEONavWrapper(
+    return EasySEONavWrapper(
       label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
@@ -108,12 +108,12 @@ extension BottomNavigationBarSEO on BottomNavigationBar {
 
 /// Extension for ListView widgets to add SEO capabilities
 extension ListViewSEO on ListView {
-  Widget seo({
+  Widget easySeo({
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEOListWrapper(
+    return EasySEOListWrapper(
       className: className,
       attributes: attributes,
       additionalTags: additionalTags,
@@ -124,12 +124,12 @@ extension ListViewSEO on ListView {
 
 /// Extension for Column widgets to add SEO capabilities
 extension ColumnSEO on Column {
-  Widget seo({
+  Widget easySeo({
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEOListWrapper(
+    return EasySEOListWrapper(
       className: className,
       attributes: attributes,
       additionalTags: additionalTags,
@@ -140,12 +140,12 @@ extension ColumnSEO on Column {
 
 /// Extension for Row widgets to add SEO capabilities
 extension RowSEO on Row {
-  Widget seo({
+  Widget easySeo({
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEOListWrapper(
+    return EasySEOListWrapper(
       className: className,
       attributes: attributes,
       additionalTags: additionalTags,
@@ -156,14 +156,14 @@ extension RowSEO on Row {
 
 /// Extension for AppBar widgets to add SEO capabilities
 extension AppBarSEO on AppBar {
-  Widget seo({
+  Widget easySeo({
     String? h1,
     String? p,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEOHeaderWrapper(
+    return EasySEOHeaderWrapper(
       h1: h1,
       p: p,
       className: className,
@@ -176,12 +176,12 @@ extension AppBarSEO on AppBar {
 
 /// Extension for Drawer widgets to add SEO capabilities
 extension DrawerSEO on Drawer {
-  Widget seo({
+  Widget easySeo({
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEOAsideWrapper(
+    return EasySEOAsideWrapper(
       className: className,
       attributes: attributes,
       additionalTags: additionalTags,
@@ -192,14 +192,14 @@ extension DrawerSEO on Drawer {
 
 /// Extension for Column widgets to mark as navigation container
 extension ColumnNavSEO on Column {
-  Widget seoNav({
+  Widget easySeoNav({
     String? label,
     bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEONavWrapper(
+    return EasySEONavWrapper(
       label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
@@ -212,14 +212,14 @@ extension ColumnNavSEO on Column {
 
 /// Extension for Row widgets to mark as navigation container
 extension RowNavSEO on Row {
-  Widget seoNav({
+  Widget easySeoNav({
     String? label,
     bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEONavWrapper(
+    return EasySEONavWrapper(
       label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
@@ -232,14 +232,14 @@ extension RowNavSEO on Row {
 
 /// Extension for Flex widgets to mark as navigation container
 extension FlexNavSEO on Flex {
-  Widget seoNav({
+  Widget easySeoNav({
     String? label,
     bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
-    return SEONavWrapper(
+    return EasySEONavWrapper(
       label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,

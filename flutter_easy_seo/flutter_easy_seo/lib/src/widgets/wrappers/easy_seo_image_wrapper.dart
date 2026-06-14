@@ -1,10 +1,10 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEOImageWrapper extends BaseSEOWrapper {
+class EasySEOImageWrapper extends EasySEOBaseWrapper {
   final String? alt;
   final String? src;
 
-  const SEOImageWrapper({
+  const EasySEOImageWrapper({
     super.key,
     required super.child,
     super.className,
@@ -49,7 +49,7 @@ class SEOImageWrapper extends BaseSEOWrapper {
   }
 
   @override
-  State<StatefulWidget> createState() => _SEOImageWrapperState();
+  State<StatefulWidget> createState() => _EasySEOImageWrapperState();
 }
 
-class _SEOImageWrapperState extends BaseSEOWrapperState<SEOImageWrapper> {}
+class _EasySEOImageWrapperState extends EasySEOBaseWrapperState<EasySEOImageWrapper> {}

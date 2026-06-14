@@ -2,8 +2,8 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 enum SEOTextType { h1, h2, h3, h4, h5, h6, p }
 
-class SEOTextWrapper extends BaseSEOWrapper {
-  const SEOTextWrapper({
+class EasySEOTextWrapper extends EasySEOBaseWrapper {
+  const EasySEOTextWrapper({
     super.key,
     required super.child,
     this.textType = SEOTextType.p,
@@ -53,7 +53,7 @@ class SEOTextWrapper extends BaseSEOWrapper {
   }
 
   @override
-  State<StatefulWidget> createState() => _SEOTextWrapperState();
+  State<StatefulWidget> createState() => _EasySEOTextWrapperState();
 }
 
-class _SEOTextWrapperState extends BaseSEOWrapperState<SEOTextWrapper> {}
+class _EasySEOTextWrapperState extends EasySEOBaseWrapperState<EasySEOTextWrapper> {}

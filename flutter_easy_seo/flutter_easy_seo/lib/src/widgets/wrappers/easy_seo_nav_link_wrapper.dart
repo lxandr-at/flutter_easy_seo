@@ -1,10 +1,10 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEONavLinkWrapper extends BaseSEOWrapper {
+class EasySEONavLinkWrapper extends EasySEOBaseWrapper {
   final String path;
   final String? text;
 
-  const SEONavLinkWrapper({
+  const EasySEONavLinkWrapper({
     super.key,
     required super.child,
     super.className,
@@ -31,7 +31,7 @@ class SEONavLinkWrapper extends BaseSEOWrapper {
   }
 
   @override
-  State<StatefulWidget> createState() => _SEONavLinkWrapperState();
+  State<StatefulWidget> createState() => _EasySEONavLinkWrapperState();
 }
 
-class _SEONavLinkWrapperState extends BaseSEOWrapperState<SEONavLinkWrapper> {}
+class _EasySEONavLinkWrapperState extends EasySEOBaseWrapperState<EasySEONavLinkWrapper> {}

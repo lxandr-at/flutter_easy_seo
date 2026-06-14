@@ -1,7 +1,7 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class SEOTimeWrapper extends BaseSEOWrapper {
-  const SEOTimeWrapper({
+class EasySEOTimeWrapper extends EasySEOBaseWrapper {
+  const EasySEOTimeWrapper({
     super.key,
     required super.child,
     super.className,
@@ -30,7 +30,7 @@ class SEOTimeWrapper extends BaseSEOWrapper {
   }
 
   @override
-  State<StatefulWidget> createState() => _SEOTimeWrapperState();
+  State<StatefulWidget> createState() => _EasySEOTimeWrapperState();
 }
 
-class _SEOTimeWrapperState extends BaseSEOWrapperState<SEOTimeWrapper> {}
+class _EasySEOTimeWrapperState extends EasySEOBaseWrapperState<EasySEOTimeWrapper> {}
