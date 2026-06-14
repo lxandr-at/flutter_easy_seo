@@ -37,48 +37,50 @@ dependencies:
 ```
 
 ## Architecture Overview
+The architecture consists of 4 main parts:
+- **EasySEOManger:** Singleton for orchestration and configuration.
+- **EasySEOPage:** Wraps (part of) a widget tree to genearate an SEO-friendly html version.
+- **Widget wrappers, HTML helper, etc.:** Create specific HMTL, jsonld and microdata output.
+- **File generation:** Generate HTML and sitemap.xml files either interactively or automatically with a widget tester.
 
 ![Easy SEO Architecture Overview](./docs/images/architecture_overview.png)
 
-## Usage
+## Simple Usage Example
 
-### Basic Setup
-
-Wrap your app with `SEOHtmlGenerator`:
+Init `EasySEOManager` in your `main()` function:
 
 ```dart
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 void main() {
-  runApp(
-    SEOHtmlGenerator(
-      enabled: true, // Enable for SEO generation
-      outputPath: 'seo-output/', // Output directory
-      child: MyApp(),
-    ),
+  ...
+  EasySEOManager.instance.init(
+    enableInteractiveMode: true
   );
+  runApp(const MyApp());
 }
 ```
 
-### Adding SEO to Pages
-
-Use the `seo()` extension on Scaffold for page metadata:
+Use the `EasySEOPage` to wrap the content:
 
 ```dart
-Scaffold(
-  appBar: AppBar(title: Text('My Page')),
-  body: Center(
-    child: Text('Hello World').seo(tag: 'h1'),
-  ),
-).seo(
-  title: 'My Page Title',
-  description: 'Page description for SEO',
-  canonicalUrl: 'https://yoursite.com/my-page',
-  additionalTags: {
-    'twitter:card': 'summary_large_image',
-    'og:title': 'My Page Title',
-  },
-);
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: EasySEOPage(
+            title: 'Some Web Page', 
+            child: Text('Hello World')
+          );
+        ),
+      ),
+    );
+  }
+}
 ```
 
 ### Widget SEO Extensions
