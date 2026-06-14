@@ -47,41 +47,140 @@ The architecture consists of 4 main parts:
 
 ## Simple Usage Example
 
-Init `EasySEOManager` in your `main()` function:
+1. **Initialize** `EasySEOManager` within your `main()` function.
+2. **Wrap** the root of your target view with `EasySEOPage` to flag it for HTML generation.
+3. **Expose** content to the HTML body by wrapping your layout elements with semantic components 
+like `EasySEOTextWrapper`, or by using their equivalent widget extension methods like `.easySeoText()`.
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() {
-  ...
-  EasySEOManager.instance.init(
-    enableInteractiveMode: true
-  );
-  runApp(const MyApp());
+   usePathUrlStrategy();
+   WidgetsFlutterBinding.ensureInitialized();
+   EasySEOManager.instance.init(
+      enableInteractiveMode: kDebugMode, // enable interactive mode in debug mode
+      enableLiveOutput: kDebugMode, // inject to DOM in debug mode
+      baseUrl: "https://mysite.com",
+   );
+   runApp(const MyApp());
 }
-```
 
-Use the `EasySEOPage` to wrap the content:
-
-```dart
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: EasySEOPage(
-            title: 'Some Web Page', 
-            child: Text('Hello World').easySeoP
-          );
-        ),
-      ),
-    );
-  }
+   @override
+   Widget build(BuildContext context) {
+      return const MaterialApp(
+         home: Scaffold(
+            body: EasySEOPage(
+               title: 'Some Web Page',
+               child: SizedBox.expand(
+                  child: Center(
+                     child: EasySEOTextWrapper(child: Text('Hello World')),
+                  ),
+               ),
+            ),
+         ),
+      );
+   }
 }
 ```
+This will generate the following HMTL and sitemap.xml:
+```html
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-easy-seo="title">Some Web Page</title>
+  <meta data-easy-seo="meta:name:title" name="title" content="Some Web Page">
+  <link data-easy-seo="link:rel:canonical" rel="canonical" href="https://mysite.com/">
+  <meta data-easy-seo="meta:property:og:title" property="og:title" content="Some Web Page">
+  <meta data-easy-seo="meta:property:og:url" property="og:url" content="https://mysite.com/">
+  <meta data-easy-seo="meta:name:twitter:card" name="twitter:card" content="summary_large_image">
+  <meta data-easy-seo="meta:name:twitter:title" name="twitter:title" content="Some Web Page">
+</head>
+<body>
+<p>Hello World</p>
+</body>
+</html>
+```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://mysite.com/</loc>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+  </url>
+</urlset>
+```
+
+## Widget wrappers and HTML output
+
+<div style="display: flex; gap: 20px;">
+  <div style="flex: 1;">
+
+### Widget Wrapper
+```dart
+// Text() to <p> - default behaviour
+EasySEOTextWrapper(child: Text('Hello World')) // or
+Text('Hello World').easySeoText() // or
+Text('Hello World').easySeoP()
+
+// Text() to <h1> ... <h6>
+EasySEOTextWrapper(
+   textType: SEOTextType.h1, 
+   child: Text('Main Topic')
+) 
+// or
+Text('Sub Topic').easySeoText(textType: SEOTextType.h3) 
+// or
+Text('Least important Topic').easySeoH6()
+
+// any widget to <p>, <h1> ... <h6>
+FancyVisualHeader().easySeoH1(text: "Main Topic")
+```
+
+---
+
+This is a new row directly under the first block in the left column.
+
+  </div>
+  <div style="flex: 1;">
+    
+### HTML Output
+```html
+
+<p>Hello World</p>
+
+
+
+
+<h1>Main Topic</h1>
+
+
+
+
+<h3>Sub Topic</h3>
+
+<h6>Least important Topic</h6>
+
+
+<h1>Main Topic</h1>
+```
+
+---
+
+This is a new row directly under the first block in the right column.
+
+  </div>
+</div>
 
 ### Widget SEO Extensions
 
