@@ -122,6 +122,11 @@ This will generate the following HMTL and sitemap.xml:
 ```
 
 ## Widget wrappers and HTML output
+Although both Flutter and HTML rely on a tree structure to define content, a Flutter widget tree cannot be converted into an HTML document entirely automatically. To generate optimized SEO metadata, we must explicitly flag specific parts of the widget tree. This architectural approach is necessary for several reasons:
+
+1. **SEO-Focused Filtering:** We only want to extract content that directly impacts search engine indexing and discoverability.
+2. **Structural Mismatches:** Many Flutter layout widgets lack a meaningful HTML equivalent. While structural components like `Center` or `Padding` are essential for a full visual CSS layout, they serve no purpose in an SEO-friendly, text-first HTML document.
+3. **Contextual Layout Mapping:** A single Flutter widget can represent entirely different semantic HTML elements depending on its context. For example, a `Row` of images could map to a site `<header>` containing an `<h1>` and `<a>` tags, or it could simply translate to a standard `<div>` containing `<img>` elements.
 
 <div style="display: flex; gap: 20px;">
   <div style="flex: 1;">
@@ -146,9 +151,18 @@ Text('Least important Topic').easySeoH6()
 // any widget to <p>, <h1> ... <h6>
 FancyVisualHeader().easySeoH1(text: "Main Topic")
 ```
+---
+```dart
+ComplexAnimatedHeaderWidget().easySeoHeader(
+ h1: "App Web Version",
+ additionalTags: [
+   SEOHtml.a(href: "https://...", content: "AppStore"),
+   SEOHtml.a(href: "https://...", content: "PlayStore"),
+ ]
+);
+```
 
 ---
-
 This is a new row directly under the first block in the left column.
 
   </div>
@@ -174,9 +188,18 @@ This is a new row directly under the first block in the left column.
 
 <h1>Main Topic</h1>
 ```
+---
+```html
+<header>
+  <h1>App Web Version</h1>
+  <a href="https://...">AppStore</a>
+  <a href="https://...">PlayStore</a>
+</header>
+
+
+```
 
 ---
-
 This is a new row directly under the first block in the right column.
 
   </div>
