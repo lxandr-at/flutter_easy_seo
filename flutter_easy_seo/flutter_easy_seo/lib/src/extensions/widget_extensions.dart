@@ -253,9 +253,8 @@ extension EasySEOWidgetExtension on Widget {
     );
   }
 
-  Widget easySeoNav({String? label, bool isBreadcrumb = false, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoNav({bool isBreadcrumb = false, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
     return EasySEONavWrapper(
-      label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,

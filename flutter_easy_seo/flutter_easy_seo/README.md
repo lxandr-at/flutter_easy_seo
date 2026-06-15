@@ -163,6 +163,27 @@ ComplexAnimatedHeaderWidget().easySeoHeader(
 ```
 
 ---
+```dart
+NavigationRail(
+  ...
+  destinations: [
+    NavigationRailDestination(
+      ...
+      label: Text("Item 1").easySeoNavLink(
+        path: '$baseUrl/$langCode/item1', 
+        text: "Item 1")
+    ),
+    NavigationRailDestination(
+      ...
+      label: Text("Item 2").easySeoNavLink(
+        path: '$baseUrl/$langCode/item2', 
+        text: "Item 2")
+    ),
+  ],
+).easySeo(globalName: "main_navigation")
+```
+
+---
 This is a new row directly under the first block in the left column.
 
   </div>

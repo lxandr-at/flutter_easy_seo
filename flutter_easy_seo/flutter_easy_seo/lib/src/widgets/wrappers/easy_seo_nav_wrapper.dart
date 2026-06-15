@@ -1,7 +1,6 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class EasySEONavWrapper extends EasySEOBaseWrapper {
-  final String? label;
   final bool isBreadcrumb;
 
   const EasySEONavWrapper({
@@ -11,7 +10,6 @@ class EasySEONavWrapper extends EasySEOBaseWrapper {
     super.attributes,
     super.globalName,
     super.additionalTags,
-    this.label,
     this.isBreadcrumb = false,
   });
 

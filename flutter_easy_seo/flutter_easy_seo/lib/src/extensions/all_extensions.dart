@@ -67,7 +67,6 @@ extension ImageSEO on Image {
 /// Extension for NavigationRail widgets to add SEO capabilities
 extension NavigationRailSEO on NavigationRail {
   Widget easySeo({
-    String? label,
     bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
@@ -75,7 +74,6 @@ extension NavigationRailSEO on NavigationRail {
     List<SEOHtml> additionalTags = const [],
   }) {
     return EasySEONavWrapper(
-      label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
@@ -89,14 +87,12 @@ extension NavigationRailSEO on NavigationRail {
 /// Extension for BottomNavigationBar widgets to add SEO capabilities
 extension BottomNavigationBarSEO on BottomNavigationBar {
   Widget easySeo({
-    String? label,
     bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
     return EasySEONavWrapper(
-      label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
@@ -193,14 +189,12 @@ extension DrawerSEO on Drawer {
 /// Extension for Column widgets to mark as navigation container
 extension ColumnNavSEO on Column {
   Widget easySeoNav({
-    String? label,
     bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
     return EasySEONavWrapper(
-      label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
@@ -213,14 +207,12 @@ extension ColumnNavSEO on Column {
 /// Extension for Row widgets to mark as navigation container
 extension RowNavSEO on Row {
   Widget easySeoNav({
-    String? label,
     bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
     return EasySEONavWrapper(
-      label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
@@ -233,14 +225,12 @@ extension RowNavSEO on Row {
 /// Extension for Flex widgets to mark as navigation container
 extension FlexNavSEO on Flex {
   Widget easySeoNav({
-    String? label,
     bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> additionalTags = const [],
   }) {
     return EasySEONavWrapper(
-      label: label,
       isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
