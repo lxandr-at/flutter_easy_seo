@@ -55,9 +55,28 @@ extension EasySEOWidgetExtension on Widget {
   Widget easySeoP({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
       easySeoText(textType: SEOTextType.p, text: text, globalName: globalName, additionalTags: additionalTags);
 
+  Widget easySeoLink({
+    required String path,
+    String? text,
+    String? className,
+    Map<String, String>? attributes,
+    String? globalName,
+    List<SEOHtml> additionalTags = const [],
+  }) {
+    return EasySEOLinkWrapper(
+      path: path,
+      text: text,
+      className: className,
+      attributes: attributes,
+      globalName: globalName,
+      additionalTags: additionalTags,
+      child: this,
+    );
+  }
+
   Widget easySeoNavLink({
     required String path,
-    required String text,
+    String? text,
     String? className,
     Map<String, String>? attributes,
     String? globalName,

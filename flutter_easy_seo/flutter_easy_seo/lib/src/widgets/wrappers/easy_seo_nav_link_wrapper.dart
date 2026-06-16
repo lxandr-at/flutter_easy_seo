@@ -1,9 +1,6 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
-class EasySEONavLinkWrapper extends EasySEOBaseWrapper {
-  final String path;
-  final String? text;
-
+class EasySEONavLinkWrapper extends EasySEOLinkWrapper {
   const EasySEONavLinkWrapper({
     super.key,
     required super.child,
@@ -11,8 +8,8 @@ class EasySEONavLinkWrapper extends EasySEOBaseWrapper {
     super.attributes,
     super.globalName,
     super.additionalTags,
-    required this.path,
-    this.text,
+    required super.path,
+    super.text,
   });
 
   @override
@@ -22,11 +19,7 @@ class EasySEONavLinkWrapper extends EasySEOBaseWrapper {
     required BuildContext context,
   }) {
     return SEOHtml.li(children: [
-      SEOHtml.a(
-        href: path,
-        content: text,
-        children: children,
-      ),
+      super.toSEOHtml(children: children, navItems: navItems, context: context),
     ]);
   }
 

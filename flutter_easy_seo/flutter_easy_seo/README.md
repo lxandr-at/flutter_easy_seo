@@ -170,17 +170,36 @@ NavigationRail(
     NavigationRailDestination(
       ...
       label: Text("Item 1").easySeoNavLink(
-        path: '$baseUrl/$langCode/item1', 
-        text: "Item 1")
+        path: 'https://.../item1')
     ),
     NavigationRailDestination(
       ...
       label: Text("Item 2").easySeoNavLink(
-        path: '$baseUrl/$langCode/item2', 
-        text: "Item 2")
+        path: 'https://.../item2')
     ),
   ],
 ).easySeo(globalName: "main_navigation")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```
 
 ---
@@ -209,6 +228,7 @@ This is a new row directly under the first block in the left column.
 
 <h1>Main Topic</h1>
 ```
+
 ---
 ```html
 <header>
@@ -218,6 +238,46 @@ This is a new row directly under the first block in the left column.
 </header>
 
 
+```
+
+---
+```html
+<nav>
+  <ul>
+    <li>
+      <a href="https://.../item1">Item 1</a>
+    </li>
+    <li>
+      <a href="https://.../item2">Item 2</a>
+    </li>
+  </ul>
+</nav>
+<script type="application/ld+json"> {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "numberOfItems": 2,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "SiteNavigationElement",
+        "name": "Item 1",
+        "url": "https://.../item1"
+      }
+    }, 
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "SiteNavigationElement",
+        "name": "Item 2",
+        "url": "https://.../item2"
+      }
+    }
+  ]
+}
+</script>
 ```
 
 ---
