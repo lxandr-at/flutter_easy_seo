@@ -156,7 +156,7 @@ ComplexAnimatedHeaderWidget().easySeoHeader(
  h1: "App Web Version",
  children: [
    SEOHtml.a(href: "https://...", content: "AppStore"),
-   SEOHtml.a(href: "https://...", content: "PlayStore"),
+   SEOAnchor(href: "https://...", content: "PlayStore"),
  ]
 );
 ```

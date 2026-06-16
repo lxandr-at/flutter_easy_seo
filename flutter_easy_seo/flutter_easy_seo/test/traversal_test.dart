@@ -19,7 +19,7 @@ void main() {
                   textType: SEOTextType.p,
                   child: Text('Some description'),
                 ),
-                EasySEONavLinkWrapper(
+                easySeoNavAnchorWrapper(
                   path: '/details',
                   child: EasySEOTextWrapper(
                     textType: SEOTextType.p,

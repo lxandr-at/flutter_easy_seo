@@ -562,54 +562,6 @@ class SEOHtml {
   // Convenience constructors with jsonLd
   // ---------------------------------------------------------------------------
 
-  /// Helper for AggregateOffer — uses [jsonLd] as the single source of truth.
-  /// Microdata is auto-derived via [_withMicrodata] during rendering.
-  static SEOHtml aggregateOffer(SEOOfferInfo info) {
-    return SEOHtml.div(
-      attributes: {'itemprop': 'offers', 'class': 'aggregateOffer'},
-      jsonLd: {
-        '@type': 'AggregateOffer',
-        'lowPrice': info.lowPrice,
-        'highPrice': info.highPrice,
-        'offerCount': info.offerCount,
-        'priceCurrency': info.currency,
-        'offers': info.individualOffers.map((offer) {
-          return {
-            '@type': 'Offer',
-            'price': offer['price'],
-            'priceCurrency': info.currency,
-            'itemCondition': 'https://schema.org/NewCondition',
-            'availability': (offer['availability'] ?? true)
-                ? 'https://schema.org/InStock'
-                : 'https://schema.org/OutOfStock',
-            'seller': {
-              '@type': 'Organization',
-              'name': offer['seller'].toString(),
-            },
-            if (info.validThrough != null)
-              'validThrough': info.validThrough!.toIso8601String(),
-            if (info.validFrom != null)
-              'validFrom': info.validFrom!.toIso8601String(),
-          };
-        }).toList(),
-      },
-    );
-  }
-
-  /// Helper for size/unit PropertyValue — uses [jsonLd] as the single source.
-  static SEOHtml sizeUnit(String size, String unit) {
-    return SEOHtml.p(
-      '',
-      attributes: {'itemprop': 'additionalProperty'},
-      jsonLd: {
-        '@type': 'PropertyValue',
-        'name': 'weight',
-        'value': size,
-        'unitText': unit,
-      },
-    );
-  }
-
   // ---------------------------------------------------------------------------
   // Path resolution
   // ---------------------------------------------------------------------------

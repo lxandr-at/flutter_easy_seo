@@ -276,27 +276,6 @@ class SEOServiceInfo implements EasySEOHeadTagSource {
       [EasySEOScriptTag(SEOHtmlJsonLd.service(this))];
 }
 
-class SEOOfferInfo {
-  final double lowPrice;
-  final double highPrice;
-  final int offerCount;
-  final String currency;
-  final List<Map<String, dynamic>> individualOffers;
-
-  const SEOOfferInfo({
-    required this.lowPrice,
-    required this.highPrice,
-    required this.offerCount,
-    this.currency = "EUR",
-    this.individualOffers = const [],
-    this.validThrough,
-    this.validFrom,
-  });
-
-  final DateTime? validThrough;
-  final DateTime? validFrom;
-}
-
 /// Bundle of common Apple PWA head tags.
 class EasySEOAppleHeadTags implements EasySEOHeadTagSource {
   final String title;

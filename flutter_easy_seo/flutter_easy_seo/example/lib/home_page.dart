@@ -28,12 +28,12 @@ class HomePage extends StatelessWidget {
               NavigationRailDestination(
                 icon: const Icon(Icons.home_outlined),
                 selectedIcon: const Icon(Icons.home),
-                label: const Text('Home').easySeoNavLink(path: "/", text: 'Home'),
+                label: const Text('Home').easySeoNavAnchor(path: "/", text: 'Home'),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.business_outlined),
                 selectedIcon: const Icon(Icons.business),
-                label: const Text('Services').easySeoNavLink(path: "/services", text: 'Services'),
+                label: const Text('Services').easySeoNavAnchor(path: "/services", text: 'Services'),
               ),
             ],
           ).easySeo(label: 'Main Navigation'),
@@ -176,10 +176,10 @@ class HomePage extends StatelessWidget {
                         const SizedBox(height: 12),
                         Column(
                           children: [
-                            const Text('Home').easySeoNavLink(path: '/', text: 'Home'),
-                            const Text('Services').easySeoNavLink(path: '/services', text: 'Services'),
-                            const Text('Contact').easySeoNavLink(path: '/contact', text: 'Contact'),
-                            const Text('About').easySeoNavLink(path: '/about', text: 'About'),
+                            const Text('Home').easySeoNavAnchor(path: '/', text: 'Home'),
+                            const Text('Services').easySeoNavAnchor(path: '/services', text: 'Services'),
+                            const Text('Contact').easySeoNavAnchor(path: '/contact', text: 'Contact'),
+                            const Text('About').easySeoNavAnchor(path: '/about', text: 'About'),
                           ],
                         ).easySeoNav(label: 'Footer Navigation'),
                       ],

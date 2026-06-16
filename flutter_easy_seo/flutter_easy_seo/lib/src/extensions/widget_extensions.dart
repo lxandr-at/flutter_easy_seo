@@ -55,7 +55,7 @@ extension EasySEOWidgetExtension on Widget {
   Widget easySeoP({String? text, String? globalName, List<SEOHtml> children = const []}) =>
       easySeoText(textType: SEOTextType.p, text: text, globalName: globalName, children: children);
 
-  Widget easySeoLink({
+  Widget easySeoAnchor({
     required String path,
     String? text,
     String? className,
@@ -74,7 +74,7 @@ extension EasySEOWidgetExtension on Widget {
     );
   }
 
-  Widget easySeoNavLink({
+  Widget easySeoNavAnchor({
     required String path,
     String? text,
     String? className,
@@ -82,7 +82,7 @@ extension EasySEOWidgetExtension on Widget {
     String? globalName,
     List<SEOHtml> children = const [],
   }) {
-    return EasySEONavLinkWrapper(
+    return easySeoNavAnchorWrapper(
       path: path,
       text: text,
       className: className,

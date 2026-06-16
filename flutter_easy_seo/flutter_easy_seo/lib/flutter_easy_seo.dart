@@ -25,6 +25,7 @@ part 'src/interfaces/easy_seo_text_content.dart';
 part 'src/models/seo_gen_result.dart';
 part 'src/models/seo_metadata_models.dart';
 part 'src/models/seo_html.dart';
+part 'src/models/seo_tag_classes.dart';
 part 'src/traversal/widget_tree_processor.dart';
 part 'src/easy_seo_manager.dart';
 part 'src/widgets/easy_seo_page.dart';
