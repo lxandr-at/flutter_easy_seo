@@ -59,7 +59,7 @@ import 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 void main() {
    // ... other code
-   
+
    EasySEOManager.instance.init(
       enableInteractiveMode: kDebugMode, // enable interactive mode in debug mode
       enableLiveOutput: kDebugMode, // inject to DOM in debug mode
@@ -162,6 +162,7 @@ ComplexAnimatedHeaderWidget().easySeoHeader(
 ```
 
 ---
+Navigation Menu
 ```dart
 NavigationRail(
   ...
@@ -181,7 +182,7 @@ NavigationRail(
 
 // or
 
-Row(
+Column(
   children: [
     TextButton(
       onPressed: () => { /* load page 1 */},
@@ -197,6 +198,42 @@ Row(
     )
   ]
 ).easySeoNav(globalName: "main_navigation");
+
+
+```
+
+---
+Breadcrumb Navigation
+```dart
+Row(
+  children: [
+    TextButton(
+      onPressed: () => { /* load page 1 */},
+      child: Text("Products").easySeoNavLink(
+        path: 'https://.../products'
+      ),
+    ),
+    TextButton(
+      onPressed: () { /* load page 2 */ },
+      child: Text("Groceries").easySeoNavLink(
+        path: 'https://.../groceries'
+      ),
+    )
+  ]
+).easySeoNav(
+  globalName: "breadcrumb_navigation", 
+  isBreadcrumb: true
+);
+
+
+
+
+
+
+
+
+
+
 
 
 ```
@@ -240,6 +277,7 @@ This is a new row directly under the first block in the left column.
 ```
 
 ---
+HTML + JSON-LD
 ```html
 <nav>
   <ul>
@@ -273,6 +311,41 @@ This is a new row directly under the first block in the left column.
         "name": "Item 2",
         "url": "https://.../item2"
       }
+    }
+  ]
+}
+</script>
+```
+
+---
+HTML + JOSON-LD
+```html
+<nav aria-label="Breadcrumb">
+  <ol style="display: flex; list-style: none; padding: 0;">
+    <li>
+      <a href="https://.../products">Products</a>
+    </li>
+    <span aria-hidden="true" style="margin: 0 8px;">›</span>
+    <li>
+      <a href="https://.../products/groceries" aria-current="page">Groceries</a>
+    </li>
+  </ol>
+</nav>
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {
+      "@type":"ListItem",
+      "position":1,
+      "name":"Products",
+      "item":"https://.../products"
+    },
+    {
+      "@type":"ListItem",
+      "position":2,"name":
+      "Groceries",
+      "item":"https://.../products/groceries"
     }
   ]
 }
