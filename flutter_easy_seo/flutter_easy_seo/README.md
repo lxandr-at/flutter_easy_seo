@@ -56,11 +56,10 @@ like `EasySEOTextWrapper`, or by using their equivalent widget extension methods
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() {
-   usePathUrlStrategy();
-   WidgetsFlutterBinding.ensureInitialized();
+   // ... other code
+   
    EasySEOManager.instance.init(
       enableInteractiveMode: kDebugMode, // enable interactive mode in debug mode
       enableLiveOutput: kDebugMode, // inject to DOM in debug mode
@@ -180,24 +179,24 @@ NavigationRail(
   ],
 ).easySeo(globalName: "main_navigation")
 
+// or
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Row(
+  children: [
+    TextButton(
+      onPressed: () => { /* load page 1 */},
+      child: Text("Item 1").easySeoNavLink(
+        path: 'https://.../item1'
+      ),
+    ),
+    TextButton(
+      onPressed: () { /* load page 2 */ },
+      child: Text("Item 2").easySeoNavLink(
+        path: 'https://.../item2'
+      ),
+    )
+  ]
+).easySeoNav(globalName: "main_navigation");
 
 
 ```

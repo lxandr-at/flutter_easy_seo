@@ -127,7 +127,9 @@ class SEOHtml {
   }) {
     String finalHref = href ?? '';
     if (href == null && path != null) {
-      finalHref = EasySEOManager.instance.formatFullUrl(path);
+      finalHref = path.startsWith('http')
+          ? path
+          : EasySEOManager.instance.formatFullUrl(path);
     }
 
     return SEOHtml(
