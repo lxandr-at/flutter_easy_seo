@@ -8,7 +8,7 @@ class EasySEOFigureWrapper extends EasySEOBaseWrapper {
     super.className,
     super.attributes,
     super.globalName,
-    super.additionalTags,
+    super.children,
   }) : _caption = caption;
 
   final String? _caption;

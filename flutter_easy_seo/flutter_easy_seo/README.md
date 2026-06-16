@@ -154,7 +154,7 @@ FancyVisualHeader().easySeoH1(text: "Main Topic")
 ```dart
 ComplexAnimatedHeaderWidget().easySeoHeader(
  h1: "App Web Version",
- additionalTags: [
+ children: [
    SEOHtml.a(href: "https://...", content: "AppStore"),
    SEOHtml.a(href: "https://...", content: "PlayStore"),
  ]

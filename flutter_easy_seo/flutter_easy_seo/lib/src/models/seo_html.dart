@@ -3,14 +3,14 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 /// Represents an HTML element that can be injected into the SEO output
 /// without affecting the visual Flutter rendering.
 ///
-/// Use [additionalTags] on any SEO wrapper to attach extra semantic HTML
+/// Use [children] on any SEO wrapper to attach extra semantic HTML
 /// alongside the widget's generated tag (e.g. structured-data spans, hidden
 /// headings that live in a different part of the widget tree, etc.).
 ///
 /// Example:
 /// ```dart
 /// EasySEOSectionWrapper(
-///   additionalTags: [
+///   children: [
 ///     SEOHtml(tag: 'h2', content: 'Section Subtitle'),
 ///     SEOHtml(
 ///       tag: 'script',

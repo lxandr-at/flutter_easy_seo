@@ -6,13 +6,13 @@ extension TextSEO on Text {
     SEOTextType textType = SEOTextType.p,
     String? className,
     Map<String, String>? attributes,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOTextWrapper(
       textType: textType,
       className: className,
       attributes: attributes,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -32,13 +32,13 @@ extension ContainerSEO on Container {
     String tag = 'div',
     String? className,
     Map<String, String>? attributes,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOContainerWrapper(
       tag: tag,
       className: className,
       attributes: attributes,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -51,14 +51,14 @@ extension ImageSEO on Image {
     String? alt,
     String? className,
     Map<String, String>? attributes,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOImageWrapper(
       src: src,
       alt: alt,
       className: className,
       attributes: attributes,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -71,14 +71,14 @@ extension NavigationRailSEO on NavigationRail {
     String? className,
     Map<String, String>? attributes,
     String? globalName,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEONavWrapper(
       isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -90,13 +90,13 @@ extension BottomNavigationBarSEO on BottomNavigationBar {
     bool isBreadcrumb = false,
     String? className,
     Map<String, String>? attributes,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEONavWrapper(
       isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -107,12 +107,12 @@ extension ListViewSEO on ListView {
   Widget easySeo({
     String? className,
     Map<String, String>? attributes,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOListWrapper(
       className: className,
       attributes: attributes,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -123,12 +123,12 @@ extension ColumnSEO on Column {
   Widget easySeo({
     String? className,
     Map<String, String>? attributes,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOListWrapper(
       className: className,
       attributes: attributes,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -139,12 +139,12 @@ extension RowSEO on Row {
   Widget easySeo({
     String? className,
     Map<String, String>? attributes,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOListWrapper(
       className: className,
       attributes: attributes,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -157,14 +157,14 @@ extension AppBarSEO on AppBar {
     String? p,
     String? className,
     Map<String, String>? attributes,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOHeaderWrapper(
       h1: h1,
       p: p,
       className: className,
       attributes: attributes,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -175,12 +175,12 @@ extension DrawerSEO on Drawer {
   Widget easySeo({
     String? className,
     Map<String, String>? attributes,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOAsideWrapper(
       className: className,
       attributes: attributes,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }

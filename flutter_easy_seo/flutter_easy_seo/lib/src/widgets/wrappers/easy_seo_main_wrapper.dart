@@ -7,7 +7,7 @@ class EasySEOMainWrapper extends EasySEOBaseWrapper {
     super.className,
     super.attributes,
     super.globalName,
-    super.additionalTags,
+    super.children,
   });
 
   @override

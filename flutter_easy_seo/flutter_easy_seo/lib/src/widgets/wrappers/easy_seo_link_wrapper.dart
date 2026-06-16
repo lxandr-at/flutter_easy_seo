@@ -10,7 +10,7 @@ class EasySEOLinkWrapper extends EasySEOBaseWrapper {
     super.className,
     super.attributes,
     super.globalName,
-    super.additionalTags,
+    super.children,
     super.jsonLd,
     required this.path,
     this.text,

@@ -7,7 +7,7 @@ class EasySEOTimeWrapper extends EasySEOBaseWrapper {
     super.className,
     super.attributes,
     super.globalName,
-    super.additionalTags,
+    super.children,
     required DateTime dateTime,
     this.text,
   }) : _dateTime = dateTime;

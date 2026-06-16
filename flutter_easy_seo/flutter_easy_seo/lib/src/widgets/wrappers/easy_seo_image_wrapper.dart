@@ -10,7 +10,7 @@ class EasySEOImageWrapper extends EasySEOBaseWrapper {
     super.className,
     super.attributes,
     super.globalName,
-    super.additionalTags,
+    super.children,
     this.alt,
     this.src,
   });

@@ -130,7 +130,7 @@ void main() {
     expect(h1Index, lessThan(sectionIndex), reason: 'Deep h1 should move its parent container before the section');
   });
 
-  testWidgets('SEOWidgetTreeProcessor supports additionalTags', (WidgetTester tester) async {
+  testWidgets('SEOWidgetTreeProcessor supports children', (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: EasySEOPage(
@@ -139,7 +139,7 @@ void main() {
             body: Column(
               children: [
                 EasySEOSectionWrapper(
-                  additionalTags: [
+                  children: [
                     SEOHtml(tag: 'h2', content: 'Section Subtitle'),
                     SEOHtml(
                       tag: 'script',
@@ -162,7 +162,7 @@ void main() {
     final processor = SEOWidgetTreeProcessor();
     final html = processor.processWidgetTree(element, []);
 
-    // Heading tags in additionalTags should be prepended
+    // Heading tags in children should be prepended
     final h2Index = html.indexOf('<h2>Section Subtitle</h2>');
     final sectionContentIndex = html.indexOf('Section content');
     final scriptIndex = html.indexOf('<script type="application/ld+json">{"@type":"Article"}</script>');

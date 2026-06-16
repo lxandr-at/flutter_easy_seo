@@ -10,7 +10,7 @@ class EasySEOTextWrapper extends EasySEOBaseWrapper {
     super.className,
     super.attributes,
     super.globalName,
-    super.additionalTags,
+    super.children,
     super.jsonLd,
     this.text,
   });

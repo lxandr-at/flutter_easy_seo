@@ -16,16 +16,16 @@ abstract class EasySEOBaseWrapper extends StatefulWidget implements EasySEOWrapp
     this.attributes,
     this.globalName,
     this.jsonLd,
-    List<SEOHtml> additionalTags = const [],
-  }) : _additionalTags = additionalTags;
+    List<SEOHtml> children = const [],
+  }) : _children = children;
 
   final Widget child;
   final String? className;
   final Map<String, String?>? attributes;
   final String? globalName;
   final Map<String, dynamic>? jsonLd;
-  final List<SEOHtml> _additionalTags;
-  List<SEOHtml> get additionalTags => _additionalTags;
+  final List<SEOHtml> _children;
+  List<SEOHtml> get children => _children;
 
   Map<String, String> get additionalAttributes => {};
 
@@ -40,7 +40,7 @@ abstract class EasySEOBaseWrapper extends StatefulWidget implements EasySEOWrapp
     required BuildContext context,
     String? content,
   }) {
-    final resolvedAdditional = additionalTags.map((t) => t.resolve(context)).toList();
+    final resolvedAdditional = this.children.map((t) => t.resolve(context)).toList();
     final headTags = resolvedAdditional.where((t) => _headingPriority.containsKey(t.tag)).toList();
     headTags.sort((a, b) => (_headingPriority[a.tag] ?? 6).compareTo(_headingPriority[b.tag] ?? 6));
     final otherTags = resolvedAdditional.where((t) => !_headingPriority.containsKey(t.tag)).toList();

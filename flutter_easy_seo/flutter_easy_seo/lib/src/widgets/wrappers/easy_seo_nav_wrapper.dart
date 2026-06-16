@@ -9,7 +9,7 @@ class EasySEONavWrapper extends EasySEOBaseWrapper {
     super.className,
     super.attributes,
     super.globalName,
-    super.additionalTags,
+    super.children,
     this.isBreadcrumb = false,
   });
 

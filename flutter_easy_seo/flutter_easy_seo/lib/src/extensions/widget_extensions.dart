@@ -8,7 +8,7 @@ extension EasySEOWidgetExtension on Widget {
     String? className,
     Map<String, String>? attributes,
     String? globalName,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOCustomWrapper(
       builder: builder,
@@ -16,7 +16,7 @@ extension EasySEOWidgetExtension on Widget {
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -27,7 +27,7 @@ extension EasySEOWidgetExtension on Widget {
     Map<String, String>? attributes,
     String? text,
     String? globalName,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOTextWrapper(
       textType: textType,
@@ -35,25 +35,25 @@ extension EasySEOWidgetExtension on Widget {
       attributes: attributes,
       text: text,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoH1({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
-      easySeoText(textType: SEOTextType.h1, text: text, globalName: globalName, additionalTags: additionalTags);
-  Widget easySeoH2({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
-      easySeoText(textType: SEOTextType.h2, text: text, globalName: globalName, additionalTags: additionalTags);
-  Widget easySeoH3({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
-      easySeoText(textType: SEOTextType.h3, text: text, globalName: globalName, additionalTags: additionalTags);
-  Widget easySeoH4({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
-      easySeoText(textType: SEOTextType.h4, text: text, globalName: globalName, additionalTags: additionalTags);
-  Widget easySeoH5({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
-      easySeoText(textType: SEOTextType.h5, text: text, globalName: globalName, additionalTags: additionalTags);
-  Widget easySeoH6({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
-      easySeoText(textType: SEOTextType.h6, text: text, globalName: globalName, additionalTags: additionalTags);
-  Widget easySeoP({String? text, String? globalName, List<SEOHtml> additionalTags = const []}) =>
-      easySeoText(textType: SEOTextType.p, text: text, globalName: globalName, additionalTags: additionalTags);
+  Widget easySeoH1({String? text, String? globalName, List<SEOHtml> children = const []}) =>
+      easySeoText(textType: SEOTextType.h1, text: text, globalName: globalName, children: children);
+  Widget easySeoH2({String? text, String? globalName, List<SEOHtml> children = const []}) =>
+      easySeoText(textType: SEOTextType.h2, text: text, globalName: globalName, children: children);
+  Widget easySeoH3({String? text, String? globalName, List<SEOHtml> children = const []}) =>
+      easySeoText(textType: SEOTextType.h3, text: text, globalName: globalName, children: children);
+  Widget easySeoH4({String? text, String? globalName, List<SEOHtml> children = const []}) =>
+      easySeoText(textType: SEOTextType.h4, text: text, globalName: globalName, children: children);
+  Widget easySeoH5({String? text, String? globalName, List<SEOHtml> children = const []}) =>
+      easySeoText(textType: SEOTextType.h5, text: text, globalName: globalName, children: children);
+  Widget easySeoH6({String? text, String? globalName, List<SEOHtml> children = const []}) =>
+      easySeoText(textType: SEOTextType.h6, text: text, globalName: globalName, children: children);
+  Widget easySeoP({String? text, String? globalName, List<SEOHtml> children = const []}) =>
+      easySeoText(textType: SEOTextType.p, text: text, globalName: globalName, children: children);
 
   Widget easySeoLink({
     required String path,
@@ -61,7 +61,7 @@ extension EasySEOWidgetExtension on Widget {
     String? className,
     Map<String, String>? attributes,
     String? globalName,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOLinkWrapper(
       path: path,
@@ -69,7 +69,7 @@ extension EasySEOWidgetExtension on Widget {
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -80,7 +80,7 @@ extension EasySEOWidgetExtension on Widget {
     String? className,
     Map<String, String>? attributes,
     String? globalName,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEONavLinkWrapper(
       path: path,
@@ -88,7 +88,7 @@ extension EasySEOWidgetExtension on Widget {
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -99,7 +99,7 @@ extension EasySEOWidgetExtension on Widget {
     String? className,
     Map<String, String>? attributes,
     String? globalName,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOHeaderWrapper(
       h1: h1,
@@ -107,69 +107,69 @@ extension EasySEOWidgetExtension on Widget {
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoSection({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoSection({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOSectionWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoArticle({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoArticle({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOArticleWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoMain({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoMain({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOMainWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoList({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoList({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOListWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoListItem({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoListItem({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOListItemWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
   Widget easySeoHtml({
     String? globalName,
-    List<SEOHtml> additionalTags = const [],
+    List<SEOHtml> children = const [],
   }) {
     return EasySEOCustomWrapper(
       tag: "",
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
@@ -179,7 +179,7 @@ extension EasySEOWidgetExtension on Widget {
     {
       String? path,
       SEOHtml Function(String? content, {Map<String, String>? attributes,List<SEOHtml> children,}) headingBuilder = SEOHtml.h1,
-      List<SEOHtml> additionalTags = const [],
+      List<SEOHtml> children = const [],
       String? globalName,
     }
   ) {
@@ -190,7 +190,7 @@ extension EasySEOWidgetExtension on Widget {
         'name': productName,
       },
       globalName: globalName,
-      additionalTags: [
+      children: [
         headingBuilder(
             path == null ? productName : '',
             attributes: {'itemprop': "name"},
@@ -198,7 +198,7 @@ extension EasySEOWidgetExtension on Widget {
               if (path != null)
                 SEOHtml.a(content: productName, relativePath: path, attributes: {'itemprop': "url"})
             ]),
-        ...additionalTags
+        ...children
       ],
       child: this,
     );
@@ -220,77 +220,77 @@ extension EasySEOWidgetExtension on Widget {
     return EasySEOImageWrapper(alt: name, src: url, attributes: {'itemprop': "image"}, globalName: globalName, child: this);
   }
 
-  Widget easySeoAside({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoAside({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOAsideWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoContainer({String tag = 'div', String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoContainer({String tag = 'div', String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOContainerWrapper(
       tag: tag,
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoFigure({String? caption, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoFigure({String? caption, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOFigureWrapper(
       caption: caption,
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoForm({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoForm({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOFormWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoFooter({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoFooter({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOFooterWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoNav({bool isBreadcrumb = false, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoNav({bool isBreadcrumb = false, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEONavWrapper(
       isBreadcrumb: isBreadcrumb,
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }
 
-  Widget easySeoTime({required DateTime dateTime, String? text, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> additionalTags = const []}) {
+  Widget easySeoTime({required DateTime dateTime, String? text, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOTimeWrapper(
       dateTime: dateTime,
       text: text,
       className: className,
       attributes: attributes,
       globalName: globalName,
-      additionalTags: additionalTags,
+      children: children,
       child: this,
     );
   }

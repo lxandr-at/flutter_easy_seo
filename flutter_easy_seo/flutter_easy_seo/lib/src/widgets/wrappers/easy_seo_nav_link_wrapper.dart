@@ -7,7 +7,7 @@ class EasySEONavLinkWrapper extends EasySEOLinkWrapper {
     super.className,
     super.attributes,
     super.globalName,
-    super.additionalTags,
+    super.children,
     required super.path,
     super.text,
   });

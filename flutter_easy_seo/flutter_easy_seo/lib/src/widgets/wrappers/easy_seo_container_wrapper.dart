@@ -8,7 +8,7 @@ class EasySEOContainerWrapper extends EasySEOBaseWrapper {
     super.className,
     super.attributes,
     super.globalName,
-    super.additionalTags,
+    super.children,
   }) : _tag = tag;
 
   final String _tag;
