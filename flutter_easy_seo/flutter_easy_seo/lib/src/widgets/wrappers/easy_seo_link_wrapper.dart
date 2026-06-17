@@ -24,7 +24,7 @@ class EasySEOLinkWrapper extends EasySEOBaseWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return SEOHtml.a(
+    return SEOAnchor(
       path: path,
       content: resolvedText,
       children: children,

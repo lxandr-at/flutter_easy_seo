@@ -155,7 +155,7 @@ FancyVisualHeader().easySeoH1(text: "Main Topic")
 ComplexAnimatedHeaderWidget().easySeoHeader(
  h1: "App Web Version",
  children: [
-   SEOHtml.a(href: "https://...", content: "AppStore"),
+   SEOAnchor(href: "https://...", content: "AppStore"),
    SEOAnchor(href: "https://...", content: "PlayStore"),
  ]
 );
@@ -169,12 +169,12 @@ NavigationRail(
   destinations: [
     NavigationRailDestination(
       ...
-      label: Text("Item 1").easySeoNavLink(
+      label: Text("Item 1").easySeoNavAnchor(
         path: 'https://.../item1')
     ),
     NavigationRailDestination(
       ...
-      label: Text("Item 2").easySeoNavLink(
+      label: Text("Item 2").easySeoNavAnchor(
         path: 'https://.../item2')
     ),
   ],
@@ -186,13 +186,13 @@ Column(
   children: [
     TextButton(
       onPressed: () => { /* load page 1 */},
-      child: Text("Item 1").easySeoNavLink(
+      child: Text("Item 1").easySeoNavAnchor(
         path: 'https://.../item1'
       ),
     ),
     TextButton(
       onPressed: () { /* load page 2 */ },
-      child: Text("Item 2").easySeoNavLink(
+      child: Text("Item 2").easySeoNavAnchor(
         path: 'https://.../item2'
       ),
     )
@@ -209,13 +209,13 @@ Row(
   children: [
     TextButton(
       onPressed: () => { /* load page 1 */},
-      child: Text("Products").easySeoNavLink(
+      child: Text("Products").easySeoNavAnchor(
         path: 'https://.../products'
       ),
     ),
     TextButton(
       onPressed: () { /* load page 2 */ },
-      child: Text("Groceries").easySeoNavLink(
+      child: Text("Groceries").easySeoNavAnchor(
         path: 'https://.../groceries'
       ),
     )
@@ -357,38 +357,6 @@ This is a new row directly under the first block in the right column.
 
   </div>
 </div>
-
-### Widget SEO Extensions
-
-Add SEO to individual widgets:
-
-```dart
-// Text widgets
-Text('Page Heading').seo(tag: 'h1');
-Text('Paragraph text').seo(tag: 'p');
-
-// Container widgets
-Container(
-  child: Text('Section content'),
-).seo(tag: 'section');
-
-// Custom widgets
-ProductGridWidget().seo(
-  builder: (context, child) {
-    return SEOContainerWrapper(
-      tag: 'section',
-      child: child,
-    );
-  }
-);
-```
-
-## Output
-
-The package generates:
-- Complete HTML files for each route
-- `sitemap.xml` with all page URLs
-- Directory structure matching your site routes
 
 ## License
 

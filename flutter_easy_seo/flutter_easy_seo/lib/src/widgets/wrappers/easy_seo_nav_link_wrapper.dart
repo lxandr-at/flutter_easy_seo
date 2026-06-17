@@ -18,7 +18,7 @@ class easySeoNavAnchorWrapper extends EasySEOLinkWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return SEOHtml.li(children: [
+    return SEOListItem(children: [
       super.toSEOHtml(children: children, navItems: navItems, context: context),
     ]);
   }

@@ -45,7 +45,7 @@ class EasySEOImageWrapper extends EasySEOBaseWrapper {
     if (extractedSrc != null) attrs['src'] = extractedSrc;
     if (alt != null) attrs['alt'] = alt!;
 
-    return SEOHtml.img(attributes: attrs.isNotEmpty ? attrs : null);
+    return SEOImage(attributes: attrs.isNotEmpty ? attrs : null);
   }
 
   @override

@@ -38,134 +38,6 @@ class SEOHtml {
     this.jsonLd,
   });
 
-  // Text-centric tags
-  const SEOHtml.h1(this.content, {this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'h1', relativePath = null;
-  const SEOHtml.h2(this.content, {this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'h2', relativePath = null;
-  const SEOHtml.h3(this.content, {this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'h3', relativePath = null;
-  const SEOHtml.h4(this.content, {this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'h4', relativePath = null;
-  const SEOHtml.h5(this.content, {this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'h5', relativePath = null;
-  const SEOHtml.h6(this.content, {this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'h6', relativePath = null;
-  const SEOHtml.p(this.content, {this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'p', relativePath = null;
-
-  // Structural and semantic tags
-  const SEOHtml.div({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'div', relativePath = null;
-  const SEOHtml.span(this.content, {this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'span', relativePath = null;
-  const SEOHtml.section({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'section', relativePath = null;
-  const SEOHtml.article({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'article', relativePath = null;
-  const SEOHtml.aside({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'aside', relativePath = null;
-  factory SEOHtml.header({
-    String? h1,
-    String? p,
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) {
-    final list = <SEOHtml>[...children];
-    if (p != null) list.insert(0, SEOHtml.p(p));
-    if (h1 != null) list.insert(0, SEOHtml.h1(h1));
-    return SEOHtml(tag: 'header', content: content, attributes: attributes, children: list, jsonLd: jsonLd);
-  }
-  const SEOHtml.main({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'main', relativePath = null;
-  const SEOHtml.footer({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'footer', relativePath = null;
-  const SEOHtml.nav({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'nav', relativePath = null;
-  const SEOHtml.figure({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'figure', relativePath = null;
-  const SEOHtml.figcaption({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'figcaption', relativePath = null;
-  factory SEOHtml.time({
-    String? text,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-    required DateTime dateTime,
-  }) {
-    return SEOHtml(
-      tag: 'time',
-      content: text,
-      children: children,
-      jsonLd: jsonLd,
-      attributes: {
-        ...?attributes,
-        'datetime': dateTime.toIso8601String(),
-      },
-    );
-  }
-
-  // List tags
-  const SEOHtml.ul({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'ul', relativePath = null;
-  const SEOHtml.ol({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'ol', relativePath = null;
-  const SEOHtml.li({this.content, this.attributes, this.children = const [], this.jsonLd})
-      : tag = 'li', relativePath = null;
-
-  // Link and media tags
-  factory SEOHtml.a({
-    String? href,
-    String? path,
-    String? relativePath,
-    String? content,
-    List<SEOHtml> children = const [],
-    Map<String, String> attributes = const {},
-    Map<String, dynamic>? jsonLd,
-  }) {
-    String finalHref = href ?? '';
-    if (href == null && path != null) {
-      finalHref = path.startsWith('http')
-          ? path
-          : EasySEOManager.instance.formatFullUrl(path);
-    }
-
-    return SEOHtml(
-      tag: 'a',
-      content: content,
-      children: children,
-      relativePath: relativePath,
-      jsonLd: jsonLd,
-      attributes: {
-        ...attributes,
-        if (finalHref.isNotEmpty) 'href': finalHref,
-      },
-    );
-  }
-  const SEOHtml.img({this.attributes, this.jsonLd})
-      : tag = 'img',
-        content = null,
-        children = const [],
-        relativePath = null;
-
-  // Metadata tags
-  const SEOHtml.script({this.content, this.attributes, this.jsonLd})
-      : tag = 'script',
-        children = const [],
-        relativePath = null;
-  const SEOHtml.meta({this.attributes, this.jsonLd})
-      : tag = 'meta',
-        content = null,
-        children = const [],
-        relativePath = null;
-  const SEOHtml.link({this.attributes, this.jsonLd})
-      : tag = 'link',
-        content = null,
-        children = const [],
-        relativePath = null;
-
   // HTML void elements
   static const _voidElements = {
     'area', 'base', 'br', 'col', 'embed', 'hr', 'img',
@@ -491,7 +363,7 @@ class SEOHtml {
       if (dt != null) {
         final formatted = '${dt.day.toString().padLeft(2, '0')}.${dt.month.toString().padLeft(2, '0')}.${dt.year}';
         return [
-          SEOHtml.time(
+          SEOTime(
             text: formatted,
             dateTime: dt,
             attributes: useMicrodataAttrs ? {'itemprop': prop} : {'class': prop},
@@ -499,16 +371,16 @@ class SEOHtml {
         ];
       }
       if (useMicrodataAttrs) {
-        return [SEOHtml.meta(attributes: {'itemprop': prop, 'content': valStr})];
+        return [SEOMeta(attributes: {'itemprop': prop, 'content': valStr})];
       } else {
-        return [SEOHtml.span(valStr, attributes: {'class': prop})];
+        return [SEOSpan(valStr, attributes: {'class': prop})];
       }
     }
 
     if (value is Map<String, dynamic>) {
       final attrs = useMicrodataAttrs ? {'itemprop': prop} : {'class': prop};
       return [
-        SEOHtml.div(
+        SEODiv(
           attributes: attrs,
           jsonLd: value,
         )._withMicrodata(useMicrodataAttrs: useMicrodataAttrs),
@@ -521,22 +393,22 @@ class SEOHtml {
         if (item is String || item is num || item is bool) {
           final valStr = item.toString();
           if (useMicrodataAttrs) {
-            items.add(SEOHtml.meta(attributes: {'itemprop': prop, 'content': valStr}));
+            items.add(SEOMeta(attributes: {'itemprop': prop, 'content': valStr}));
           } else {
-            items.add(SEOHtml.span(valStr, attributes: {'class': prop}));
+            items.add(SEOSpan(valStr, attributes: {'class': prop}));
           }
         } else if (item is Map<String, dynamic>) {
           if (useMicrodataAttrs) {
             items.add(
-              SEOHtml.div(
+              SEODiv(
                 attributes: {if (prop.isNotEmpty) 'itemprop': prop},
                 jsonLd: item,
               )._withMicrodata(useMicrodataAttrs: useMicrodataAttrs),
             );
           } else {
-            final inner = SEOHtml.div(jsonLd: item)._withMicrodata(useMicrodataAttrs: useMicrodataAttrs);
+            final inner = SEODiv(jsonLd: item)._withMicrodata(useMicrodataAttrs: useMicrodataAttrs);
             items.add(
-              SEOHtml.li(
+              SEOListItem(
                 attributes: {'class': 'offer-item'},
                 children: inner.children,
               ),
@@ -546,7 +418,7 @@ class SEOHtml {
       }
       if (!useMicrodataAttrs && items.isNotEmpty && value.any((v) => v is Map)) {
         return [
-          SEOHtml.ul(
+          SEOUnorderedList(
             attributes: {'class': '$prop-list'},
             children: items,
           ),

@@ -178,7 +178,7 @@ extension EasySEOWidgetExtension on Widget {
     String productName,
     {
       String? path,
-      SEOHtml Function(String? content, {Map<String, String>? attributes,List<SEOHtml> children,}) headingBuilder = SEOHtml.h1,
+      SEOHtml Function(String content, {Map<String, String>? attributes, List<SEOHtml> children, Map<String, dynamic>? jsonLd}) headingBuilder = SEOH1.new,
       List<SEOHtml> children = const [],
       String? globalName,
     }
@@ -196,7 +196,7 @@ extension EasySEOWidgetExtension on Widget {
             attributes: {'itemprop': "name"},
             children: [
               if (path != null)
-                SEOHtml.a(content: productName, relativePath: path, attributes: {'itemprop': "url"})
+                SEOAnchor(content: productName, relativePath: path, attributes: {'itemprop': "url"})
             ]),
         ...children
       ],

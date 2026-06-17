@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
                 label: const Text('Services').easySeoNavAnchor(path: "/services", text: 'Services'),
               ),
             ],
-          ).easySeo(label: 'Main Navigation'),
+          ).easySeo(globalName: 'Main Navigation'),
           const VerticalDivider(width: 1, thickness: 1),
           Expanded(
             child: SingleChildScrollView(
@@ -181,7 +181,7 @@ class HomePage extends StatelessWidget {
                             const Text('Contact').easySeoNavAnchor(path: '/contact', text: 'Contact'),
                             const Text('About').easySeoNavAnchor(path: '/about', text: 'About'),
                           ],
-                        ).easySeoNav(label: 'Footer Navigation'),
+                        ).easySeoNav(globalName: 'Footer Navigation'),
                       ],
                     ),
                   ),

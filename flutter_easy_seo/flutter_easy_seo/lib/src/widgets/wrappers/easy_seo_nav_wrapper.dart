@@ -29,7 +29,7 @@ class EasySEONavWrapper extends EasySEOBaseWrapper {
           modifiedChildren.add(_addAriaCurrentToLink(flatItems[i]));
         } else {
           modifiedChildren.add(flatItems[i]);
-          modifiedChildren.add(const SEOHtml.span(
+          modifiedChildren.add(const SEOSpan(
             '›',
             attributes: {'aria-hidden': 'true', 'style': 'margin: 0 8px;'},
           ));
@@ -39,7 +39,7 @@ class EasySEONavWrapper extends EasySEOBaseWrapper {
       final navAttrs = _buildAttributes() ?? <String, String>{};
       navAttrs['aria-label'] = 'Breadcrumb';
 
-      return SEOHtml.nav(
+      return SEONav(
         attributes: navAttrs,
         jsonLd: navItems.isNotEmpty ? SEOHtmlJsonLd.breadcrumbListData(navItems) : null,
         children: [
@@ -54,13 +54,13 @@ class EasySEONavWrapper extends EasySEOBaseWrapper {
       );
     }
 
-    return SEOHtml.nav(
+    return SEONav(
       attributes: _buildAttributes(),
       jsonLd: navItems.isNotEmpty
           ? SEOHtmlJsonLd.siteNavigationData(navItems)
           : null,
       children: [
-        SEOHtml.ul(children: children),
+        SEOUnorderedList(children: children),
       ],
     );
   }
