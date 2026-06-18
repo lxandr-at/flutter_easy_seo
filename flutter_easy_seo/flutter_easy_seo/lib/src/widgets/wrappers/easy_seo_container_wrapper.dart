@@ -19,7 +19,7 @@ class EasySEOContainerWrapper extends EasySEOBaseWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return _buildSimpleTag(tag: _tag, children: children, context: context);
+    return SEOHtml(tag: _tag, children: children);
   }
 
   @override

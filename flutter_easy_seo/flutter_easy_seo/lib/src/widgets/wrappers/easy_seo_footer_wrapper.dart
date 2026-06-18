@@ -16,7 +16,7 @@ class EasySEOFooterWrapper extends EasySEOBaseWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return _buildSimpleTag(tag: 'footer', children: children, context: context);
+    return SEOHtml(tag: 'footer', children: children);
   }
 
   @override

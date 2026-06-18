@@ -13,6 +13,51 @@ class SEOWidgetTreeProcessor {
     'h6': 5,
   };
 
+  static Map<String, String> _buildWrapperAttrs(EasySEOBaseWrapper wrapper) {
+    final attrs = <String, String>{};
+    if (wrapper.className != null) attrs['class'] = wrapper.className!;
+    attrs.addAll(wrapper.additionalAttributes);
+    if (wrapper.attributes != null) {
+      for (final e in wrapper.attributes!.entries) {
+        if (e.value != null && e.value!.isNotEmpty) {
+          attrs[e.key] = e.value!;
+        } else {
+          attrs[e.key] = '';
+        }
+      }
+    }
+    return attrs;
+  }
+
+  static SEOHtml _mergeWrapperAttrs(EasySEOBaseWrapper wrapper, SEOHtml html, BuildContext context) {
+    final baseAttrs = _buildWrapperAttrs(wrapper);
+    final hasBase = baseAttrs.isNotEmpty;
+    final hasHtml = html.attributes != null && html.attributes!.isNotEmpty;
+    final mergedAttrs = !hasBase && !hasHtml
+        ? null
+        : <String, String>{...baseAttrs, ...?html.attributes};
+
+    final mergedJsonLd = html.jsonLd ?? wrapper.jsonLd;
+
+    final resolvedAdditional = wrapper.children.map((t) => t.resolve(context)).toList();
+    final headTags = resolvedAdditional.where((t) => _headingPriority.containsKey(t.tag)).toList();
+    headTags.sort((a, b) => (_headingPriority[a.tag] ?? 6).compareTo(_headingPriority[b.tag] ?? 6));
+    final otherTags = resolvedAdditional.where((t) => !_headingPriority.containsKey(t.tag)).toList();
+
+    return SEOHtml(
+      tag: html.tag,
+      content: html.content,
+      attributes: mergedAttrs,
+      children: [
+        ...headTags,
+        ...html.children,
+        ...otherTags,
+      ],
+      relativePath: html.relativePath,
+      jsonLd: mergedJsonLd,
+    );
+  }
+
   String processWidgetTree(Element rootElement, List<String> includeGlobals, {SEORenderMode mode = SEORenderMode.microdataAndJsonLd}) {
     _metadata = null;
 
@@ -69,11 +114,14 @@ class SEOWidgetTreeProcessor {
         navItems.add(SEONavItem(text: wrapper.resolvedText, url: wrapper.path));
       }
 
-      final html = wrapper.toSEOHtml(
+      var html = wrapper.toSEOHtml(
         children: sortedChildResults.map((r) => r.html).toList(),
         navItems: navItems,
         context: element,
       );
+      if (wrapper is EasySEOBaseWrapper) {
+        html = _mergeWrapperAttrs(wrapper, html, element);
+      }
 
       int ownPriority = _headingPriority[html.tag] ?? 6;
       int ownOrder = html.tag == 'footer' ? 1 : 0;

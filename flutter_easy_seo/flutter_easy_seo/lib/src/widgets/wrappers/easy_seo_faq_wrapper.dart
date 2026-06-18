@@ -20,21 +20,16 @@ class EasySEOFaqWrapper extends EasySEOBaseWrapper {
     required BuildContext context,
   }) {
     if (items.isEmpty) {
-      return _buildSimpleTag(tag: 'section', children: children, context: context);
+      return SEOHtml(tag: 'section', children: children);
     }
-
-    final mergedAttrs = _buildAttributes() ?? <String, String>{};
-    mergedAttrs['itemscope'] = '';
-    mergedAttrs['itemtype'] = 'https://schema.org/FAQPage';
 
     final allChildren = <SEOHtml>[
       for (final item in items) _buildFaqItem(item),
-      ...this.children,
       ...children,
     ];
 
     return SEOSection(
-      attributes: mergedAttrs,
+      attributes: {'itemscope': '', 'itemtype': 'https://schema.org/FAQPage'},
       jsonLd: {'@type': 'FAQPage'},
       children: allChildren,
     );

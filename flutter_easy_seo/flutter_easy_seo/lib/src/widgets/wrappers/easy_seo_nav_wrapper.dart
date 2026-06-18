@@ -36,11 +36,8 @@ class EasySEONavWrapper extends EasySEOBaseWrapper {
         }
       }
 
-      final navAttrs = _buildAttributes() ?? <String, String>{};
-      navAttrs['aria-label'] = 'Breadcrumb';
-
       return SEONav(
-        attributes: navAttrs,
+        attributes: {'aria-label': 'Breadcrumb'},
         jsonLd: navItems.isNotEmpty ? SEOHtmlJsonLd.breadcrumbListData(navItems) : null,
         children: [
           SEOHtml(
@@ -55,7 +52,6 @@ class EasySEONavWrapper extends EasySEOBaseWrapper {
     }
 
     return SEONav(
-      attributes: _buildAttributes(),
       jsonLd: navItems.isNotEmpty
           ? SEOHtmlJsonLd.siteNavigationData(navItems)
           : null,

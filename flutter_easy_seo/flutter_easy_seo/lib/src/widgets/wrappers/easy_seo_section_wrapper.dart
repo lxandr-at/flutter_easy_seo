@@ -16,7 +16,7 @@ class EasySEOSectionWrapper extends EasySEOBaseWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return _buildSimpleTag(tag: 'section', children: children, context: context);
+    return SEOHtml(tag: 'section', children: children);
   }
 
   @override

@@ -25,7 +25,7 @@ class EasySEOTextWrapper extends EasySEOBaseWrapper {
     required BuildContext context,
   }) {
     final content = this.text ?? _extractTextFromChild(child);
-    return _buildSimpleTag(tag: textType.name, content: content, children: children, context: context);
+    return SEOHtml(tag: textType.name, content: content, children: children);
   }
 
   String _extractTextFromChild(Widget widgetChild) {

@@ -22,16 +22,6 @@ class EasySEOImageWrapper extends EasySEOBaseWrapper {
     required BuildContext context,
   }) {
     final attrs = <String, String>{};
-    if (className != null) attrs['class'] = className!;
-    if (attributes != null) {
-      for (final e in attributes!.entries) {
-        if (e.value != null && e.value!.isNotEmpty) {
-          attrs[e.key] = e.value!;
-        } else {
-          attrs[e.key] = '';
-        }
-      }
-    }
 
     String? extractedSrc = src;
     if (extractedSrc == null) {

@@ -24,7 +24,7 @@ class EasySEOHeaderWrapper extends EasySEOBaseWrapper {
     final allChildren = <SEOHtml>[...children];
     if (p != null) allChildren.insert(0, SEOParagraph(p!));
     if (h1 != null) allChildren.insert(0, SEOH1(h1!));
-    return _buildSimpleTag(tag: 'header', children: allChildren, context: context);
+    return SEOHtml(tag: 'header', children: allChildren);
   }
 
   @override

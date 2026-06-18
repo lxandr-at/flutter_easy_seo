@@ -26,7 +26,7 @@ class EasySEOTimeWrapper extends EasySEOBaseWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return _buildSimpleTag(tag: 'time', children: children, context: context, content: text);
+    return SEOHtml(tag: 'time', children: children, content: text);
   }
 
   @override
