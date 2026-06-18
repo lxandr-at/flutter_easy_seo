@@ -134,10 +134,80 @@ Although both Flutter and HTML rely on a tree structure to define content, a Flu
 2. **Structural Mismatches:** Many Flutter layout widgets lack a meaningful HTML equivalent. While structural components like `Center` or `Padding` are essential for a full visual CSS layout, they serve no purpose in an SEO-friendly, text-first HTML document.
 3. **Contextual Layout Mapping:** A single Flutter widget can represent entirely different semantic HTML elements depending on its context. For example, a `Row` of images could map to a site `<header>` containing an `<h1>` and `<a>` tags, or it could simply translate to a standard `<div>` containing `<img>` elements.
 
-For the following flutter widgets, html content can be automatically extracted:
+Note: For some flutter widgets the html content can be automatically extracted:
 - **`Text()`**: `easySeoP` and `easySeoH1..H6` automatically extract the text content
 - **`Image.network`**: `easySeo` automatically extracts the `src`
 
+### Custom output defintion with core classes
+
+At the core of this mapping system are the **SEOHtml** class and its derived elements, which allow you to define any custom HTML tree. While these are used automatically by our widget wrappers, you can also use them directly if the built-in extensions and helper methods don't fit your needs. For example, if the `EasySEOFaqWrapper` weren't available, you could build a custom FAQ structure like this:
+```dart
+Column(
+  children: [
+    Text('Frequently Asked Questions'),
+    Text('Q1: How does this work?'),
+    Text('A1: It generates HTML from the widget tree.'),
+    Text('Q2: Is it fast?'),
+    Text('A2: Yes, it runs asynchronously.'),
+  ],
+).easySeoHtml(children: [
+  SEOSection(
+    attributes: {'itemscope': null, 'itemtype': 'https://schema.org/FAQPage'},
+    jsonLd: {
+      '@type': 'FAQPage',
+      'mainEntity': [
+        {'@type': 'Question', 'name': 'How does this work?',
+         'acceptedAnswer': {'@type': 'Answer', 'text': 'It generates HTML from the widget tree.'}},
+        {'@type': 'Question', 'name': 'Is it fast?',
+         'acceptedAnswer': {'@type': 'Answer', 'text': 'Yes, it runs asynchronously.'}},
+      ],
+    },
+    children: [
+      SEODiv(attributes: {'itemprop': 'mainEntity', 'itemscope': null, 'itemtype': 'https://schema.org/Question'},
+        children: [
+          SEOH3('How does this work?', attributes: {'itemprop': 'name'}),
+          SEODiv(attributes: {'itemprop': 'acceptedAnswer', 'itemscope': null, 'itemtype': 'https://schema.org/Answer'},
+            children: [
+              SEOParagraph('It generates HTML from the widget tree.', attributes: {'itemprop': 'text'}),
+            ]),
+        ]),
+    ]),
+])
+```
+```html
+<section class="faq-page">
+  <div class="mainEntity">
+    <h3 class="name">How does this work?</h3>
+    <div class="acceptedAnswer">
+      <p class="text">It generates HTML from the widget tree.</p>
+    </div>
+  </div>
+</section>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question", 
+      "name": "How does this work?", 
+      "acceptedAnswer": {
+        "@type": "Answer", 
+        "text": "It generates HTML from the widget tree."
+      }
+    },
+    {
+      "@type": "Question", 
+      "name": "Is it fast?", 
+      "acceptedAnswer": {
+        "@type": "Answer", 
+        "text": "Yes, it runs asynchronously."
+      }
+    }
+  ]
+}</script>
+```
+
+## Examples of HTML + JSON-LD output using wrappers and extensions methods
 <div style="display: flex; gap: 20px;">
   <div style="flex: 1;">
 
@@ -257,8 +327,102 @@ Row(
 ```
 
 ---
-This is a new row directly under the first block in the left column.
+SEO for a product (name, brand, offers ...)
+```dart
+// var product = ...
+// var prices = ...
+// var validFrom = ...
+// var validTo = ...
+ProductCardWidget().easySeoProduct(
+  product.name, 
+  headingBuilder: SEOH3.new, 
+  children: [
+    SEOBrand(product.brand.name),
+    SEOSizeUnit("${product.size}", product.unit),
+    SEOProductOffers(
+      lowPrice: prices.first.price,
+      highPrice: prices.last.price,
+      offerCount: prices.length,
+      individualOffers: prices.map((e) => {
+        'price': e.price, 
+        'seller': e.shop.name, 
+        'availability': e.isAvailable}
+      ).toList(),
+      validFrom: validFrom,
+      validThrough: validTo
+    )
+  ]
+)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
   </div>
   <div style="flex: 1;">
     
@@ -375,10 +539,196 @@ HTML + JOSON-LD
 ```
 
 ---
-This is a new row directly under the first block in the right column.
-
+HTML + JSON-LD
+```html
+<article>
+  <h3 class="name">Water</h3>
+  <img src="https://water.webp" alt="Water, 500 ml" class="image" />
+  <p class="brand">
+    <span class="name">Water Brand</span>
+  </p>
+  <p class="additionalProperty">
+    <span class="name">weight</span>
+    <span class="value">500</span>
+    <span class="unitText">ml</span>
+  </p>
+  <div class="aggregateOffer">
+    <span class="lowPrice">1.48</span>
+    <span class="highPrice">1.68</span>
+    <span class="offerCount">2</span>
+    <span class="priceCurrency">EUR</span>
+    <ul class="offers-list">
+      <li class="offer-item">
+        <span class="price">1.48</span>
+        <span class="priceCurrency">EUR</span>
+        <div class="seller">
+          <span class="name">Shop 1</span>
+        </div>
+        <time class="validThrough" datetime="2026-06-17T00:00:00.000Z">17.06.2026</time>
+        <time class="validFrom" datetime="2026-06-11T00:00:00.000Z">11.06.2026</time>
+      </li>
+      <li class="offer-item">
+        <span class="price">1.68</span>
+        <span class="priceCurrency">EUR</span>
+        <div class="seller">
+          <span class="name">Shop 2</span>
+        </div>
+        <time class="validThrough" datetime="2026-06-17T00:00:00.000Z">17.06.2026</time>
+        <time class="validFrom" datetime="2026-06-11T00:00:00.000Z">11.06.2026</time>
+      </li>
+    </ul>
+  </div>
+</article>
+<script type = "application/ld+json"> {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Water",
+  "image": ["https://water.webp"],
+  "brand": {
+    "@type": "Brand",
+    "name": "Water Brand"
+  },
+  "additionalProperty": [{
+      "@type": "PropertyValue",
+      "name": "weight",
+      "value": "500",
+      "unitText": "ml"
+    }
+  ],
+  "offers": {
+    "@type": "AggregateOffer",
+    "lowPrice": 1.48,
+    "highPrice": 1.68,
+    "offerCount": 2,
+    "priceCurrency": "EUR",
+    "offers": [{
+        "@type": "Offer",
+        "price": 1.48,
+        "priceCurrency": "EUR",
+        "itemCondition": "https://schema.org/NewCondition",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Shop 1"
+        },
+        "validThrough": "2026-06-17T00:00:00.000Z",
+        "validFrom": "2026-06-11T00:00:00.000Z"
+      }, {
+        "@type": "Offer",
+        "price": 1.68,
+        "priceCurrency": "EUR",
+        "itemCondition": "https://schema.org/NewCondition",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Shop 2"
+        },
+        "validThrough": "2026-06-17T00:00:00.000Z",
+        "validFrom": "2026-06-11T00:00:00.000Z"
+      }
+    ]
+  }
+}
+</script>
+```
   </div>
 </div>
+
+## API Reference
+
+### Text wrappers
+
+| Method / Class | HTML Tag | JSON-LD | Notes |
+|---|---|---|---|
+| `EasySEOTextWrapper` / `.easySeoText()` | `p` (default) or `h1`–`h6` | — | `textType:` controls heading level |
+| `.easySeoP()` / `.easySeoH1()`–`.easySeoH6()` | `p` / `h1`–`h6` | — | Convenience shorthands for `easySeoText` |
+| `"string".easySeoP` / `.easySeoH1`–`.easySeoH6` | `<p>string</p>` / `<h1>string</h1>`–`<h6>string</h6>` | — | String extension getters |
+| `"string".easySeoBrand` | `<p itemprop="brand"></p>` | `{"@type": "Brand", "name": "…"}` | Empty `<p>` — brand name in JSON-LD only |
+| `SEOBrand(name)` | `<p itemprop="brand"></p>` | `{"@type": "Brand", "name": "…"}` | Same as above, tag-class form |
+| `SEOParagraph(content)` | `<p>content</p>` | — | Tag class for `<p>` |
+| `SEOH1(content)`–`SEOH6(content)` | `<h1>content</h1>`–`<h6>content</h6>` | — | Tag classes for headings |
+
+### Structural / Semantic wrappers
+
+| Method / Class | HTML Tag | JSON-LD | Notes |
+|---|---|---|---|
+| `EasySEOHeaderWrapper` / `.easySeoHeader()` | `<header>…</header>` | — | Optional `h1:` / `p:` params insert `<h1>`/`<p>` as first children |
+| `EasySEOSectionWrapper` / `.easySeoSection()` | `<section>…</section>` | — | — |
+| `EasySEOArticleWrapper` / `.easySeoArticle()` | `<article>…</article>` | via `jsonLd:` param | — |
+| `EasySEOMainWrapper` / `.easySeoMain()` | `<main>…</main>` | — | — |
+| `EasySEOFooterWrapper` / `.easySeoFooter()` | `<footer>…</footer>` | — | Sorts last among siblings |
+| `EasySEOAsideWrapper` / `.easySeoAside()` | `<aside>…</aside>` | — | — |
+| `EasySEOFigureWrapper` / `.easySeoFigure()` | `<figure>…</figure>` | — | Optional `caption:` appends `<figcaption>` |
+| `EasySEOFormWrapper` / `.easySeoForm()` | `<form>…</form>` | — | — |
+| `EasySEOContainerWrapper` / `.easySeoContainer()` | `div` (configurable via `tag:`) | — | Allows arbitrary tag name |
+| `EasySEOCustomWrapper` / `.easySeo()` | configurable `tag:` (default `div`) | — | Also accepts `builder:` for custom rendering |
+| `.easySeoHtml()` | *(raw children, no wrapper tag)* | — | Injects children as-is into the HTML body |
+
+### Links & Navigation
+
+| Method / Class | HTML Tag | JSON-LD | Notes |
+|---|---|---|---|
+| `EasySEOLinkWrapper` / `.easySeoAnchor(path:)` | `<a href="…">text</a>` | — | `path:` resolved via `formatFullUrl`; `text:` optional (auto-extracted from child) |
+| `EasySEONavLinkWrapper` / `.easySeoNavAnchor(path:)` | `<li><a href="…">text</a></li>` | — | Wraps anchor in `<li>` |
+| `EasySEONavWrapper` / `.easySeoNav()` | `<nav><ul><li><a>…</a></li>…</ul></nav>` | `ItemList` / `SiteNavigationElement` | Auto-collects nav items from `easySeoNavAnchor` children |
+| `EasySEONavWrapper` / `.easySeoNav(isBreadcrumb: true)` | `<nav aria-label="Breadcrumb"><ol><li>…<span>›</span></li>…</ol></nav>` | `BreadcrumbList` | Last link gets `aria-current="page"` |
+| `SEOAnchor(href: / path:)` | `<a href="…">content</a>` | — | Tag class; `path:` resolved, `href:` used verbatim |
+| `SEOListItem(…)` | `<li>…</li>` | — | Tag class |
+| `SEOUnorderedList(…)` | `<ul>…</ul>` | — | Tag class |
+| `SEOOrderedList(…)` | `<ol>…</ol>` | — | Tag class |
+| `SEONav(…)` | `<nav>…</nav>` | — | Tag class |
+
+### Media & Time
+
+| Method / Class | HTML Tag | JSON-LD | Notes |
+|---|---|---|---|
+| `EasySEOImageWrapper` / `.easySeoImage()` | `<img src="…" alt="…" />` | — | `src:` auto-extracted from child `NetworkImage` |
+| `EasySEOTimeWrapper` / `.easySeoTime(dateTime:)` | `<time datetime="2026-01-01T00:00:00.000">text</time>` | — | `dateTime:` required, `text:` optional |
+| `SEOImage(attributes:)` | `<img … />` | — | Tag class |
+| `SEOTime(dateTime:, text:)` | `<time datetime="…">text</time>` | — | Tag class |
+
+### Product / Schema helpers
+
+| Method / Class | HTML Tag | JSON-LD | Notes |
+|---|---|---|---|
+| `.easySeoProduct(name)` / `EasySEOArticleWrapper` | `<article itemscope itemtype="https://schema.org/Product">…</article>` | `{"@type": "Product", "name": "…"}` | `headingBuilder:` defaults to `SEOH1.new`; optional `path:` for URL itemprop |
+| `SEOBrand(name)` | `<p itemprop="brand"></p>` | `{"@type": "Brand", "name": "…"}` | — |
+| `SEOSizeUnit(size, unit)` | `<p itemprop="additionalProperty"></p>` | `{"@type": "PropertyValue", "name": "weight", "value": "…", "unitText": "…"}` | — |
+| `SEOProductOffers(lowPrice:, highPrice:, offerCount:, …)` | `<div itemprop="offers" class="aggregateOffer"></div>` | `{"@type": "AggregateOffer", "lowPrice": …, "highPrice": …, "offerCount": …, "offers": […]}` | Each offer in `individualOffers:` becomes an `{"@type": "Offer", …}` with seller, availability, validThrough/validFrom |
+
+### SEOHtml tag classes
+
+Each class extends `SEOHtml` and is usable anywhere a `List<SEOHtml>` is expected (e.g. the `children:` param on any wrapper or extension).
+
+| Class | HTML Tag | Content param | Special |
+|---|---|---|---|
+| `SEOH1`–`SEOH6` | `h1`–`h6` | positional `String` | — |
+| `SEOParagraph` | `p` | positional `String` | — |
+| `SEODiv` | `div` | named `content` | — |
+| `SEOSpan` | `span` | positional `String` | — |
+| `SEOSection`, `SEOArticle`, `SEOAside` | `section`, `article`, `aside` | named `content` | — |
+| `SEOHeader` | `header` | named `content` | Also accepts `h1:` / `p:` (prepended before children) |
+| `SEOMain`, `SEOFooter`, `SEONav` | `main`, `footer`, `nav` | named `content` | — |
+| `SEOFigure`, `SEOFigcaption` | `figure`, `figcaption` | named `content` | — |
+| `SEOTime` | `time` | named `text` | Requires `dateTime:` — adds `datetime` attribute |
+| `SEOUnorderedList`, `SEOOrderedList` | `ul`, `ol` | named `content` | — |
+| `SEOListItem` | `li` | named `content` | — |
+| `SEOAnchor` | `a` | named `content` | Accepts `href:` / `path:` / `relativePath:` — resolves URLs |
+| `SEOImage` | `img` | *(self-closing)* | Only `attributes:` |
+| `SEOScript` | `script` | named `content` | — |
+| `SEOMeta` | `meta` | *(self-closing)* | Only `attributes:` |
+| `SEOLink` | `link` | *(self-closing)* | Only `attributes:` |
+
+### Head tag sources
+
+| Class | Produces | Added to |
+|---|---|---|
+| `EasySEOOgTags(title:, description:, imageUrl:, url:, type:, siteName:)` | Multiple `<meta property="og:…">` tags | `EasySEOPage.headTags` / `EasySEOManager.headTags` |
+| `EasySEOTwitterTags(card:, site:, title:, description:, image:)` | Multiple `<meta name="twitter:…">` tags | Same |
+| `EasySEOAppleHeadTags(title:, iconUrl:, statusBarStyle:, isWebAppCapable:)` | Apple PWA `<meta>` and `<link>` tags | Same |
+| `SEOServiceInfo(serviceType:, providerName:, brandLogoUrl:, areasServed:)` | `<script type="application/ld+json">` with `Service` schema | Same |
+
+All head tag sources implement `EasySEOHeadTagSource` and are flattened via `toHeadTags()`.
 
 ## License
 

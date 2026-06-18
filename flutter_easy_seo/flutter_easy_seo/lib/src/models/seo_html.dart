@@ -493,6 +493,14 @@ class SEONavItem {
   const SEONavItem({required this.text, required this.url});
 }
 
+/// Represents a single question/answer pair for [EasySEOFaqWrapper].
+class EasySEOFaqItem {
+  final String question;
+  final String answer;
+
+  const EasySEOFaqItem({required this.question, required this.answer});
+}
+
 extension SEOHtmlJsonLd on SEOHtml {
   /// Returns a SiteNavigationElement JSON-LD map.
   static Map<String, dynamic> siteNavigationData(List<SEONavItem> items) {

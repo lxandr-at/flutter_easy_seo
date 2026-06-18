@@ -52,3 +52,4 @@ part 'src/widgets/wrappers/easy_seo_footer_wrapper.dart';
 part 'src/widgets/wrappers/easy_seo_custom_wrapper.dart';
 part 'src/widgets/wrappers/easy_seo_link_wrapper.dart';
 part 'src/widgets/wrappers/easy_seo_nav_link_wrapper.dart';
+part 'src/widgets/wrappers/easy_seo_faq_wrapper.dart';

@@ -283,6 +283,17 @@ extension EasySEOWidgetExtension on Widget {
     );
   }
 
+  Widget easySeoFaq({required List<EasySEOFaqItem> items, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
+    return EasySEOFaqWrapper(
+      items: items,
+      className: className,
+      attributes: attributes,
+      globalName: globalName,
+      children: children,
+      child: this,
+    );
+  }
+
   Widget easySeoTime({required DateTime dateTime, String? text, String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
     return EasySEOTimeWrapper(
       dateTime: dateTime,
