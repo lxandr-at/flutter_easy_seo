@@ -1,6 +1,13 @@
 # flutter_easy_seo
 
 A Flutter package that generates SEO-friendly HTML from the live widget tree for search engine bots.
+1. **Initialize** `EasySEOManager` within your `main()` function.
+2. **Wrap** the root of your target view with `EasySEOPage` to flag it for HTML generation.
+3. **Expose** content to the HTML body by wrapping your UI elements with components 
+like `EasySEOTextWrapper`, or by using their equivalent widget extension methods like `.easySeoText()`.
+4. **Generate** HTML content, either interactively by clicking through your web app or automatically in 
+a headless widget tester.
+5. **Serve** these static HTML pages to search engine bots (and the flutter app to human users).
 
 ## The Problem
 
@@ -127,6 +134,10 @@ Although both Flutter and HTML rely on a tree structure to define content, a Flu
 2. **Structural Mismatches:** Many Flutter layout widgets lack a meaningful HTML equivalent. While structural components like `Center` or `Padding` are essential for a full visual CSS layout, they serve no purpose in an SEO-friendly, text-first HTML document.
 3. **Contextual Layout Mapping:** A single Flutter widget can represent entirely different semantic HTML elements depending on its context. For example, a `Row` of images could map to a site `<header>` containing an `<h1>` and `<a>` tags, or it could simply translate to a standard `<div>` containing `<img>` elements.
 
+For the following flutter widgets, html content can be automatically extracted:
+- **`Text()`**: `easySeoP` and `easySeoH1..H6` automatically extract the text content
+- **`Image.network`**: `easySeo` automatically extracts the `src`
+
 <div style="display: flex; gap: 20px;">
   <div style="flex: 1;">
 
@@ -152,6 +163,13 @@ FancyVisualHeader().easySeoH1(text: "Main Topic")
 ```
 ---
 ```dart
+Image.network(
+  'https://picsum.photos/seed/home/800/400',
+   // other params,
+).easySeo(alt: 'Image Description')
+```
+---
+```dart
 ComplexAnimatedHeaderWidget().easySeoHeader(
  h1: "App Web Version",
  children: [
@@ -164,7 +182,7 @@ ComplexAnimatedHeaderWidget().easySeoHeader(
 ---
 Navigation Menu
 ```dart
-NavigationRail(
+NavigationRail( // or BottomNavigationBar(...
   ...
   destinations: [
     NavigationRailDestination(
@@ -264,7 +282,12 @@ This is a new row directly under the first block in the left column.
 
 <h1>Main Topic</h1>
 ```
+---
+```html
+<img src="https://picsum.photos/seed/home/800/400" alt="Image Description"/>
 
+
+```
 ---
 ```html
 <header>
@@ -316,7 +339,6 @@ HTML + JSON-LD
 }
 </script>
 ```
-
 ---
 HTML + JOSON-LD
 ```html
