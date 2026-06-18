@@ -696,6 +696,12 @@ HTML + JSON-LD
 | `SEOSizeUnit(size, unit)` | `<p itemprop="additionalProperty"></p>` | `{"@type": "PropertyValue", "name": "weight", "value": "…", "unitText": "…"}` | — |
 | `SEOProductOffers(lowPrice:, highPrice:, offerCount:, …)` | `<div itemprop="offers" class="aggregateOffer"></div>` | `{"@type": "AggregateOffer", "lowPrice": …, "highPrice": …, "offerCount": …, "offers": […]}` | Each offer in `individualOffers:` becomes an `{"@type": "Offer", …}` with seller, availability, validThrough/validFrom |
 
+### FAQ
+
+| Method / Class | HTML Tag | JSON-LD | Notes |
+|---|---|---|---|
+| `EasySEOFaqWrapper` / `.easySeoFaq(items:)` | `<section itemscope itemtype="https://schema.org/FAQPage"><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question"><h3 itemprop="name">…</h3><div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><p itemprop="text">…</p></div></div>…</section>` | `{"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "…", "acceptedAnswer": {"@type": "Answer", "text": "…"}}, …]}` | `items:` takes `List<EasySEOFaqItem>` — each item has `question:` and `answer:` (both strings). Data-driven — no widget-tree traversal needed. |
+
 ### SEOHtml tag classes
 
 Each class extends `SEOHtml` and is usable anywhere a `List<SEOHtml>` is expected (e.g. the `children:` param on any wrapper or extension).
