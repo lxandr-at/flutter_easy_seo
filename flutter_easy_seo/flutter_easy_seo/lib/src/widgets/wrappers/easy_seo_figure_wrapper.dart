@@ -23,7 +23,7 @@ class EasySEOFigureWrapper extends EasySEOBaseWrapper {
       ...children,
       if (_caption != null) SEOFigcaption(content: _caption),
     ];
-    return SEOHtml(tag: 'figure', children: allChildren);
+    return SEOFigure(children: allChildren);
   }
 
   @override

@@ -1,7 +1,6 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class SEOWidgetTreeProcessor {
-  SEOPageMetadata? _metadata;
   Set<String>? _skipGlobals;
 
   static const _headingPriority = {
@@ -59,8 +58,6 @@ class SEOWidgetTreeProcessor {
   }
 
   String processWidgetTree(Element rootElement, List<String> includeGlobals, {SEORenderMode mode = SEORenderMode.microdataAndJsonLd}) {
-    _metadata = null;
-
     final rootResults = <_BuildResult>[];
 
     for (final name in includeGlobals) {
@@ -78,8 +75,6 @@ class SEOWidgetTreeProcessor {
 
     return rootResults.map((r) => r.html.toHtmlString(mode: mode)).join();
   }
-
-  SEOPageMetadata? get metadata => _metadata;
 
   _BuildResult _buildSeoHtml(Element element) {
     final widget = element.widget;

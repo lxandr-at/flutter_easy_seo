@@ -40,7 +40,6 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
     String title,
     SeoSuccess result,
     String fileName,
-    String contentType,
   ) {
     showDialog(
       context: context,
@@ -249,7 +248,6 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
                                   'Generated HTML Page',
                                   result,
                                   fileHandler.getSanitizedPath(),
-                                  'text/html',
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(

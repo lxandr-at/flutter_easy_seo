@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_easy_seo/flutter_easy_seo.dart' show URLHelper;
+import 'src/utils/url_helper_facade.dart';
 
 // Import the "facade" which handles the platform switching
 import 'src/output/easy_seo_file_output_facade.dart';

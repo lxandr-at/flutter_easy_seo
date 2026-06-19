@@ -305,7 +305,7 @@ class SEOSizeUnit extends SEOHtml {
     String unit,
   ) : super(
           tag: 'p',
-          content: '',
+          content: '$size $unit',
           attributes: {'itemprop': 'additionalProperty'},
           jsonLd: {
             '@type': 'PropertyValue',
@@ -319,7 +319,7 @@ class SEOSizeUnit extends SEOHtml {
 class SEOBrand extends SEOHtml {
   SEOBrand(String name) : super(
     tag: 'p',
-    content: '',
+    content: name,
     attributes: {'itemprop': 'brand'},
     jsonLd: {
       '@type': 'Brand',

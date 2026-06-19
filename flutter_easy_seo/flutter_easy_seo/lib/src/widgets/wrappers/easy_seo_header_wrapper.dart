@@ -21,10 +21,7 @@ class EasySEOHeaderWrapper extends EasySEOBaseWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    final allChildren = <SEOHtml>[...children];
-    if (p != null) allChildren.insert(0, SEOParagraph(p!));
-    if (h1 != null) allChildren.insert(0, SEOH1(h1!));
-    return SEOHtml(tag: 'header', children: allChildren);
+    return SEOHeader(h1: h1, p: p, children: children);
   }
 
   @override

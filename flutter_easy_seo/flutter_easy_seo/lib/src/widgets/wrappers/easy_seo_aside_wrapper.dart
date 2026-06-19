@@ -16,7 +16,7 @@ class EasySEOAsideWrapper extends EasySEOBaseWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return SEOHtml(tag: 'aside', children: children);
+    return SEOAside(children: children);
   }
 
   @override
