@@ -207,6 +207,63 @@ Column(
 }</script>
 ```
 
+### Custom wrappers by extending `EasySEOBaseWrapper`
+
+If none of the built-in wrappers fit your needs, you can create your own by extending `EasySEOBaseWrapper` and implementing `toSEOHtml()`. Return the semantic core only — the processor automatically layers on:
+
+- **`className`** / **`attributes`** — merged onto the root tag's attributes
+- **`jsonLd`** — applied only if your `toSEOHtml()` result doesn't already have its own
+- **`children`** (additional tags) — heading tags sorted first, then non-heading tags last
+
+```dart
+class MyFooterWrapper extends EasySEOBaseWrapper {
+  const MyFooterWrapper({
+    super.key,
+    required super.child,
+    super.className,
+    super.attributes,
+    super.globalName,
+    super.children,
+  });
+
+  @override
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    // Return semantic core + jsonLd directly in the class.
+    // className, attributes, and additional children
+    // are auto-merged by SEOWidgetTreeProcessor._mergeWrapperAttrs().
+    // jsonLd from the returned SEOHtml takes priority over
+    // any constructor-level jsonLd, so setting it here is sufficient.
+    return SEOHtml(
+      tag: 'footer',
+      children: children,
+      jsonLd: {'@type': 'WPFooter'},
+    );
+  }
+}
+```
+
+Usage:
+```dart
+MyFooterWrapper(
+  className: 'site-footer',
+  child: Column(children: [
+    Text('© 2026 MyCorp').easySeoP(),
+  ]),
+)
+```
+
+This produces:
+```html
+<footer class="site-footer">
+  <p>© 2026 MyCorp</p>
+</footer>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WPFooter"}</script>
+```
+
 ## Examples of HTML + JSON-LD output using wrappers and extensions methods
 <div style="display: flex; gap: 20px;">
   <div style="flex: 1;">
