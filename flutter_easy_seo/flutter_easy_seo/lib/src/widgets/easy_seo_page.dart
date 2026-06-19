@@ -80,7 +80,6 @@ class _EasySEOPageState extends State<EasySEOPage> {
   final _processor = SEOWidgetTreeProcessor();
   late final EasySEOFileOutput _fileHandler;
   late final EasySEOLiveOutput _liveHandler;
-  late final url_helper.URLHelper _urlHelper;
   late final EasySEOPageController _controller;
   SeoRouteKey? _currentRouteKey;
 
@@ -90,7 +89,6 @@ class _EasySEOPageState extends State<EasySEOPage> {
     _controller = EasySEOPageController();
     _fileHandler = EasySEOFileOutput();
     _liveHandler = EasySEOLiveOutput();
-    _urlHelper = url_helper.URLHelper();
 
     // register this state method with the controller so that
     // the EasySEOManager can call it

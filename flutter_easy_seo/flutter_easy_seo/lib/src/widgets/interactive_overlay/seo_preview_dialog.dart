@@ -3,14 +3,12 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 class _SeoPreviewDialog extends StatefulWidget {
   final String title;
   final String fileName;
-  final String contentType;
   final SeoSuccess initialResult;
 
   const _SeoPreviewDialog({
     required this.title,
     required this.initialResult,
     required this.fileName,
-    required this.contentType,
   });
 
   @override

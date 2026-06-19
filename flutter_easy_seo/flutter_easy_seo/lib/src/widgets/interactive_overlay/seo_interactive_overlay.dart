@@ -21,7 +21,6 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
     String title,
     String content,
     String fileName,
-    String contentType,
   ) {
     showDialog(
       context: context,
@@ -49,7 +48,6 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
         title: title,
         initialResult: result,
         fileName: fileName,
-        contentType: contentType,
       ),
     );
   }
@@ -294,8 +292,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
                                 context,
                                 'Generated sitemap.xml',
                                 sitemap,
-                                'sitemap.xml',
-                                'text/xml',
+                                'sitemap.xml'
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(

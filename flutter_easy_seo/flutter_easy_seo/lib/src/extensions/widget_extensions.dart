@@ -3,16 +3,14 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 /// Extension for custom widget mapping
 extension EasySEOWidgetExtension on Widget {
   Widget easySeo({
-    Widget Function(BuildContext, Widget)? builder,
     String? tag,
     String? className,
     Map<String, String>? attributes,
     String? globalName,
     List<SEOHtml> children = const [],
   }) {
-    return EasySEOCustomWrapper(
-      builder: builder,
-      tag: tag,
+    return EasySEOContainerWrapper(
+      tag: tag ?? 'div',
       className: className,
       attributes: attributes,
       globalName: globalName,
@@ -82,7 +80,7 @@ extension EasySEOWidgetExtension on Widget {
     String? globalName,
     List<SEOHtml> children = const [],
   }) {
-    return easySeoNavAnchorWrapper(
+    return EasySeoNavAnchorWrapper(
       path: path,
       text: text,
       className: className,
@@ -166,7 +164,7 @@ extension EasySEOWidgetExtension on Widget {
     String? globalName,
     List<SEOHtml> children = const [],
   }) {
-    return EasySEOCustomWrapper(
+    return EasySEOContainerWrapper(
       tag: "",
       globalName: globalName,
       children: children,

@@ -110,7 +110,7 @@ class SEOWidgetTreeProcessor {
     if (widget is EasySEOWrapper) {
       final wrapper = widget as EasySEOWrapper;
 
-      if (wrapper is easySeoNavAnchorWrapper) {
+      if (wrapper is EasySeoNavAnchorWrapper) {
         navItems.add(SEONavItem(text: wrapper.resolvedText, url: wrapper.path));
       }
 

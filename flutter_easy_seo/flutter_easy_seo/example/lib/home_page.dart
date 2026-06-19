@@ -129,7 +129,6 @@ class HomePage extends StatelessWidget {
                         title: '24/7 Support',
                         description: 'Expert help whenever you need it.',
                       ),
-                      EasySEOConfigWidget()
                     ],
                   ),
 

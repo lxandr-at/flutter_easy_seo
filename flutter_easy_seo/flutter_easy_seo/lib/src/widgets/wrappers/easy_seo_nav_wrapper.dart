@@ -40,8 +40,7 @@ class EasySEONavWrapper extends EasySEOBaseWrapper {
         attributes: {'aria-label': 'Breadcrumb'},
         jsonLd: navItems.isNotEmpty ? SEOHtmlJsonLd.breadcrumbListData(navItems) : null,
         children: [
-          SEOHtml(
-            tag: 'ol',
+          SEOOrderedList(
             attributes: {
               'style': 'display: flex; list-style: none; padding: 0;',
             },

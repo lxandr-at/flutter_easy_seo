@@ -7,64 +7,64 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 class SEOH1 extends SEOHtml {
   const SEOH1(
     String content, {
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'h1', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'h1', content: content);
 }
 
 class SEOH2 extends SEOHtml {
   const SEOH2(
     String content, {
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'h2', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'h2', content: content);
 }
 
 class SEOH3 extends SEOHtml {
   const SEOH3(
     String content, {
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'h3', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'h3', content: content);
 }
 
 class SEOH4 extends SEOHtml {
   const SEOH4(
     String content, {
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'h4', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'h4', content: content);
 }
 
 class SEOH5 extends SEOHtml {
   const SEOH5(
     String content, {
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'h5', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'h5', content: content);
 }
 
 class SEOH6 extends SEOHtml {
   const SEOH6(
     String content, {
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'h6', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'h6', content: content);
 }
 
 class SEOParagraph extends SEOHtml {
   const SEOParagraph(
     String content, {
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'p', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'p', content: content);
 }
 
 // ---------------------------------------------------------------------------
@@ -73,62 +73,59 @@ class SEOParagraph extends SEOHtml {
 
 class SEODiv extends SEOHtml {
   const SEODiv({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'div', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'div');
 }
 
 class SEOSpan extends SEOHtml {
   const SEOSpan(
     String content, {
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'span', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'span', content: content);
 }
 
 class SEOSection extends SEOHtml {
   const SEOSection({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'section', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'section');
 }
 
 class SEOArticle extends SEOHtml {
   const SEOArticle({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'article', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'article');
 }
 
 class SEOAside extends SEOHtml {
   const SEOAside({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'aside', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'aside');
 }
 
 class SEOHeader extends SEOHtml {
   SEOHeader({
     String? h1,
     String? p,
-    String? content,
-    Map<String, String>? attributes,
+    super.content,
+    super.attributes,
+    super.jsonLd,
     List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
   }) : super(
           tag: 'header',
-          content: content,
-          attributes: attributes,
-          jsonLd: jsonLd,
           children: _buildHeaderChildren(h1, p, children),
         );
 
@@ -142,61 +139,59 @@ class SEOHeader extends SEOHtml {
 
 class SEOMain extends SEOHtml {
   const SEOMain({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'main', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'main');
 }
 
 class SEOFooter extends SEOHtml {
   const SEOFooter({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'footer', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'footer');
 }
 
 class SEONav extends SEOHtml {
   const SEONav({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'nav', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'nav');
 }
 
 class SEOFigure extends SEOHtml {
   const SEOFigure({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'figure', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'figure');
 }
 
 class SEOFigcaption extends SEOHtml {
   const SEOFigcaption({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'figcaption', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'figcaption');
 }
 
 class SEOTime extends SEOHtml {
   SEOTime({
     String? text,
     Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
+    super.children,
+    super.jsonLd,
     required DateTime dateTime,
   }) : super(
           tag: 'time',
           content: text,
-          children: children,
-          jsonLd: jsonLd,
           attributes: _buildTimeAttrs(attributes, dateTime),
         );
 
@@ -214,29 +209,29 @@ class SEOTime extends SEOHtml {
 
 class SEOUnorderedList extends SEOHtml {
   const SEOUnorderedList({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'ul', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'ul');
 }
 
 class SEOOrderedList extends SEOHtml {
   const SEOOrderedList({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'ol', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'ol');
 }
 
 class SEOListItem extends SEOHtml {
   const SEOListItem({
-    String? content,
-    Map<String, String>? attributes,
-    List<SEOHtml> children = const [],
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'li', content: content, attributes: attributes, children: children, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.children,
+    super.jsonLd,
+  }) : super(tag: 'li');
 }
 
 // ---------------------------------------------------------------------------
@@ -247,17 +242,13 @@ class SEOAnchor extends SEOHtml {
   SEOAnchor({
     String? href,
     String? path,
-    String? relativePath,
-    String? content,
-    List<SEOHtml> children = const [],
+    super.relativePath,
+    super.content,
+    super.children,
+    super.jsonLd,
     Map<String, String> attributes = const {},
-    Map<String, dynamic>? jsonLd,
   }) : super(
           tag: 'a',
-          content: content,
-          children: children,
-          relativePath: relativePath,
-          jsonLd: jsonLd,
           attributes: _resolveHref(href, path, attributes),
         );
 
@@ -277,9 +268,9 @@ class SEOAnchor extends SEOHtml {
 
 class SEOImage extends SEOHtml {
   const SEOImage({
-    Map<String, String>? attributes,
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'img', attributes: attributes, jsonLd: jsonLd);
+    super.attributes,
+    super.jsonLd,
+  }) : super(tag: 'img');
 }
 
 // ---------------------------------------------------------------------------
@@ -288,24 +279,24 @@ class SEOImage extends SEOHtml {
 
 class SEOScript extends SEOHtml {
   const SEOScript({
-    String? content,
-    Map<String, String>? attributes,
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'script', content: content, attributes: attributes, jsonLd: jsonLd);
+    super.content,
+    super.attributes,
+    super.jsonLd,
+  }) : super(tag: 'script');
 }
 
 class SEOMeta extends SEOHtml {
   const SEOMeta({
-    Map<String, String>? attributes,
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'meta', attributes: attributes, jsonLd: jsonLd);
+    super.attributes,
+    super.jsonLd,
+  }) : super(tag: 'meta');
 }
 
 class SEOLink extends SEOHtml {
   const SEOLink({
-    Map<String, String>? attributes,
-    Map<String, dynamic>? jsonLd,
-  }) : super(tag: 'link', attributes: attributes, jsonLd: jsonLd);
+    super.attributes,
+    super.jsonLd,
+  }) : super(tag: 'link');
 }
 
 class SEOSizeUnit extends SEOHtml {
@@ -369,9 +360,9 @@ class SEOProductOffers extends SEOHtml {
             'name': offer['seller'].toString(),
           },
           if (validThrough != null)
-            'validThrough': validThrough!.toIso8601String(),
+            'validThrough': validThrough.toIso8601String(),
           if (validFrom != null)
-            'validFrom': validFrom!.toIso8601String(),
+            'validFrom': validFrom.toIso8601String(),
         };
       }).toList(),
     },
