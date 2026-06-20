@@ -268,27 +268,11 @@ This produces:
 ## Examples of HTML + JSON-LD output using wrappers and extensions methods
 
 <table width="100%" style="border-collapse: collapse; border: none;">
-  <tr style="border: none;">
-    <td width="50%" style="border: none; vertical-align: top;">
+<th>Widget Wrapper</th>
+<th>HTML + JSON-LD Output</th>
+<tr style="border: none;">
+<td width="50%" style="border: none; vertical-align: top;">
 
-### Column 1 Heading
-Add your column 1 content here. You can use standard Markdown or HTML inside these cells.
-
-    </td>
-    <td width="50%" style="border: none; vertical-align: top;">
-
-### Column 2 Heading
-Add your column 2 content here. Flutter code snippets or feature bullet points fit perfectly here.
-
-    </td>
-  </tr>
-</table>
-
-## Examples of HTML + JSON-LD output using wrappers and extensions methods
-<div style="display: flex; gap: 20px;">
-  <div style="flex: 1;">
-
-### Widget Wrapper
 ```dart
 // Text() to <p> - default behaviour
 EasySEOTextWrapper(child: Text('Hello World')) // or
@@ -308,14 +292,58 @@ Text('Least important Topic').easySeoH6()
 // any widget to <p>, <h1> ... <h6>
 FancyVisualHeader().easySeoH1(text: "Main Topic")
 ```
----
+
+</td>
+<td width="50%" style="border: none; vertical-align: top;">
+
+```html
+
+<p>Hello World</p>
+
+
+
+
+<h1>Main Topic</h1>
+
+
+
+
+<h3>Sub Topic</h3>
+
+<h6>Least important Topic</h6>
+
+
+<h1>Main Topic</h1>
+```
+
+</td>
+</tr>
+
+<tr style="border: none;">
+<td width="50%" style="border: none; vertical-align: top;">
+
 ```dart
 Image.network(
   'https://picsum.photos/seed/home/800/400',
    // other params,
 ).easySeo(alt: 'Image Description')
 ```
----
+
+</td>
+<td width="50%" style="border: none; vertical-align: top;">
+
+```html
+<img src="https://picsum.photos/seed/home/800/400" alt="Image Description"/>
+
+
+```
+
+</td>
+</tr>
+
+<tr style="border: none;">
+<td width="50%" style="border: none; vertical-align: top;">
+
 ```dart
 ComplexAnimatedHeaderWidget().easySeoHeader(
  h1: "App Web Version",
@@ -326,7 +354,26 @@ ComplexAnimatedHeaderWidget().easySeoHeader(
 );
 ```
 
----
+</td>
+<td width="50%" style="border: none; vertical-align: top;">
+
+```html
+<header>
+  <h1>App Web Version</h1>
+  <a href="https://...">AppStore</a>
+  <a href="https://...">PlayStore</a>
+</header>
+
+
+```
+
+
+</td>
+</tr>
+
+<tr style="border: none;">
+<td width="50%" style="border: none; vertical-align: top;">
+
 Navigation Menu
 ```dart
 NavigationRail( // or BottomNavigationBar(...
@@ -367,7 +414,56 @@ Column(
 
 ```
 
----
+
+</td>
+<td width="50%" style="border: none; vertical-align: top;">
+
+HTML + JSON-LD
+```html
+<nav>
+  <ul>
+    <li>
+      <a href="https://.../item1">Item 1</a>
+    </li>
+    <li>
+      <a href="https://.../item2">Item 2</a>
+    </li>
+  </ul>
+</nav>
+<script type="application/ld+json"> {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "numberOfItems": 2,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "SiteNavigationElement",
+        "name": "Item 1",
+        "url": "https://.../item1"
+      }
+    }, 
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "SiteNavigationElement",
+        "name": "Item 2",
+        "url": "https://.../item2"
+      }
+    }
+  ]
+}
+</script>
+```
+
+</td>
+</tr>
+
+<tr style="border: none;">
+<td width="50%" style="border: none; vertical-align: top;">
+
 Breadcrumb Navigation
 ```dart
 Row(
@@ -403,7 +499,49 @@ Row(
 
 ```
 
----
+</td>
+<td width="50%" style="border: none; vertical-align: top;">
+
+HTML + JOSON-LD
+```html
+<nav aria-label="Breadcrumb">
+  <ol style="display: flex; list-style: none; padding: 0;">
+    <li>
+      <a href="https://.../products">Products</a>
+    </li>
+    <span aria-hidden="true" style="margin: 0 8px;">›</span>
+    <li>
+      <a href="https://.../products/groceries" aria-current="page">Groceries</a>
+    </li>
+  </ol>
+</nav>
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {
+      "@type":"ListItem",
+      "position":1,
+      "name":"Products",
+      "item":"https://.../products"
+    },
+    {
+      "@type":"ListItem",
+      "position":2,"name":
+      "Groceries",
+      "item":"https://.../products/groceries"
+    }
+  ]
+}
+</script>
+```
+
+</td>
+</tr>
+
+<tr style="border: none;">
+<td width="50%" style="border: none; vertical-align: top;">
+
 SEO for a product (name, brand, offers ...)
 ```dart
 // var product = ...
@@ -500,122 +638,10 @@ ProductCardWidget().easySeoProduct(
 
 
 ```
-  </div>
-  <div style="flex: 1;">
-    
-### HTML Output
-```html
 
-<p>Hello World</p>
+</td>
+<td width="50%" style="border: none; vertical-align: top;">
 
-
-
-
-<h1>Main Topic</h1>
-
-
-
-
-<h3>Sub Topic</h3>
-
-<h6>Least important Topic</h6>
-
-
-<h1>Main Topic</h1>
-```
----
-```html
-<img src="https://picsum.photos/seed/home/800/400" alt="Image Description"/>
-
-
-```
----
-```html
-<header>
-  <h1>App Web Version</h1>
-  <a href="https://...">AppStore</a>
-  <a href="https://...">PlayStore</a>
-</header>
-
-
-```
-
----
-HTML + JSON-LD
-```html
-<nav>
-  <ul>
-    <li>
-      <a href="https://.../item1">Item 1</a>
-    </li>
-    <li>
-      <a href="https://.../item2">Item 2</a>
-    </li>
-  </ul>
-</nav>
-<script type="application/ld+json"> {
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  "numberOfItems": 2,
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "item": {
-        "@type": "SiteNavigationElement",
-        "name": "Item 1",
-        "url": "https://.../item1"
-      }
-    }, 
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "item": {
-        "@type": "SiteNavigationElement",
-        "name": "Item 2",
-        "url": "https://.../item2"
-      }
-    }
-  ]
-}
-</script>
-```
----
-HTML + JOSON-LD
-```html
-<nav aria-label="Breadcrumb">
-  <ol style="display: flex; list-style: none; padding: 0;">
-    <li>
-      <a href="https://.../products">Products</a>
-    </li>
-    <span aria-hidden="true" style="margin: 0 8px;">›</span>
-    <li>
-      <a href="https://.../products/groceries" aria-current="page">Groceries</a>
-    </li>
-  </ol>
-</nav>
-<script type="application/ld+json">{
-  "@context":"https://schema.org",
-  "@type":"BreadcrumbList",
-  "itemListElement":[
-    {
-      "@type":"ListItem",
-      "position":1,
-      "name":"Products",
-      "item":"https://.../products"
-    },
-    {
-      "@type":"ListItem",
-      "position":2,"name":
-      "Groceries",
-      "item":"https://.../products/groceries"
-    }
-  ]
-}
-</script>
-```
-
----
 HTML + JSON-LD
 ```html
 <article>
@@ -708,9 +734,8 @@ HTML + JSON-LD
 }
 </script>
 ```
-  </div>
-</div>
 
+</table>
 
 ## License
 
