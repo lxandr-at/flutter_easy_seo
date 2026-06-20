@@ -1,13 +1,13 @@
 # flutter_easy_seo
 
 A Flutter package that generates SEO-friendly HTML from the live widget tree for search engine bots.
-1. **Initialize** `EasySEOManager` within your `main()` function.
-2. **Wrap** the root of your target view with `EasySEOPage` to flag it for HTML generation.
-3. **Expose** content to the HTML body by wrapping your UI elements with components 
+1. [**Initialize**](#simple-usage-example) `EasySEOManager` within your `main()` function.
+2. [**Wrap**](#simple-usage-example) the root of your target view with `EasySEOPage` to flag it for HTML generation.
+3. [**Expose**](#widget-wrappers-and-html-output) content to the HTML body by wrapping your UI elements with components 
 like `EasySEOTextWrapper`, or by using their equivalent widget extension methods like `.easySeoText()`.
-4. **Generate** HTML content, either interactively by clicking through your web app or automatically in 
+4. [**Generate**](#generate-seo-friendly-html) HTML content, either interactively by clicking through your web app or automatically in 
 a headless widget tester.
-5. **Serve** these static HTML pages to search engine bots (and the flutter app to human users).
+5. [**Serve**](#serve-to-search-engine-bots) these static HTML pages to search engine bots (and the flutter app to human users).
 
 ## The Problem
 
@@ -569,6 +569,18 @@ ProductCardWidget().easySeoProduct(
 }
 </script>
 ```
+
+## Generate SEO-friendly HTML
+Generation of the SEO-friendly versions of the flutter web app can be done in 2 different ways:
+1. **Interactive mode** with UI overlay
+2. **Automatic** mode via flutter widget tester
+
+### Interactive Mode
+
+
+### Automated with widget tester
+
+## Serve to search engine bots
 
 ## License
 
