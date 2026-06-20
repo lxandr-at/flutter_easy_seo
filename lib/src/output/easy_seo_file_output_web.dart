@@ -5,6 +5,7 @@ import 'easy_seo_file_output_base.dart';
 
 /// Handler for file system operations
 class EasySEOFileOutput with EasySEOFileOutputBase {
+  @override
   String getSanitizedPath() {
     // 1. Determine the raw route
     String rawPath = web.window.location.pathname;

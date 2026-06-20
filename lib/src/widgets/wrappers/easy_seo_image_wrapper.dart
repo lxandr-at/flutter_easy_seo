@@ -29,6 +29,8 @@ class EasySEOImageWrapper extends EasySEOBaseWrapper {
         final provider = (child as Image).image;
         if (provider is NetworkImage) {
           extractedSrc = provider.url;
+        } else if (provider is AssetImage) {
+          extractedSrc = provider.assetName;
         }
       }
     }

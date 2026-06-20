@@ -24,7 +24,7 @@ class EasySEOTextWrapper extends EasySEOBaseWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    final content = this.text ?? _extractTextFromChild(child);
+    final content = text ?? _extractTextFromChild(child);
     return SEOHtml(tag: textType.name, content: content, children: children);
   }
 

@@ -217,7 +217,6 @@ class _EasySEOPageState extends State<EasySEOPage> {
     if (!EasySEOManager.instance.enabled.value || widget.disabled) {
       return SeoSkipped(widget.disabled ? "Disabled locally" : "Disabled globally");
     }
-    ;
 
     final rootElement = _findRootElement();
     if (rootElement == null) {

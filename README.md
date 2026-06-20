@@ -136,9 +136,10 @@ Although both Flutter and HTML rely on a tree structure to define content, a Flu
 
 Note: For some flutter widgets the html content can be automatically extracted:
 - **`Text()`**: `easySeoP` and `easySeoH1..H6` automatically extract the text content
-- **`Image.network`**: `easySeo` automatically extracts the `src`
+- **`Image.network, Image.asset`**: `easySeo` automatically extracts the `src`
 
-### Custom output defintion with core classes
+### Custom output generation
+#### With core classes
 
 At the core of this mapping system are the **SEOHtml** class and its derived elements, which allow you to define any custom HTML tree. While these are used automatically by our widget wrappers, you can also use them directly if the built-in extensions and helper methods don't fit your needs. For example, if the `EasySEOFaqWrapper` weren't available, you could build a custom FAQ structure like this:
 ```dart
@@ -207,7 +208,7 @@ Column(
 }</script>
 ```
 
-### Custom wrappers by extending `EasySEOBaseWrapper`
+#### With custom wrappers by extending `EasySEOBaseWrapper`
 
 If none of the built-in wrappers fit your needs, you can create your own by extending `EasySEOBaseWrapper` and implementing `toSEOHtml()`. Return the semantic core only — the processor automatically layers on:
 
@@ -267,12 +268,7 @@ This produces:
 
 ## Examples of HTML + JSON-LD output using wrappers and extensions methods
 
-<table width="100%" style="border-collapse: collapse; border: none;">
-<th>Widget Wrapper</th>
-<th>HTML + JSON-LD Output</th>
-<tr style="border: none;">
-<td width="50%" style="border: none; vertical-align: top;">
-
+### Text() or any Widget to `<p>, <h1> ... <h6>`
 ```dart
 // Text() to <p> - default behaviour
 EasySEOTextWrapper(child: Text('Hello World')) // or
@@ -292,58 +288,25 @@ Text('Least important Topic').easySeoH6()
 // any widget to <p>, <h1> ... <h6>
 FancyVisualHeader().easySeoH1(text: "Main Topic")
 ```
-
-</td>
-<td width="50%" style="border: none; vertical-align: top;">
-
 ```html
-
 <p>Hello World</p>
-
-
-
-
 <h1>Main Topic</h1>
-
-
-
-
 <h3>Sub Topic</h3>
-
 <h6>Least important Topic</h6>
-
-
 <h1>Main Topic</h1>
 ```
 
-</td>
-</tr>
-
-<tr style="border: none;">
-<td width="50%" style="border: none; vertical-align: top;">
-
+### Image() to `<img>`
 ```dart
-Image.network(
-  'https://picsum.photos/seed/home/800/400',
-   // other params,
-).easySeo(alt: 'Image Description')
+Image.network('https://picsum.photos/seed/home/800/400').easySeo(alt: 'Net Image')
+Image.asset('/images/asset.png').easySeo(alt: 'Asset Image')
 ```
-
-</td>
-<td width="50%" style="border: none; vertical-align: top;">
-
 ```html
-<img src="https://picsum.photos/seed/home/800/400" alt="Image Description"/>
-
-
+<img src="https://picsum.photos/seed/home/800/400" alt="Net Image"/>
+<img src="/images/asset.png" alt="Asset Image"/>
 ```
 
-</td>
-</tr>
-
-<tr style="border: none;">
-<td width="50%" style="border: none; vertical-align: top;">
-
+### Widget() to `<header>`
 ```dart
 ComplexAnimatedHeaderWidget().easySeoHeader(
  h1: "App Web Version",
@@ -353,28 +316,15 @@ ComplexAnimatedHeaderWidget().easySeoHeader(
  ]
 );
 ```
-
-</td>
-<td width="50%" style="border: none; vertical-align: top;">
-
 ```html
 <header>
   <h1>App Web Version</h1>
   <a href="https://...">AppStore</a>
   <a href="https://...">PlayStore</a>
 </header>
-
-
 ```
 
-
-</td>
-</tr>
-
-<tr style="border: none;">
-<td width="50%" style="border: none; vertical-align: top;">
-
-Navigation Menu
+### NavigationRail, BottomNavigationBar or Widget to `<nav>`
 ```dart
 NavigationRail( // or BottomNavigationBar(...
   ...
@@ -391,9 +341,7 @@ NavigationRail( // or BottomNavigationBar(...
     ),
   ],
 ).easySeo(globalName: "main_navigation")
-
 // or
-
 Column(
   children: [
     TextButton(
@@ -410,15 +358,7 @@ Column(
     )
   ]
 ).easySeoNav(globalName: "main_navigation");
-
-
 ```
-
-
-</td>
-<td width="50%" style="border: none; vertical-align: top;">
-
-HTML + JSON-LD
 ```html
 <nav>
   <ul>
@@ -457,14 +397,7 @@ HTML + JSON-LD
 }
 </script>
 ```
-
-</td>
-</tr>
-
-<tr style="border: none;">
-<td width="50%" style="border: none; vertical-align: top;">
-
-Breadcrumb Navigation
+### Widget to breadcrumb `<nav>`
 ```dart
 Row(
   children: [
@@ -485,24 +418,7 @@ Row(
   globalName: "breadcrumb_navigation", 
   isBreadcrumb: true
 );
-
-
-
-
-
-
-
-
-
-
-
-
 ```
-
-</td>
-<td width="50%" style="border: none; vertical-align: top;">
-
-HTML + JOSON-LD
 ```html
 <nav aria-label="Breadcrumb">
   <ol style="display: flex; list-style: none; padding: 0;">
@@ -535,14 +451,7 @@ HTML + JOSON-LD
 }
 </script>
 ```
-
-</td>
-</tr>
-
-<tr style="border: none;">
-<td width="50%" style="border: none; vertical-align: top;">
-
-SEO for a product (name, brand, offers ...)
+### Widget (e.g. 'ProductCardWidget') to `<article>` + 'Product' JSON-LD
 ```dart
 // var product = ...
 // var prices = ...
@@ -568,81 +477,7 @@ ProductCardWidget().easySeoProduct(
     )
   ]
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
-
-</td>
-<td width="50%" style="border: none; vertical-align: top;">
-
-HTML + JSON-LD
 ```html
 <article>
   <h3 class="name">Water</h3>
@@ -734,8 +569,6 @@ HTML + JSON-LD
 }
 </script>
 ```
-
-</table>
 
 ## License
 

@@ -290,7 +290,7 @@ class EasySEOManager {
     }
 
     this.pages = staticPages;
-    this.dynamicPathPatterns = extractedDynamicPatterns;
+    dynamicPathPatterns = extractedDynamicPatterns;
   }
 
   /// Helper to check if any SEO output is active
@@ -474,7 +474,7 @@ class EasySEOManager {
       pageSegments = segments.sublist(1);
     }
 
-    final pagePath = pageSegments.isEmpty ? '' : '/' + pageSegments.join('/');
+    final pagePath = pageSegments.isEmpty ? '' : '/${pageSegments.join('/')}';
     return (pagePath: pagePath, detectedLang: detectedLang);
   }
 

@@ -345,7 +345,7 @@ class SEOHtml {
 
     return SEOHtml(
       tag: tag,
-      content: content,
+      content: (!useMicrodataAttrs && generated.isNotEmpty) ? null : content,
       attributes: newAttrs,
       children: resolvedChildren,
       jsonLd: jsonLd,
@@ -533,12 +533,12 @@ extension SEOHtmlJsonLd on SEOHtml {
           .asMap()
           .entries
           .map((e) => {
-                '@type': 'ListItem',
-                'position': e.key + 1,
-                'name': e.value.text,
-                if (e.value.url.isNotEmpty) 'item': e.value.url,
-              })
-          .toList(),
+            '@type': 'ListItem',
+            'position': e.key + 1,
+            'name': e.value.text,
+            if (e.value.url.isNotEmpty) 'item': e.value.url,
+          },
+        ).toList(),
     };
   }
 

@@ -194,9 +194,10 @@ extension EasySEOWidgetExtension on Widget {
             attributes: {'itemprop': "name"},
             children: [
               if (path != null)
-                SEOAnchor(content: productName, relativePath: path, attributes: {'itemprop': "url"})
-            ]),
-        ...children
+                SEOAnchor(content: productName, relativePath: path, attributes: {'itemprop': "url"}),
+            ],
+        ),
+        ...children,
       ],
       child: this,
     );
