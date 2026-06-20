@@ -121,6 +121,7 @@ class EasySEOManager {
   final ValueNotifier<bool> disableOnGenerate = ValueNotifier(false);
   final ValueNotifier<bool> enableInteractiveMode = ValueNotifier(false);
   final ValueNotifier<bool> showResultDialog = ValueNotifier(true);
+  final ValueNotifier<bool> showHighlights = ValueNotifier(false);
   final ValueNotifier<SEORenderMode> renderMode = ValueNotifier(SEORenderMode.full);
   bool interactiveMinimized = false;
 

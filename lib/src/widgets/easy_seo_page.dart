@@ -289,10 +289,32 @@ class _EasySEOPageState extends State<EasySEOPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
+    Widget content = widget.child;
+
+    content = ValueListenableBuilder<bool>(
+      valueListenable: EasySEOManager.instance.showHighlights,
+      builder: (context, show, child) {
+        if (!show) return child!;
+        return Tooltip(
+          message: 'EasySEOPage',
+          waitDuration: const Duration(seconds: 1),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFF2196F3), width: 3.5),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            position: DecorationPosition.foreground,
+            child: child,
+          ),
+        );
+      },
+      child: content,
+    );
+
+    content = ValueListenableBuilder<bool>(
       valueListenable: EasySEOManager.instance.enableInteractiveMode,
       builder: (context, enabled, child) {
-        // 2. Register this instance with the global singleton
+        // Register this instance with the global singleton
         // Because it's added last, it becomes the 'activeController'
         _currentRouteKey = SeoRouteKey(path: _getCurrentPath(), rank: widget.rank);
         EasySEOManager.instance.register(_currentRouteKey!, _controller);
@@ -315,7 +337,9 @@ class _EasySEOPageState extends State<EasySEOPage> {
           ],
         );
       },
-      child: widget.child,
+      child: content,
     );
+
+    return content;
   }
 }

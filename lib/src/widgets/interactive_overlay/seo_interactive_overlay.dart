@@ -107,6 +107,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
         manager.enableLiveOutput,
         manager.enableFileOutput,
         manager.showResultDialog,
+        manager.showHighlights,
         manager.renderMode,
       ]),
       builder: (context, _) {
@@ -215,6 +216,13 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
                         icon: Icons.visibility,
                         onChanged: (val) => manager.showResultDialog.value = val,
                         tooltip: 'Show results popup dialog after generation',
+                      ),
+                      _buildToggle(
+                        label: 'Highlights',
+                        value: manager.showHighlights.value,
+                        icon: Icons.border_style,
+                        onChanged: (val) => manager.showHighlights.value = val,
+                        tooltip: 'Show colored borders around SEO-wrapped widgets',
                       ),
                       _buildModeDropdown(),
                     ],
