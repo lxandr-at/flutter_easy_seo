@@ -264,6 +264,26 @@ This produces:
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WPFooter"}</script>
 ```
 
+
+## Examples of HTML + JSON-LD output using wrappers and extensions methods
+
+<table width="100%" style="border-collapse: collapse; border: none;">
+  <tr style="border: none;">
+    <td width="50%" style="border: none; vertical-align: top;">
+
+### Column 1 Heading
+Add your column 1 content here. You can use standard Markdown or HTML inside these cells.
+
+    </td>
+    <td width="50%" style="border: none; vertical-align: top;">
+
+### Column 2 Heading
+Add your column 2 content here. Flutter code snippets or feature bullet points fit perfectly here.
+
+    </td>
+  </tr>
+</table>
+
 ## Examples of HTML + JSON-LD output using wrappers and extensions methods
 <div style="display: flex; gap: 20px;">
   <div style="flex: 1;">
