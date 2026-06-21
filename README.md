@@ -576,9 +576,14 @@ Generation of the SEO-friendly versions of the flutter web app can be done in 2 
 2. **Automatic** mode via flutter widget tester
 
 ### Interactive Mode
-
+The interactive mode has 2 main purposes:
+1. **Debugging:** You can see which HTML content is created on each page and try different output formats (html only, html + json-ld, microadata). You can also see a visualization of the widgets that are currently flagged for SEO by enabling colored borders for each wrapper type.
+2. **Create HMTL content:** While clicking through the pages of the web app, you can either automatically download a file, download the file on demand, copy it to the clipboard or directly send the created content to a REST endpoint by using the `EasySEOManger.onGenerate` callback.
 
 ### Automated with widget tester
+While the Interactive Mode can be used to create SEO-frinedly HTML content manually by clicking through the pages, this is not a feasible approach for a flutter web app with many pages. For example, an app with product detail pages can quickly have hundreds of pages. In this case an automated approach is required.
+
+A fully automated headless method can be achieved by using a flutter widget tester. Although this can be bit tricky, the flutter_easy_seo package contains a few concepts to make it as easy as possible
 
 ## Serve to search engine bots
 
