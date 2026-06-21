@@ -5,7 +5,7 @@ A Flutter package that generates SEO-friendly HTML from the live widget tree for
 2. [**Wrap**](#simple-usage-example) the root of your target view with `EasySEOPage` to flag it for HTML generation.
 3. [**Expose**](#widget-wrappers-and-html-output) content to the HTML body by wrapping your UI elements with components 
 like `EasySEOTextWrapper`, or by using their equivalent widget extension methods like `.easySeoText()`.
-4. [**Generate**](#generate-seo-friendly-html) HTML content, either interactively by clicking through your web app or automatically in 
+4. [**Generate**](#generating-seo-friendly-html) HTML content, either interactively by clicking through your web app or automatically in 
 a headless widget tester.
 5. [**Serve**](#serve-to-search-engine-bots) these static HTML pages to search engine bots (and the flutter app to human users).
 
@@ -570,20 +570,31 @@ ProductCardWidget().easySeoProduct(
 </script>
 ```
 
-## Generate SEO-friendly HTML
-Generation of the SEO-friendly versions of the flutter web app can be done in 2 different ways:
-1. **Interactive mode** with UI overlay
-2. **Automatic** mode via flutter widget tester
+## Generating SEO-Friendly HTML
+The generation of SEO-friendly versions of the Flutter web application can be accomplished in two different ways:
+1. **Interactive Mode:** Utilizes a UI overlay for real-time visualization and control.
+2. **Automated Mode:** Executes programmatically via the Flutter widget tester.
 
 ### Interactive Mode
-The interactive mode has 2 main purposes:
-1. **Debugging:** You can see which HTML content is created on each page and try different output formats (html only, html + json-ld, microadata). You can also see a visualization of the widgets that are currently flagged for SEO by enabling colored borders for each wrapper type.
-2. **Create HMTL content:** While clicking through the pages of the web app, you can either automatically download a file, download the file on demand, copy it to the clipboard or directly send the created content to a REST endpoint by using the `EasySEOManger.onGenerate` callback.
+Interactive mode serves two primary purposes:
+1. **Debugging:** It allows you to inspect the specific HTML content generated for each page and test different output formats (e.g., HTML only, HTML + JSON-LD, or Microdata). It also provides visual debugging by rendering colored borders around the widgets currently flagged for SEO tracking based on their wrapper type.
+2. **HTML Generation:** As you navigate through the web application, you can dynamically capture the generated content. The package supports automatically downloading the output as a file, downloading on demand, copying it to the clipboard, or streaming it directly to a backend REST endpoint via the `EasySEOManager.onGenerate` callback.
 
-### Automated with widget tester
-While the Interactive Mode can be used to create SEO-frinedly HTML content manually by clicking through the pages, this is not a feasible approach for a flutter web app with many pages. For example, an app with product detail pages can quickly have hundreds of pages. In this case an automated approach is required.
+![Easy SEO Interactive Mode](./docs/images/interactive_mode.png)
 
-A fully automated headless method can be achieved by using a flutter widget tester. Although this can be bit tricky, the flutter_easy_seo package contains a few concepts to make it as easy as possible
+### Automated Mode via Widget Tester
+While Interactive Mode is ideal for manual verification and rapid debugging, it is impractical for large-scale production applications with high-cardinality routing, such as an e-commerce platform with hundreds of product detail pages. For these use cases, an automated, headless pipeline is required.
+
+Leveraging the `WidgetTester` framework allows for fully automated, headless HTML generation. Although programmatic widget testing in Flutter introduces specific synchronization challenges, the `flutter_easy_seo` package provides structural primitives and helpers to streamline the implementation.
+
+When engineering an automated generation script, several critical architectural edge cases must be managed:
+- **Asynchronous Content Settlement:** Before executing the HTML generation lifecycle, the `WidgetTester` must yield until the UI is fully settled. This requires waiting not only for asynchronous network operations (e.g., fetching product data from a database) but also for reactive localization changes to complete without triggering a full page reload.
+
+- **Dynamic Route Discovery:** In data-driven applications, valid deep links are often unknown at compile time. If a catalog page dynamically renders links to individual product details, the framework must discover these targets at runtime. The flutter_easy_seo package addresses this by parsing the generated output, automatically collecting discovered URLs that match the dynamic routing patterns registered in `EasySEOManager.pages`.
+
+- **Asynchronous Context Execution:** By default, the Flutter `WidgetTester` environment executes within a simulated, synchronous clock domain via the `FakeAsync` zone. Side effects that rely on real-world time or external I/O—such as streaming the generated HTML payloads to a remote REST endpoint—must be explicitly wrapped in `tester.runAsync()` to prevent deadlock or test failure.
+
+- **Headless Environment Limitations & Mocking:** Because the headless test runner does not execute within a true browser context, certain web-specific APIs are unavailable. For example, browser-native URL retrieval hooks fail and must be injected via alternate configuration methods. Furthermore, dependencies that use platform-specific guards can cause runtime exceptions; while code may use `if (!kIsWeb)` to guard a mobile package like path_provider, `kIsWeb` evaluates to `false` in a standard command-line test environment. Consequently, these platform-dependent packages must be explicitly mocked.
 
 ## Serve to search engine bots
 
