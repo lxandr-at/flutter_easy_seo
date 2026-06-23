@@ -125,6 +125,38 @@ class EasySEOManager {
   final ValueNotifier<SEORenderMode> renderMode = ValueNotifier(SEORenderMode.full);
   bool interactiveMinimized = false;
 
+  int _overlayRefCount = 0;
+  OverlayEntry? _overlayEntry;
+
+  void showOverlay(BuildContext context) {
+    _overlayRefCount++;
+    if (_overlayRefCount == 1) {
+      _overlayEntry = OverlayEntry(
+        builder: (_) => const Positioned(
+          left: 0,
+          right: 0,
+          bottom: 16,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Center(
+              child: EasySEOInteractiveOverlay(),
+            ),
+          ),
+        ),
+      );
+      Navigator.of(context, rootNavigator: true).overlay!.insert(_overlayEntry!);
+    }
+  }
+
+  void hideOverlay() {
+    _overlayRefCount--;
+    if (_overlayRefCount <= 0) {
+      _overlayRefCount = 0;
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+    }
+  }
+
   String? baseUrl;
   List<String> supportedLanguages = const [];
   List<String> pages = const [];

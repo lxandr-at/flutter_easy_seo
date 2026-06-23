@@ -100,6 +100,14 @@ class _EasySEOPageState extends State<EasySEOPage> {
     // registering with EasySEOManager is done in build()
     // because the context at this point gets the old route path
 
+    EasySEOManager.instance.enableInteractiveMode.addListener(_onInteractiveModeChanged);
+    if (EasySEOManager.instance.enableInteractiveMode.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        EasySEOManager.instance.showOverlay(context);
+      });
+    }
+
     _initSEO();
   }
 
@@ -117,12 +125,25 @@ class _EasySEOPageState extends State<EasySEOPage> {
   @override
   void dispose() {
     _disposed = true;
+    EasySEOManager.instance.enableInteractiveMode.removeListener(_onInteractiveModeChanged);
+    EasySEOManager.instance.hideOverlay();
     // 3. Clean up the registry to allow the previous page to regain authority
     final key = _registrationKey ?? _currentRouteKey;
     if (key != null) {
       EasySEOManager.instance.unregister(key, _controller);
     }
     super.dispose();
+  }
+
+  void _onInteractiveModeChanged() {
+    if (EasySEOManager.instance.enableInteractiveMode.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        EasySEOManager.instance.showOverlay(context);
+      });
+    } else {
+      EasySEOManager.instance.hideOverlay();
+    }
   }
 
   void _generate() async {
@@ -296,6 +317,12 @@ class _EasySEOPageState extends State<EasySEOPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Register this instance with the global singleton
+    _currentRouteKey = SeoRouteKey(path: _getCurrentPath(), rank: widget.rank);
+    if (EasySEOManager.instance.register(_currentRouteKey!, _controller)) {
+      _registrationKey = _currentRouteKey;
+    }
+
     Widget content = widget.child;
 
     content = ValueListenableBuilder<bool>(
@@ -313,37 +340,6 @@ class _EasySEOPageState extends State<EasySEOPage> {
             position: DecorationPosition.foreground,
             child: child,
           ),
-        );
-      },
-      child: content,
-    );
-
-    content = ValueListenableBuilder<bool>(
-      valueListenable: EasySEOManager.instance.enableInteractiveMode,
-      builder: (context, enabled, child) {
-        // Register this instance with the global singleton
-        // Because it's added last, it becomes the 'activeController'
-        _currentRouteKey = SeoRouteKey(path: _getCurrentPath(), rank: widget.rank);
-        if (EasySEOManager.instance.register(_currentRouteKey!, _controller)) {
-          _registrationKey = _currentRouteKey;
-        }
-
-        if (!enabled) return child!;
-        return Stack(
-          children: [
-            child!,
-            const Positioned(
-              left: 0,
-              right: 0,
-              bottom: 16,
-              child: Material(
-                type: MaterialType.transparency,
-                child: Center(
-                  child: EasySEOInteractiveOverlay(),
-                ),
-              ),
-            ),
-          ],
         );
       },
       child: content,
