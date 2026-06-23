@@ -150,7 +150,10 @@ class EasySEOManager {
   /// Returns the controller that currently has authority (the deepest/newest one)
   EasySEOPageController? get activeController => _stack.values.lastOrNull;
 
-  void register(SeoRouteKey key, EasySEOPageController controller) {
+  bool register(SeoRouteKey key, EasySEOPageController controller) {
+    final existing = _stack[key];
+    if (existing != null && existing != controller) return false;
+    _stack.removeWhere((k, c) => k.rank == key.rank && k.path != key.path);
     debugPrint('📦 [EasySEO] Registering: $key');
     _stack[key] = controller;
 
@@ -165,12 +168,13 @@ class EasySEOManager {
       }
       _gatheredPages.add(pagePath);
     }
+    return true;
   }
 
-  void unregister(SeoRouteKey key) {
+  void unregister(SeoRouteKey key, EasySEOPageController controller) {
+    if (_stack[key] != controller) return;
     debugPrint('🗑️ [EasySEO] Unregistering controller: $key, ${_stack.length}');
     _stack.remove(key);
-    debugPrint('🗑️ [EasySEO] Unregistering controller: $key, ${_stack.length}');
   }
 
   /// Global trigger for the headless test or automated syncs

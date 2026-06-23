@@ -82,6 +82,8 @@ class _EasySEOPageState extends State<EasySEOPage> {
   late final EasySEOLiveOutput _liveHandler;
   late final EasySEOPageController _controller;
   SeoRouteKey? _currentRouteKey;
+  SeoRouteKey? _registrationKey;
+  bool _disposed = false;
 
   @override
   void initState() {
@@ -114,9 +116,11 @@ class _EasySEOPageState extends State<EasySEOPage> {
 
   @override
   void dispose() {
+    _disposed = true;
     // 3. Clean up the registry to allow the previous page to regain authority
-    if (_currentRouteKey != null) {
-      EasySEOManager.instance.unregister(_currentRouteKey!);
+    final key = _registrationKey ?? _currentRouteKey;
+    if (key != null) {
+      EasySEOManager.instance.unregister(key, _controller);
     }
     super.dispose();
   }
@@ -132,6 +136,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_disposed || !mounted) return;
         debugPrint("EasySEO: calling gen in initState()");
         _generateHTML();
       });
@@ -209,6 +214,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
   }
 
   EasySEOGenerationResult _generateHTML({SEORenderMode? mode}) {
+    if (!mounted) return SeoFailure("not mounted!");
     // do nothing if not the active (top level) EasySEOPage widget
     if (!_isActiveController()) {
       return SeoSkipped("not the active (top level) EasySEOPage widget");
@@ -279,6 +285,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
   }
 
   Element? _findRootElement() {
+    if (!mounted) return null;
     final element = context as Element;
     return element;
   }
@@ -317,7 +324,9 @@ class _EasySEOPageState extends State<EasySEOPage> {
         // Register this instance with the global singleton
         // Because it's added last, it becomes the 'activeController'
         _currentRouteKey = SeoRouteKey(path: _getCurrentPath(), rank: widget.rank);
-        EasySEOManager.instance.register(_currentRouteKey!, _controller);
+        if (EasySEOManager.instance.register(_currentRouteKey!, _controller)) {
+          _registrationKey = _currentRouteKey;
+        }
 
         if (!enabled) return child!;
         return Stack(

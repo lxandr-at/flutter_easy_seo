@@ -12,6 +12,7 @@ import 'src/utils/platform_helper_facade.dart';
 
 export 'src/utils/platform_helper_facade.dart';
 export 'src/utils/url_helper_facade.dart';
+export 'src/test_utils/test_mock_defaults.dart';
 
 part 'src/extensions/all_extensions.dart';
 part 'src/extensions/widget_extensions.dart';
