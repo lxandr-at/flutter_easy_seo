@@ -1,11 +1,19 @@
 // lib/test_utils.dart
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class EasySEOMockPlatformChannels {
-  static void useHeadlessDefaults() {
+  static void useHeadlessDefaultMocks() {
+    _allowRealNetWorkRequests();
     _mockPathProvider();
     _mockConnectivityPlugin();
+    _mockSharedPreferences();
+  }
+
+  static void _allowRealNetWorkRequests() {
+    HttpOverrides.global = null;
   }
 
   static void _mockConnectivityPlugin({String initialResult = 'wifi'}) {
@@ -50,5 +58,37 @@ class EasySEOMockPlatformChannels {
         }
       },
     );
+  }
+
+  static void _mockSharedPreferences({Map<String, Object> initialValues = const {}}) {
+    // 1. Target the exact internal channel string for SharedPreferences
+    const MethodChannel channel = MethodChannel('plugins.flutter.io/shared_preferences');
+
+    // 2. Register the mock handler on the test binary messenger
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+
+      switch (methodCall.method) {
+        case 'getAll':
+        // The shared_preferences plugin expects a prefixed key-value map
+        // containing your initial testing states
+          return initialValues;
+
+        case 'setBool':
+        case 'setString':
+        case 'setInt':
+        case 'setDouble':
+        case 'setStringList':
+        case 'remove':
+        case 'clear':
+        // Return true to simulate a successful disk write operation
+          return true;
+
+        default:
+          throw MissingPluginException(
+            'No implementation found for method ${methodCall.method} on channel ${channel.name}',
+          );
+      }
+    });
   }
 }
