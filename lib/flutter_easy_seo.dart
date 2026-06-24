@@ -4,6 +4,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'src/utils/url_helper_facade.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:meta/meta.dart';
+import 'dart:io';
+import 'package:path/path.dart' as p; // Pure Dart package, no Flutter dependency
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 // Import the "facade" which handles the platform switching
 import 'src/output/easy_seo_file_output_facade.dart';
@@ -12,7 +18,6 @@ import 'src/utils/platform_helper_facade.dart';
 
 export 'src/utils/platform_helper_facade.dart';
 export 'src/utils/url_helper_facade.dart';
-export 'src/test_utils/test_mock_defaults.dart';
 
 part 'src/extensions/all_extensions.dart';
 part 'src/extensions/widget_extensions.dart';
@@ -46,3 +51,6 @@ part 'src/widgets/wrappers/easy_seo_footer_wrapper.dart';
 part 'src/widgets/wrappers/easy_seo_link_wrapper.dart';
 part 'src/widgets/wrappers/easy_seo_nav_anchor_wrapper.dart';
 part 'src/widgets/wrappers/easy_seo_faq_wrapper.dart';
+
+part 'src/test_utils/test_mock_defaults.dart';
+part 'src/test_utils/test_functions.dart';

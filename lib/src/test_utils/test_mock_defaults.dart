@@ -1,8 +1,4 @@
-// lib/test_utils.dart
-import 'dart:io';
-
-import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart';
+part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class EasySEOMockPlatformChannels {
   static void useHeadlessDefaultMocks() {
@@ -90,5 +86,42 @@ class EasySEOMockPlatformChannels {
           );
       }
     });
+  }
+}
+
+class JsonCacheInfoRepository {
+  final String databaseName;
+  File? _targetFile;
+  bool _isInitialized = false;
+  final Map<String, dynamic> _memoryStorage = {};
+
+  JsonCacheInfoRepository({required this.databaseName});
+
+  bool get _isUnderTest => Platform.environment.containsKey('FLUTTER_TEST');
+
+  /// Initialize the cache file target using native OS paths
+  Future<void> open() async {
+    if (_isInitialized) return;
+
+    if (!_isUnderTest) {
+      // 🚀 NATIVE REPLACEMENT: Grabs the OS system temp directory directly
+      final Directory systemTempDir = Directory.systemTemp;
+
+      // Namespace it so it is cleanly siloed on the user's host file system
+      final String directoryPath = p.join(systemTempDir.path, 'flutter_easy_seo_cache');
+      await Directory(directoryPath).create(recursive: true);
+
+      _targetFile = File(p.join(directoryPath, '$databaseName.json'));
+    }
+
+    _isInitialized = true;
+  }
+
+  Future<void> deleteDataFile() async {
+    if (_isUnderTest) {
+      _memoryStorage.clear();
+    } else if (_targetFile != null && await _targetFile!.exists()) {
+      await _targetFile!.delete();
+    }
   }
 }
