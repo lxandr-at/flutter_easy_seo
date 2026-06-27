@@ -1,8 +1,8 @@
 # flutter_easy_seo
 
 A Flutter package that generates SEO-friendly HTML from the live widget tree for search engine bots.
-1. [**Initialize**](#simple-usage-example) `EasySEOManager` within your `main()` function.
-2. [**Wrap**](#simple-usage-example) the root of your target view with `EasySEOPage` to flag it for HTML generation.
+1. [**Initialize**](#simple-usage-example) **`EasySEOManager`** within your `main()` function.
+2. [**Wrap**](#simple-usage-example) the root of your target view with **`EasySEOPage`** to flag it for HTML generation.
 3. [**Expose**](#widget-wrappers-and-html-output) content to the HTML body by wrapping your UI elements with components 
 like `EasySEOTextWrapper`, or by using their equivalent widget extension methods like `.easySeoText()`.
 4. [**Generate**](#generating-seo-friendly-html) HTML content, either interactively by clicking through your web app or automatically in 
@@ -11,13 +11,15 @@ a headless widget tester:
     2. [Automated Mode via Widget Tester](#automated-mode-via-widget-tester)
 5. [**Serve**](#serving-content-to-search-engine-bots) these static HTML pages to search engine bots (and the flutter app to human users).
 
-## The Problem
+## What problem gets solved?
+
+### The Problem
 
 - **Search Bots Need Text**: For a web application to rank, search engine bots must parse the site's textual and structural content.
 - **Flutter is a Blank Canvas**: To a crawler, a baseline Flutter Web app looks like an empty page. Flutter does not use a document-based HTML DOM; instead, it paints pixels directly onto a single, flat ``<canvas>`` via CanvasKit or WebAssembly. 
 - **No SSR or Hydration**: Standard architectural workarounds like Server-Side Rendering (SSR) or DOM hydration are fundamentally impossible within Flutter’s rendering pipeline.
 
-## The Solution
+### The Solution
 This package implements a dual-layer strategy to bridge the Flutter-to-SEO gap completely:
 
 1. **[Dynamic Rendering](https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering) (Static File Serving)**: The package pre-generates your views into pure, static HTML files. When a search bot requests a page, your server instantly delivers this static file. Because it requires zero engine initialization, the bot gets the full text content instantly.
@@ -27,14 +29,31 @@ This package implements a dual-layer strategy to bridge the Flutter-to-SEO gap c
    - **Anti-Cloaking Compliance:** Search engines like Google frequently run undercover audits using stealth, human-like user agents to verify that users see the same content as the bots. Live injection ensures your content remains identical across all testing profiles.
    - **Unknown Crawlers:** It provides a safe fallback for AI crawlers, scrapers, or third-party bots that do not announce themselves as a bot to your server, but still rely on reading a rendered HTML structure after execution.
 
+## Real World Example
+
+Besides the example in the repo, you can also take a look at a real world example that uses this `flutter_easy_seo` package:<br> 
+- Landing Page (`https://preisvergleich.lxandr.at/en`):
+    - <a href="https://preisvergleich.lxandr.at/en" target="_blank" rel="noopener noreferrer">User Version</a>
+    - <a href="https://preisvergleich.lxandr.at/en?bot=1" target="_blank" rel="noopener noreferrer">SEO Version</a>
+- Product Price Compare Page (`https://preisvergleich.lxandr.at/en/compare`):
+    - <a href="https://preisvergleich.lxandr.at/en/compare" target="_blank" rel="noopener noreferrer">User Version</a>
+    - <a href="https://preisvergleich.lxandr.at/en/compare?bot=1" target="_blank" rel="noopener noreferrer">SEO Version</a>
+- Product Price Compare Details Page (`https://preisvergleich.lxandr.at/en/compare/1`):
+    - <a href="https://preisvergleich.lxandr.at/en/compare/1" target="_blank" rel="noopener noreferrer">User Version</a>
+    - <a href="https://preisvergleich.lxandr.at/en/compare/1?bot=1" target="_blank" rel="noopener noreferrer">SEO Version</a>
+
+- The visually unappealing SEO versions will be indexed, whereas the visually pleasing user versions will not:
+
+    ![Easy SEO Architecture Overview](./docs/images/real_world_listing.png)
+
 ## Main Features
 
-- Generate complete HTML documents from the Flutter live widget tree
+- Generate complete SEO-friendly HTML documents from the Flutter live widget tree
 - Automatic sitemap.xml generation
-- Supports SEO-relevant html tags and head section info and meta data (Twitter, Open Graph) and custom meta tags
-- Interactive mode with UI overlay
-- Automatic mode via flutter widget tester
-- json+ld and microdata support
+- SEO-relevant html tags and head section info and meta data (Twitter, Open Graph) and custom meta tags
+- Interactive Mode with UI Overlay
+- Automatic Mode via Flutter Widget Tester
+- JSON-LD and Microdata support
 
 ## Installation
 
