@@ -36,10 +36,10 @@ Future<void> waitUntilReady(
   }
 }
 
-/// Waits for a specific route to be structurally ready and handles all lifecycle checks.
+/// Waits for a specific [route] to be structurally ready within the [timeout} and handles lifecycle checks.
 ///
-/// The [extraCheck] callback allows to inject custom evaluation rules (such as
-/// language propagation or global state verifications) dynamically.
+/// The [extraCheck] callback allows to inject custom evaluation rules such as
+/// language propagation or global state verifications.
 Future<void> waitForRoute(
     String route,
     WidgetTester tester, {

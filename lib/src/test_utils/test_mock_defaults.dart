@@ -104,7 +104,7 @@ class JsonCacheInfoRepository {
     if (_isInitialized) return;
 
     if (!_isUnderTest) {
-      // 🚀 NATIVE REPLACEMENT: Grabs the OS system temp directory directly
+      // NATIVE REPLACEMENT: Grabs the OS system temp directory directly
       final Directory systemTempDir = Directory.systemTemp;
 
       // Namespace it so it is cleanly siloed on the user's host file system
