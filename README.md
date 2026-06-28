@@ -22,7 +22,7 @@ a headless widget tester:
 ### The Solution
 This package implements a dual-layer strategy to bridge the Flutter-to-SEO gap completely:
 
-1. **[Dynamic Rendering](https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering) (Static File Serving)**: The package pre-generates your views into pure, static HTML files. When a search bot requests a page, your server instantly delivers this static file. Because it requires zero engine initialization, the bot gets the full text content instantly.
+1. **[Dynamic Rendering 🌐](https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering) (Static File Serving)**: The package pre-generates your views into pure, static HTML files. When a search bot requests a page, your server instantly delivers this static file. Because it requires zero engine initialization, the bot gets the full text content instantly.
 2. **Hybrid Live DOM Injection:** While the app runs for human users, the package actively injects the exact same semantic HTML directly into the browser DOM. 
 
    This serves as a critical fail-safe for two reasons:
@@ -33,14 +33,14 @@ This package implements a dual-layer strategy to bridge the Flutter-to-SEO gap c
 
 Besides the example in the repo, you can also take a look at a real world example that uses this `flutter_easy_seo` package:<br> 
 - Landing Page (`https://preisvergleich.lxandr.at/en`):
-    - <a href="https://preisvergleich.lxandr.at/en" target="_blank" rel="noopener noreferrer">User Version</a>
-    - <a href="https://preisvergleich.lxandr.at/en?bot=1" target="_blank" rel="noopener noreferrer">SEO Version</a>
+    - <a href="https://preisvergleich.lxandr.at/en" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
+    - <a href="https://preisvergleich.lxandr.at/en?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
 - Product Price Compare Page (`https://preisvergleich.lxandr.at/en/compare`):
-    - <a href="https://preisvergleich.lxandr.at/en/compare" target="_blank" rel="noopener noreferrer">User Version</a>
-    - <a href="https://preisvergleich.lxandr.at/en/compare?bot=1" target="_blank" rel="noopener noreferrer">SEO Version</a>
+    - <a href="https://preisvergleich.lxandr.at/en/compare" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
+    - <a href="https://preisvergleich.lxandr.at/en/compare?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
 - Product Price Compare Details Page (`https://preisvergleich.lxandr.at/en/compare/1`):
-    - <a href="https://preisvergleich.lxandr.at/en/compare/1" target="_blank" rel="noopener noreferrer">User Version</a>
-    - <a href="https://preisvergleich.lxandr.at/en/compare/1?bot=1" target="_blank" rel="noopener noreferrer">SEO Version</a>
+    - <a href="https://preisvergleich.lxandr.at/en/compare/1" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
+    - <a href="https://preisvergleich.lxandr.at/en/compare/1?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
 
 - The visually unappealing SEO versions will be indexed, whereas the visually pleasing user versions will not:
 
