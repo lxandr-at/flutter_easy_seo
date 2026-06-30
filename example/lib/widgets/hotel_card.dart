@@ -24,24 +24,19 @@ class HotelCard extends StatelessWidget {
             children: [
               EasySEOImageWrapper(
                 alt: hotel.name,
-                child: SizedBox(
-                width: 80,
-                height: 80,
-                child: Container(
-                  color: Colors.grey.shade200,
-                  alignment: Alignment.center,
-                  child: const Icon(Icons.image, color: Colors.grey),
+                child: Image.network(
+                  'https://picsum.photos/seed/${hotel.id}/160/160',
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
                 ),
-              ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      child: Text(hotel.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    ).easySeoH3(text: hotel.name),
+                    Text(hotel.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     const SizedBox(height: 4),
                     Text(stars, style: const TextStyle(color: Colors.amber, fontSize: 14)),
                     const SizedBox(height: 4),
@@ -58,13 +53,14 @@ class HotelCard extends StatelessWidget {
       ),
     ).easySeoListItem(
       children: [
+        SEOH3(hotel.name, attributes: {'itemprop': 'name'}),
         SEOAnchor(
           path: '/$locale/hotels/${hotel.id}',
           content: hotel.name,
-          attributes: {'itemprop': 'url'},
+          attributes: {'itemprop': 'item'},
         ),
-        SEOSpan(hotel.location, attributes: {'itemprop': 'location'}),
-        SEOSpan(hotel.pricePerNight.toStringAsFixed(0), attributes: {'itemprop': 'price'}),
+        SEOSpan(hotel.location),
+        SEOSpan(hotel.pricePerNight.toStringAsFixed(0)),
       ],
     );
   }

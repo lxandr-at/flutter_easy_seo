@@ -22,7 +22,7 @@ class ReservationsPage extends ConsumerWidget {
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Breadcrumb(locale: locale, labels: [t['nav.reservations']!]),
+            child: Breadcrumb(locale: locale, labels: [t['reservation.title']!], slugs: ['reservations']),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -34,37 +34,15 @@ class ReservationsPage extends ConsumerWidget {
               child: Center(child: Text(t['reservation.empty']!)),
             )
           else
-            ...reservations.map((r) => _buildReservationCard(t, r)),
+            Column(
+              children: reservations.map((r) => _buildReservationCard(t, r)).toList(),
+            ).easySeoList(),
           const SizedBox(height: 24),
         ],
       ),
     ).easySeoMain(
       children: [
         SEOH1(t['reservation.title']!),
-        SEOSection(
-          jsonLd: {
-            '@type': 'ItemList',
-            'itemListElement': reservations.map((r) {
-              return {
-                '@type': 'ListItem',
-                'item': {
-                  '@type': 'HotelReservation',
-                  'reservationFor': {
-                    '@type': 'Hotel',
-                    'name': r.hotelName,
-                  },
-                  'checkinDate': r.checkIn.toIso8601String(),
-                  'checkoutDate': r.checkOut.toIso8601String(),
-                  'totalPrice': {
-                    '@type': 'MonetaryAmount',
-                    'value': r.totalPrice,
-                    'currency': 'EUR',
-                  },
-                },
-              };
-            }).toList(),
-          },
-        ),
       ],
     );
     return EasySEOPage(
@@ -111,11 +89,39 @@ class ReservationsPage extends ConsumerWidget {
           ],
         ),
       ),
-    ).easySeoArticle(
+    ).easySeoListItem(
       children: [
-        SEOH3(r.hotelName),
-        SEOTime(text: t['reservation.checkIn'], dateTime: r.checkIn),
-        SEOTime(text: t['reservation.checkOut'], dateTime: r.checkOut),
+        SEODiv(
+          attributes: {'itemprop': 'item'},
+          jsonLd: {
+            '@type': 'HotelReservation',
+            'reservationFor': {
+              '@type': 'Hotel',
+              'name': r.hotelName,
+            },
+          },
+          children: [
+            SEOTime(
+              text: t['reservation.checkIn'],
+              dateTime: r.checkIn,
+              attributes: {'itemprop': 'checkinDate'},
+            ),
+            SEOTime(
+              text: t['reservation.checkOut'],
+              dateTime: r.checkOut,
+              attributes: {'itemprop': 'checkoutDate'},
+            ),
+            SEODiv(
+              jsonLd: {
+                '@type': 'MonetaryAmount',
+                'value': r.totalPrice,
+                'currency': 'EUR',
+              },
+              attributes: {'itemprop': 'totalPrice'},
+            ),
+          ],
+        ),
+        SEOH3(r.hotelName, attributes: {'itemprop': 'name'}),
       ],
     );
   }

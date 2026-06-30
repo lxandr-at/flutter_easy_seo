@@ -22,30 +22,21 @@ class HotelListPage extends ConsumerWidget {
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Breadcrumb(locale: locale, labels: [t['nav.hotels']!]),
+            child: Breadcrumb(locale: locale, labels: [t['nav.hotels']!], slugs: ['hotels']),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(t['nav.hotels']!, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           ),
-          ...hotels.map((hotel) => HotelCard(locale: locale, hotel: hotel)),
+          Column(
+            children: hotels.map((hotel) => HotelCard(locale: locale, hotel: hotel)).toList(),
+          ).easySeoList(),
           const SizedBox(height: 24),
         ],
       ),
     ).easySeoMain(
       children: [
         SEOH1(t['nav.hotels']!),
-        SEOSection(
-          jsonLd: {
-            '@type': 'ItemList',
-            'numberOfItems': hotels.length,
-            'itemListElement': hotels.asMap().entries.map((e) => {
-              '@type': 'ListItem',
-              'position': e.key + 1,
-              'url': '/$locale/hotels/${e.value.id}',
-            }).toList(),
-          },
-        ),
       ],
     );
     return EasySEOPage(

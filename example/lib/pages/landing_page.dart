@@ -20,7 +20,7 @@ class LandingPage extends StatelessWidget {
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Breadcrumb(locale: locale, labels: const []),
+            child: Breadcrumb(locale: locale, labels: const [], slugs: const []),
           ),
           _buildHero(context, t),
           _buildFeatures(t),

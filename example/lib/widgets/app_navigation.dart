@@ -17,7 +17,7 @@ class AppNavigation extends StatelessWidget {
       items: [
         BottomNavigationBarItem(icon: const Icon(Icons.home), label: t['nav.home']!),
         BottomNavigationBarItem(icon: const Icon(Icons.hotel), label: t['nav.hotels']!),
-        BottomNavigationBarItem(icon: const Icon(Icons.calendar_today), label: t['nav.reservations']!),
+        BottomNavigationBarItem(icon: const Icon(Icons.calendar_today), label: t['reservation.title']!),
       ],
     ).easySeoNav(
       globalName: 'app-nav',
@@ -26,7 +26,7 @@ class AppNavigation extends StatelessWidget {
           jsonLd: SEOHtmlJsonLd.siteNavigationData([
             SEONavItem(text: t['nav.home']!, url: '/$locale'),
             SEONavItem(text: t['nav.hotels']!, url: '/$locale/hotels'),
-            SEONavItem(text: t['nav.reservations']!, url: '/$locale/reservations'),
+            SEONavItem(text: t['reservation.title']!, url: '/$locale/reservations'),
           ]),
         ),
       ],

@@ -16,7 +16,16 @@ class EasySEOListItemWrapper extends EasySEOBaseWrapper {
     required List<SEONavItem> navItems,
     required BuildContext context,
   }) {
-    return SEOHtml(tag: 'li', children: children);
+    return SEOHtml(
+      tag: 'li',
+      attributes: {
+        'itemprop': 'itemListElement',
+        'itemscope': '',
+        'itemtype': 'https://schema.org/ListItem',
+      },
+      jsonLd: {'@type': 'ListItem'},
+      children: children,
+    );
   }
 
   @override

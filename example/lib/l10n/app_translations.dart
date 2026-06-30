@@ -6,7 +6,6 @@ class AppTranslations {
       'app.title': 'Hotel Buchungsplattform',
       'nav.home': 'Startseite',
       'nav.hotels': 'Hotels',
-      'nav.reservations': 'Meine Reservierungen',
       'landing.hero.title': 'Finden Sie Ihr Traumhotel',
       'landing.hero.subtitle':
           'Entdecken Sie exklusive Unterkünfte in den schönsten Regionen Europas und buchen Sie Ihren perfekten Aufenthalt.',
@@ -78,7 +77,6 @@ class AppTranslations {
       'app.title': 'Hotel Booking Platform',
       'nav.home': 'Home',
       'nav.hotels': 'Hotels',
-      'nav.reservations': 'My Reservations',
       'landing.hero.title': 'Find Your Dream Hotel',
       'landing.hero.subtitle':
           'Discover exclusive accommodations in Europe\'s most beautiful regions and book your perfect stay.',
@@ -150,7 +148,6 @@ class AppTranslations {
       'app.title': 'Plateforme de Réservation Hôtelière',
       'nav.home': 'Accueil',
       'nav.hotels': 'Hôtels',
-      'nav.reservations': 'Mes Réservations',
       'landing.hero.title': 'Trouvez Votre Hôtel de Rêve',
       'landing.hero.subtitle':
           'Découvrez des hébergements exclusifs dans les plus belles régions d\'Europe et réservez votre séjour parfait.',

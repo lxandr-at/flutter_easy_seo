@@ -258,11 +258,6 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
           ),
         ],
       ),
-    ).easySeoForm(
-      children: [
-        if (_checkIn != null) SEOTime(text: t['hotel.checkIn'], dateTime: _checkIn!),
-        if (_checkOut != null) SEOTime(text: t['hotel.checkOut'], dateTime: _checkOut!),
-      ],
     );
   }
 

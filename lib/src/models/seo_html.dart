@@ -286,6 +286,8 @@ class SEOHtml {
         return attributes?['content'];
       case 'link':
         return attributes?['href'];
+      case 'time':
+        return attributes?['datetime'] ?? content;
       default:
         return content;
     }
@@ -334,7 +336,7 @@ class SEOHtml {
           children.any((c) => c.tag == 'ul' || c.tag == 'ol');
       if (!hasStructuralList) {
       for (final entry in jsonLd!.entries) {
-        if (entry.key == '@type' || entry.key == '@context') continue;
+        if (entry.key == '@type' || entry.key == '@context' || entry.key == 'numberOfItems') continue;
         // In full mode, skip scalar values already rendered by a child element
         // (e.g. Product.name from <h3 itemprop="name">)
         if (!useMicrodataAttrs &&
@@ -458,7 +460,7 @@ class SEOHtml {
       final urls = EasySEOManager.instance.resolveSeoUrls(currentPath);
       final baseUrl = urls.canonicalUrl;
       final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
-      final cleanPath = relativePath!.startsWith('/') ? relativePath! : '/$relativePath';
+      final cleanPath = EasySEOManager._encodePath((relativePath!.startsWith('/') ? relativePath! : '/$relativePath').toLowerCase());
       resolvedHref = '$cleanBase$cleanPath';
 
       resolvedAttributes ??= {};

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
 class Calendar extends StatelessWidget {
   final String locale;
@@ -43,11 +42,6 @@ class Calendar extends StatelessWidget {
             ),
           ),
         ],
-      ).easySeoForm(
-        children: [
-          if (selectedDate != null)
-            SEOTime(text: label, dateTime: selectedDate!),
-        ],
       );
     }
 
@@ -63,11 +57,6 @@ class Calendar extends StatelessWidget {
               ? '${selectedDate!.day}.${selectedDate!.month}.${selectedDate!.year}'
               : label),
         ),
-      ],
-    ).easySeoForm(
-      children: [
-        if (selectedDate != null)
-          SEOTime(text: label, dateTime: selectedDate!),
       ],
     );
   }

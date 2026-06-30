@@ -351,6 +351,16 @@ class EasySEOManager {
   /// Helper to check if any SEO output is active
   bool get isActive => enableFileOutput.value || enableLiveOutput.value || !disableOnGenerate.value;
 
+  static String _encodePath(String path) {
+    return path.split('/').map((s) {
+      try {
+        return Uri.encodeComponent(Uri.decodeComponent(s));
+      } catch (_) {
+        return Uri.encodeComponent(s);
+      }
+    }).join('/');
+  }
+
   /// Formats a path into a full URL using the configured [baseUrl]
   String formatFullUrl(String path) {
     String? bUrl = baseUrl;
@@ -365,7 +375,7 @@ class EasySEOManager {
     if (bUrl == null || bUrl.isEmpty) return path;
 
     final cleanBase = bUrl.endsWith('/') ? bUrl.substring(0, bUrl.length - 1) : bUrl;
-    final cleanPath = path.startsWith('/') ? path : '/$path';
+    final cleanPath = _encodePath((path.startsWith('/') ? path : '/$path').toLowerCase());
     return '$cleanBase$cleanPath';
   }
 
@@ -373,6 +383,7 @@ class EasySEOManager {
   String _getUrlForLang(String? lang, String pagePath, {String cleanBase = ''}) {
     final String? firstLang = supportedLanguages.firstOrNull;
     final targetLang = lang ?? firstLang;
+    final encodedPath = _encodePath(pagePath);
 
     // Root case: if it's the first language and root path, omit the prefix
     if (pagePath.isEmpty && targetLang == firstLang) {
@@ -381,11 +392,11 @@ class EasySEOManager {
 
     // All other cases (subpages or non-primary languages) use the prefix
     if (targetLang != null) {
-      return '$cleanBase/$targetLang$pagePath';
+      return '$cleanBase/$targetLang$encodedPath';
     }
 
     // Fallback for neutral subpages (shouldn't normally happen with exhaustive langs)
-    return pagePath.isEmpty ? '$cleanBase/' : '$cleanBase$pagePath';
+    return pagePath.isEmpty ? '$cleanBase/' : '$cleanBase$encodedPath';
   }
 
   /// Returns a list of all routes that can be built from supportedLanguages and pages.
@@ -535,7 +546,7 @@ class EasySEOManager {
 
   /// Unified resolver that takes any path, parses it, and returns the canonical, alternate, and x-default URLs
   EasySEOUrls resolveSeoUrls(String path) {
-    final parsed = parsePath(path);
+    final parsed = parsePath(path.toLowerCase());
     final pagePath = parsed.pagePath;
     final detectedLang = parsed.detectedLang;
     final cleanBase = getEffectiveCleanBaseUrl();
