@@ -144,12 +144,23 @@ class SEOHtml {
     if (blocks.isEmpty) return '';
     final indent = '  ' * indentLevel;
     final buffer = StringBuffer();
-    for (final block in blocks) {
-      buffer.write(indent);
-      buffer.write('<script type="application/ld+json">');
-      buffer.write(jsonEncode(_orderedJsonLd(block)));
-      buffer.write('</script>\n');
+    buffer.write(indent);
+    buffer.write('<script type="application/ld+json">');
+    if (blocks.length == 1) {
+      buffer.write(jsonEncode(_orderedJsonLd(blocks.first)));
+    } else {
+      final graph = <String, dynamic>{
+        '@context': 'https://schema.org',
+        '@graph': [
+          for (final block in blocks)
+            _orderedJsonLd(
+              Map<String, dynamic>.from(block)..remove('@context'),
+            ),
+        ],
+      };
+      buffer.write(jsonEncode(_orderedJsonLd(graph)));
     }
+    buffer.write('</script>\n');
     return buffer.toString();
   }
 
@@ -517,7 +528,7 @@ extension SEOHtmlJsonLd on SEOHtml {
               'item': {
                 '@type': 'SiteNavigationElement',
                 'name': e.value.text,
-                'url': e.value.url,
+                'url': EasySEOManager.instance.formatFullUrl(e.value.url),
               },
             };
           })
@@ -536,7 +547,7 @@ extension SEOHtmlJsonLd on SEOHtml {
             '@type': 'ListItem',
             'position': e.key + 1,
             'name': e.value.text,
-            if (e.value.url.isNotEmpty) 'item': e.value.url,
+            if (e.value.url.isNotEmpty) 'item': EasySEOManager.instance.formatFullUrl(e.value.url),
           },
         ).toList(),
     };

@@ -100,12 +100,17 @@ class SeoRouteKey implements Comparable<SeoRouteKey> {
 ///   EasySEOTwitterTags(site: '@somepage')
 /// ]]
 /// ```
-/// * [pathProvider] - Optional delegate to retrieve the current active path from the routing context. If it is not provided and the app is run as a web-app,
-/// the path will be retrieved from the current browser url. If run on a non-web platform (e.g. widget tester, android) the current path must be provided by
-/// this function. For example with GoRouter:
-/// ```dart
-/// pathProvider: (context) => GoRouter.maybeOf(context)?.routerDelegate.currentConfiguration.uri.toString(),
-/// ```
+/// * [pathProvider] - Optional delegate to retrieve the current active path from the routing context.
+///   When omitted, the path is resolved through a built-in fallback chain:
+///   1. [pathProvider] is **required** when using routers that store symbolic route names instead of
+///   URL paths in `settings.name` (e.g. **GoRouter**, **Beamer**). For example:
+///       ```dart
+///       pathProvider: (context) => GoRouter.maybeOf(context)?.routerDelegate.currentConfiguration.uri.toString(),
+///       ```
+///   2. [ModalRoute.of(context)?.settings.name] — works automatically for **Navigator 1.0**,
+///      **auto_route**, **fluro**, and any router that stores the full path in `settings.name`.
+///   3. [URLHelper().getCurrentPath()] — browser URL on web (hash-routing aware), empty on native.
+///
 class EasySEOManager {
   // singleton
   EasySEOManager._internal();
@@ -271,13 +276,26 @@ class EasySEOManager {
       }
     }
   }
-  /// Returns the current active path, prioritizing the pathProvider with the given [context]
-  /// and falling back to URLHelper's current browser path.
+  /// Returns the current active path using a layered fallback strategy:
+  /// 1. [pathProvider] — explicit user-configured delegate (GoRouter, Beamer).
+  /// 2. [ModalRoute.of(context)?.settings.name] — native route name (Navigator 1.0, auto_route, fluro).
+  /// 3. [URLHelper().getCurrentPath()] — browser URL on web, empty string on native.
   String getCurrentPath(BuildContext context) {
+    // Layer 1: Explicit pathProvider (user-configured, e.g., GoRouter)
     if (pathProvider != null) {
       final path = pathProvider!(context);
-      if (path != null) return path;
+      if (path != null && path.isNotEmpty) return path;
     }
+
+    // Layer 2: ModalRoute from the build context (Navigator 1.0, auto_route, fluro)
+    final modalRoute = ModalRoute.of(context);
+    if (modalRoute != null &&
+        modalRoute.settings.name != null &&
+        modalRoute.settings.name!.isNotEmpty) {
+      return modalRoute.settings.name!;
+    }
+
+    // Layer 3: Browser URL via URLHelper (web) / '' (native)
     return URLHelper().getCurrentPath();
   }
   // ------ EasySEO widget registry ----------

@@ -45,10 +45,6 @@ class EasySEOFaqWrapper extends EasySEOBaseWrapper {
       jsonLd: {
         '@type': 'Question',
         'name': item.question,
-        'acceptedAnswer': {
-          '@type': 'Answer',
-          'text': item.answer,
-        },
       },
       children: [
         SEOH3(item.question, attributes: {'itemprop': 'name'}),
