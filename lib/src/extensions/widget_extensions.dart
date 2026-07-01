@@ -110,32 +110,35 @@ extension EasySEOWidgetExtension on Widget {
     );
   }
 
-  Widget easySeoSection({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
+  Widget easySeoSection({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const [], Map<String, dynamic>? jsonLd}) {
     return EasySEOSectionWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
       children: children,
+      jsonLd: jsonLd,
       child: this,
     );
   }
 
-  Widget easySeoArticle({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
+  Widget easySeoArticle({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const [], Map<String, dynamic>? jsonLd}) {
     return EasySEOArticleWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
       children: children,
+      jsonLd: jsonLd,
       child: this,
     );
   }
 
-  Widget easySeoMain({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const []}) {
+  Widget easySeoMain({String? className, Map<String, String>? attributes, String? globalName, List<SEOHtml> children = const [], Map<String, dynamic>? jsonLd}) {
     return EasySEOMainWrapper(
       className: className,
       attributes: attributes,
       globalName: globalName,
       children: children,
+      jsonLd: jsonLd,
       child: this,
     );
   }

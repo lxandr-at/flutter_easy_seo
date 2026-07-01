@@ -51,11 +51,20 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
         ? (hotel.reviews.map((r) => r.rating).reduce((a, b) => a + b) / hotel.reviews.length)
         : 0.0;
 
+    final slug = hotel.id;
+    final base = EasySEOManager.instance.getEffectiveCleanBaseUrl();
+    final langs = EasySEOManager.instance.supportedLanguages;
+    final headTags = <EasySEOHeadTag>[
+      EasySEOLinkTag.canonical('$base/${widget.locale}/hotels/$slug'),
+      ...langs.map((l) => EasySEOLinkTag.alternate(href: '$base/$l/hotels/$slug', lang: l)),
+      EasySEOLinkTag.alternate(href: '$base/${langs.first}/hotels/$slug', lang: 'x-default'),
+    ];
+
     final scrollable = SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildHotelSection(t, hotel, stars),
+          _buildHotelSection(t, hotel, stars, avgRating),
           _buildAmenities(t),
           _buildBookingSection(t, hotel, totalNights, totalPrice),
           _buildReviews(t, hotel),
@@ -63,34 +72,15 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
         ],
       ),
     ).easySeoMain(
-      children: [
-        SEOArticle(
-          jsonLd: {
-            '@type': 'Hotel',
-            'name': hotel.name,
-            'description': hotel.description,
-            'location': hotel.location,
-            'starRating': hotel.stars,
-            'priceRange': hotel.pricePerNight.toStringAsFixed(0),
-            if (hotel.reviews.isNotEmpty)
-              'aggregateRating': {
-                '@type': 'AggregateRating',
-                'ratingValue': avgRating.toStringAsFixed(1),
-                'reviewCount': hotel.reviews.length,
-              },
-          },
-          children: [
-            SEOH1(hotel.name),
-            SEOParagraph(hotel.description),
-          ],
-        ),
-      ],
+      children: [],
     );
     final mq = MediaQuery.of(context);
     return EasySEOPage(
       rank: 1,
       title: hotel.name,
       description: hotel.description,
+      headTags: headTags,
+      includeGlobals: ['navigation_breadcrumb'],
       child: Center(
         child: Card(
           margin: const EdgeInsets.all(24),
@@ -127,7 +117,7 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
     );
   }
 
-  Widget _buildHotelSection(Map<String, String> t, Hotel hotel, String stars) {
+  Widget _buildHotelSection(Map<String, String> t, Hotel hotel, String stars, double avgRating) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -163,10 +153,34 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
       ),
     ).easySeoSection(
       children: [
-        SEOH1(hotel.name),
-        SEOParagraph(hotel.description),
-        SEOSpan(hotel.location, attributes: {'itemprop': 'location'}),
+        SEOH1(hotel.name, attributes: {'itemprop': 'name'}),
+        SEOParagraph(hotel.description, attributes: {'itemprop': 'description'}),
       ],
+      jsonLd: {
+        '@type': 'Hotel',
+        'name': hotel.name,
+        'description': hotel.description,
+        'location': hotel.location,
+        'starRating': hotel.stars,
+        'priceRange': hotel.pricePerNight.toStringAsFixed(0),
+        if (hotel.reviews.isNotEmpty)
+          'aggregateRating': {
+            '@type': 'AggregateRating',
+            'ratingValue': avgRating.toStringAsFixed(1),
+            'reviewCount': hotel.reviews.length,
+          },
+        if (hotel.reviews.isNotEmpty)
+          'review': hotel.reviews.map((r) => {
+            '@type': 'Review',
+            'author': {'@type': 'Person', 'name': r.author},
+            'datePublished': r.date.toIso8601String(),
+            'reviewBody': r.text,
+            'reviewRating': {
+              '@type': 'Rating',
+              'ratingValue': r.rating,
+            },
+          }).toList(),
+      },
     );
   }
 
@@ -292,10 +306,6 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
           ReviewList(locale: widget.locale, reviews: hotel.reviews, hotelName: hotel.name),
         ],
       ),
-    ).easySeoSection(
-      children: [
-        SEOH2(t['hotel.reviews']!),
-      ],
     );
   }
 }

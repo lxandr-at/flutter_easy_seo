@@ -8,6 +8,7 @@ class EasySEOSectionWrapper extends EasySEOBaseWrapper {
     super.attributes,
     super.globalName,
     super.children,
+    super.jsonLd,
   });
 
   @override

@@ -120,12 +120,6 @@ class SEOWidgetTreeProcessor {
 
       int ownPriority = _headingPriority[html.tag] ?? 6;
       int ownOrder = html.tag == 'footer' ? 1 : 0;
-      for (final child in html.children) {
-        final childPrio = _headingPriority[child.tag];
-        if (childPrio != null && childPrio < ownPriority) {
-          ownPriority = childPrio;
-        }
-      }
       if (ownPriority < bubbledPriority) {
         bubbledPriority = ownPriority;
       }

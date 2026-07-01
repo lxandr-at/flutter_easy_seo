@@ -31,6 +31,6 @@ class Breadcrumb extends StatelessWidget {
           ),
         ],
       ],
-    ).easySeoNav(isBreadcrumb: true);
+    ).easySeoNav(isBreadcrumb: true, globalName: "navigation_breadcrumb");
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_seo/flutter_easy_seo.dart';
 import '../models/hotel.dart';
 
 class ReviewList extends StatelessWidget {
@@ -43,16 +42,6 @@ class ReviewList extends StatelessWidget {
           ],
         ),
       ),
-    ).easySeoArticle(
-      children: [
-        SEOH4(review.author, attributes: {'itemprop': 'author'}),
-        SEOTime(
-          text: dateStr,
-          dateTime: review.date,
-          attributes: {'itemprop': 'datePublished'},
-        ),
-        SEOParagraph(review.rating.toString(), attributes: {'itemprop': 'reviewRating'}),
-      ],
     );
   }
 }
