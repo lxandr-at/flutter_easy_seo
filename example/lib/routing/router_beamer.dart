@@ -24,12 +24,23 @@ class _AppBeamLocation extends BeamLocation<BeamState> {
     if (hotelMatch != null) {
       return [
         BeamPage(
-          key: ValueKey('shell-$locale'),
-          child: ShellLayout(locale: locale, child: _buildContent(path, locale)),
+          key: ValueKey('shell-$locale-${_contentKey(path, locale)}'),
+          child: ShellLayout(locale: locale, child: HotelListPage(locale: locale)),
         ),
         BeamPage(
           key: ValueKey('hotel-${hotelMatch.group(1)}'),
           opaque: false,
+          routeBuilder: (context, settings, child) => PageRouteBuilder(
+            opaque: false,
+            barrierDismissible: true,
+            barrierColor: Colors.black54,
+            settings: settings,
+            pageBuilder: (_, __, ___) => child,
+            transitionsBuilder: (_, animation, __, child) => FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          ),
           child: HotelDetailPage(locale: locale, hotelId: hotelMatch.group(1)!),
         ),
       ];
@@ -37,7 +48,7 @@ class _AppBeamLocation extends BeamLocation<BeamState> {
 
     return [
       BeamPage(
-        key: ValueKey('shell-$locale'),
+        key: ValueKey('shell-$locale-${_contentKey(path, locale)}'),
         child: ShellLayout(locale: locale, child: _buildContent(path, locale)),
       ),
     ];
@@ -48,6 +59,13 @@ class _AppBeamLocation extends BeamLocation<BeamState> {
     if (path == '/$locale/hotels') return HotelListPage(locale: locale);
     if (path == '/$locale/reservations') return ReservationsPage(locale: locale);
     return LandingPage(locale: locale);
+  }
+
+  String _contentKey(String path, String locale) {
+    if (path == '/$locale') return 'landing';
+    if (path.startsWith('/$locale/hotels')) return 'hotels';
+    if (path == '/$locale/reservations') return 'reservations';
+    return 'landing';
   }
 
   @override
@@ -77,8 +95,6 @@ class _BeamerRouterAdapter extends RouterAdapter {
             supportedLanguages: ['de', 'en', 'fr'],
             pages: ['/', '/hotels', '/hotels/:hotelId', '/reservations'],
             enableInteractiveMode: true,
-            pathProvider: (context) =>
-                (_beamerDelegate.currentBeamLocation.state as BeamState).uri.toString(),
             headTags: [
               const SEOServiceInfo(
                 serviceType: 'Hotel Reservation',
@@ -104,11 +120,12 @@ class _BeamerRouterAdapter extends RouterAdapter {
   }
 
   @override
-  void push(BuildContext context, String path) => context.beamToNamed(path);
+  void push(BuildContext context, String path) =>
+      _beamerDelegate.beamToNamed(path);
 
   @override
   void go(BuildContext context, String path) =>
-      context.beamToNamed(path, replaceRouteInformation: true);
+      _beamerDelegate.beamToNamed(path, replaceRouteInformation: true);
 
   @override
   void pop(BuildContext context) {

@@ -1,18 +1,36 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/app_translations.dart';
+import '../providers/breadcrumb_provider.dart';
 import '../routing/nav_adapter.dart';
 import '../widgets/breadcrumb.dart';
 import '../widgets/faq_block.dart';
 import '../widgets/raw_seo_demo.dart';
 
-class LandingPage extends StatelessWidget {
+@RoutePage()
+class LandingPage extends ConsumerStatefulWidget {
   final String locale;
-  const LandingPage({super.key, required this.locale});
+  const LandingPage({super.key, @PathParam.inherit('locale') required this.locale});
+
+  @override
+  ConsumerState<LandingPage> createState() => _LandingPageState();
+}
+
+class _LandingPageState extends ConsumerState<LandingPage> {
+  bool _breadcrumbSet = false;
 
   @override
   Widget build(BuildContext context) {
-    final t = translations(locale);
+    final t = translations(widget.locale);
+    if (!_breadcrumbSet) {
+      _breadcrumbSet = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(breadcrumbProvider.notifier).clear();
+      });
+    }
+
     final body = SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -20,7 +38,7 @@ class LandingPage extends StatelessWidget {
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Breadcrumb(locale: locale, labels: const [], slugs: const []),
+            child: Breadcrumb(locale: widget.locale),
           ),
           _buildHero(context, t),
           _buildFeatures(t),
@@ -69,7 +87,7 @@ class LandingPage extends StatelessWidget {
           Text(t['landing.hero.subtitle']!, style: const TextStyle(fontSize: 15, color: Colors.white70)),
           const SizedBox(height: 20),
           FilledButton.icon(
-            onPressed: () => RouterAdapter.of(context).go(context, '/$locale/hotels'),
+            onPressed: () => RouterAdapter.of(context).go(context, '/${widget.locale}/hotels'),
             icon: const Icon(Icons.search),
             label: Text(t['landing.cta']!),
           ),
@@ -116,7 +134,7 @@ class LandingPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: FaqBlock(
-        locale: locale,
+        locale: widget.locale,
         items: [
           FaqItem(question: t['faq.q1']!, answer: t['faq.a1']!),
           FaqItem(question: t['faq.q2']!, answer: t['faq.a2']!),

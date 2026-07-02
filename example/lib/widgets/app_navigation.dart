@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
-import 'package:go_router/go_router.dart';
+import '../routing/nav_adapter.dart';
 import '../l10n/app_translations.dart';
 
 class AppNavigation extends StatelessWidget {
@@ -34,17 +34,19 @@ class AppNavigation extends StatelessWidget {
   }
 
   int _currentIndex(BuildContext context) {
-    final location = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
-    if (location.contains('/hotels')) return 1;
-    if (location.contains('/reservations')) return 2;
+    try {
+      final location = RouterAdapter.of(context).getCurrentPath(context);
+      if (location.contains('/hotels')) return 1;
+      if (location.contains('/reservations')) return 2;
+    } catch (_) {}
     return 0;
   }
 
   void _onTap(BuildContext context, int index) {
     switch (index) {
-      case 0: context.go('/$locale'); break;
-      case 1: context.go('/$locale/hotels'); break;
-      case 2: context.go('/$locale/reservations'); break;
+      case 0: RouterAdapter.of(context).go(context, '/$locale'); break;
+      case 1: RouterAdapter.of(context).go(context, '/$locale/hotels'); break;
+      case 2: RouterAdapter.of(context).go(context, '/$locale/reservations'); break;
     }
   }
 }

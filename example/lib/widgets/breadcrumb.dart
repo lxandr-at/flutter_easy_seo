@@ -1,33 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/app_translations.dart';
+import '../providers/breadcrumb_provider.dart';
+import '../routing/nav_adapter.dart';
 
-class Breadcrumb extends StatelessWidget {
+class Breadcrumb extends ConsumerWidget {
   final String locale;
-  final List<String> labels;
-  final List<String> slugs;
 
-  const Breadcrumb({
-    super.key,
-    required this.locale,
-    required this.labels,
-    required this.slugs,
-  });
+  const Breadcrumb({super.key, required this.locale});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = translations(locale);
+    final segments = ref.watch(breadcrumbProvider);
 
     return Row(
       children: [
-        Text(t['nav.home']!, style: const TextStyle(fontSize: 13))
-            .easySeoNavAnchor(path: '/$locale', text: t['nav.home']!),
-        for (var i = 0; i < labels.length; i++) ...[
+        GestureDetector(
+          onTap: () => RouterAdapter.of(context).go(context, '/$locale'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+            child: Text(t['nav.home']!, style: const TextStyle(fontSize: 13)),
+          ),
+        ).easySeoNavAnchor(path: '/$locale', text: t['nav.home']!),
+        for (var i = 0; i < segments.length; i++) ...[
           const Text(' › ', style: TextStyle(color: Colors.grey)),
-          Text(labels[i], style: const TextStyle(fontSize: 13))
-              .easySeoNavAnchor(
-            path: '/$locale/${slugs.sublist(0, i + 1).join('/')}',
-            text: labels[i],
+          GestureDetector(
+            onTap: () => RouterAdapter.of(context).go(
+              context,
+              '/$locale/${segments.sublist(0, i + 1).map((s) => s.slug).join('/')}',
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+              child: Text(segments[i].label, style: const TextStyle(fontSize: 13)),
+            ),
+          ).easySeoNavAnchor(
+            path: '/$locale/${segments.sublist(0, i + 1).map((s) => s.slug).join('/')}',
+            text: segments[i].label,
           ),
         ],
       ],

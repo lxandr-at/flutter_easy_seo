@@ -1,18 +1,21 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/app_translations.dart';
 import '../models/hotel.dart';
+import '../providers/breadcrumb_provider.dart';
 import '../providers/hotel_provider.dart';
 import '../providers/reservation_provider.dart';
 import '../routing/nav_adapter.dart';
 import '../widgets/calendar.dart';
 import '../widgets/review_list.dart';
 
+@RoutePage()
 class HotelDetailPage extends ConsumerStatefulWidget {
   final String locale;
   final String hotelId;
-  const HotelDetailPage({super.key, required this.locale, required this.hotelId});
+  const HotelDetailPage({super.key, @PathParam('locale') required this.locale, @PathParam('hotelId') required this.hotelId});
 
   @override
   ConsumerState<HotelDetailPage> createState() => _HotelDetailPageState();
@@ -22,6 +25,22 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
   DateTime? _checkIn;
   DateTime? _checkOut;
   String _roomType = 'Standard';
+  bool _breadcrumbPushed = false;
+  late final BreadcrumbNotifier _breadcrumbNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _breadcrumbNotifier = ref.read(breadcrumbProvider.notifier);
+  }
+
+  @override
+  void dispose() {
+    if (_breadcrumbPushed) {
+      Future.microtask(() => _breadcrumbNotifier.pop());
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +60,15 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
       );
     }
 
+    if (!_breadcrumbPushed) {
+      _breadcrumbPushed = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(breadcrumbProvider.notifier).push(
+          BreadcrumbSegment(label: hotel.name, slug: hotel.id),
+        );
+      });
+    }
+
     final stars = '★' * hotel.stars;
     final totalNights = _checkIn != null && _checkOut != null
         ? _checkOut!.difference(_checkIn!).inDays
@@ -50,15 +78,6 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
     final avgRating = hotel.reviews.isNotEmpty
         ? (hotel.reviews.map((r) => r.rating).reduce((a, b) => a + b) / hotel.reviews.length)
         : 0.0;
-
-    final slug = hotel.id;
-    final base = EasySEOManager.instance.getEffectiveCleanBaseUrl();
-    final langs = EasySEOManager.instance.supportedLanguages;
-    final headTags = <EasySEOHeadTag>[
-      EasySEOLinkTag.canonical('$base/${widget.locale}/hotels/$slug'),
-      ...langs.map((l) => EasySEOLinkTag.alternate(href: '$base/$l/hotels/$slug', lang: l)),
-      EasySEOLinkTag.alternate(href: '$base/${langs.first}/hotels/$slug', lang: 'x-default'),
-    ];
 
     final scrollable = SingleChildScrollView(
       child: Column(
@@ -79,7 +98,6 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
       rank: 1,
       title: hotel.name,
       description: hotel.description,
-      headTags: headTags,
       includeGlobals: ['navigation_breadcrumb'],
       child: Center(
         child: Card(
@@ -160,7 +178,10 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
         '@type': 'Hotel',
         'name': hotel.name,
         'description': hotel.description,
-        'location': hotel.location,
+        'location': {
+  '@type': 'PostalAddress',
+  'addressLocality': hotel.location,
+},
         'starRating': hotel.stars,
         'priceRange': hotel.pricePerNight.toStringAsFixed(0),
         if (hotel.reviews.isNotEmpty)

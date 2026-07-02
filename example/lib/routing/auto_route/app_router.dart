@@ -7,11 +7,8 @@ import 'app_router.gr.dart';
 import 'auto_shell.dart';
 
 Route<T> _buildDialogRoute<T>(BuildContext context, Widget child, AutoRoutePage<T> page) {
-  final params = page.routeData.pathParams;
-  final locale = params.getString('locale', 'de');
-  final hotelId = params.getString('hotelId', '');
   return PageRouteBuilder<T>(
-    settings: RouteSettings(name: '/$locale/hotels/$hotelId'),
+    settings: page,
     pageBuilder: (_, __, ___) => child,
     opaque: false,
     barrierDismissible: true,
@@ -23,7 +20,7 @@ Route<T> _buildDialogRoute<T>(BuildContext context, Widget child, AutoRoutePage<
 }
 
 @AutoRouterConfig(replaceInRouteName: 'Page,Route')
-class AppRouter extends $AppRouter {
+class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(

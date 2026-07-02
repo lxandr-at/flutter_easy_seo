@@ -48,16 +48,16 @@ class _AutoRouteRouterAdapter extends RouterAdapter {
 
   @override
   void push(BuildContext context, String path) =>
-      context.router.pushNamed(path);
+      context.router.root.pushPath(path);
 
   @override
   void go(BuildContext context, String path) =>
-      context.router.replaceNamed(path);
+      context.router.root.navigatePath(path);
 
   @override
   void pop(BuildContext context) {
     final router = AutoRouter.of(context);
-    if (router.canPop()) router.popForced();
+    router.pop();
   }
 
   @override
