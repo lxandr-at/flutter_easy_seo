@@ -103,8 +103,14 @@ class _VanillaRouterAdapter extends RouterAdapter {
       Navigator.pushNamed(context, path);
 
   @override
-  void go(BuildContext context, String path) =>
+  void go(BuildContext context, String path) {
+    final route = _onGenerateRoute(RouteSettings(name: path));
+    if (route is ModalRoute && !route.opaque) {
+      Navigator.pushNamed(context, path);
+    } else {
       Navigator.pushNamedAndRemoveUntil(context, path, (_) => false);
+    }
+  }
 
   @override
   void pop(BuildContext context) {

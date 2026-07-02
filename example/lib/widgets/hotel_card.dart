@@ -17,7 +17,7 @@ class HotelCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => RouterAdapter.of(context).push(context, '/$locale/hotels/${hotel.id}'),
+        onTap: () => RouterAdapter.of(context).go(context, '/$locale/hotels/${hotel.id}'),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(

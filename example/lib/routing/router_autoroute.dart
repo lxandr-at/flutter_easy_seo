@@ -20,6 +20,7 @@ class _AutoRouteRouterAdapter extends RouterAdapter {
             supportedLanguages: ['de', 'en', 'fr'],
             pages: ['/', '/hotels', '/hotels/:hotelId', '/reservations'],
             enableInteractiveMode: true,
+            pathProvider: (context) => context.router.currentPath,
             headTags: [
               const SEOServiceInfo(
                 serviceType: 'Hotel Reservation',
@@ -62,8 +63,7 @@ class _AutoRouteRouterAdapter extends RouterAdapter {
 
   @override
   String getCurrentPath(BuildContext context) {
-    final route = ModalRoute.of(context);
-    return route?.settings.name ?? '';
+    return context.router.currentPath;
   }
 
   @override

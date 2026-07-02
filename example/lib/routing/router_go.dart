@@ -11,8 +11,12 @@ import '../widgets/shell_layout.dart';
 import 'nav_adapter.dart';
 
 class _GoRouterAdapter extends RouterAdapter {
+  final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
+
   @override
   Widget buildApp(String initialLocale) {
+    GoRouter.optionURLReflectsImperativeAPIs = true;
     final router = _createRouter(initialLocale);
 
     return ProviderScope(
@@ -50,9 +54,12 @@ class _GoRouterAdapter extends RouterAdapter {
 
   GoRouter _createRouter(String initialLocale) {
     return GoRouter(
+      navigatorKey: _rootNavigatorKey,
       initialLocation: '/$initialLocale',
       routes: [
+        // 1. The Main Shell Route for normal pages sharing the ShellLayout
         ShellRoute(
+          navigatorKey: _shellNavigatorKey,
           builder: (context, state, child) =>
               ShellLayout(locale: _localeFromState(state), child: child),
           routes: [
@@ -60,21 +67,28 @@ class _GoRouterAdapter extends RouterAdapter {
               path: '/:locale',
               builder: (context, state) =>
                   LandingPage(locale: _localeFromState(state)),
-            ),
-            GoRoute(
-              path: '/:locale/hotels',
-              builder: (context, state) =>
-                  HotelListPage(locale: _localeFromState(state)),
-            ),
-            GoRoute(
-              path: '/:locale/reservations',
-              builder: (context, state) =>
-                  ReservationsPage(locale: _localeFromState(state)),
+              routes: [
+                GoRoute(
+                  path: 'hotels',
+                  builder: (context, state) =>
+                      HotelListPage(locale: _localeFromState(state)),
+                ),
+                GoRoute(
+                  path: 'reservations',
+                  builder: (context, state) =>
+                      ReservationsPage(locale: _localeFromState(state)),
+                ),
+              ],
             ),
           ],
         ),
+
+        // 2. Clear Root-Level Route for the Dialog Page.
+        // This changes the browser URL and places the DialogPage on the root navigator
+        // without breaking the widget tree deactivation lifecycle.
         GoRoute(
           path: '/:locale/hotels/:hotelId',
+          parentNavigatorKey: _rootNavigatorKey,
           pageBuilder: (context, state) => DialogPage(
             key: state.pageKey,
             child: HotelDetailPage(
