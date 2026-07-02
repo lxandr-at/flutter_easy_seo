@@ -92,6 +92,7 @@ void main() {
       enableInteractiveMode: kDebugMode, // enable interactive mode in debug mode
       enableLiveOutput: kDebugMode, // inject to DOM in debug mode
       baseUrl: "https://mysite.com",
+      pathProvider: // **REQUIRED when using router packages**
    );
    runApp(const MyApp());
 }
@@ -116,7 +117,7 @@ class MyApp extends StatelessWidget {
    }
 }
 ```
-This will generate the following HMTL and sitemap.xml:
+The simple example above will generate the following HTML and sitemap.xml:
 ```html
 <!DOCTYPE html>
 <html lang="de">
@@ -147,6 +148,35 @@ This will generate the following HMTL and sitemap.xml:
   </url>
 </urlset>
 ```
+
+### Providing a `pathProvider` for Declarative Routers
+
+`EasySEOManager.getCurrentPath()` retrieves the resolved URL path to populate meta tags like `og:url`.
+It resolves the path using a three-layer fallback chain:
+
+1. **`pathProvider`** callback (explicitly configured) — highest priority.
+2. **`ModalRoute.of(context)?.settings.name`** — fallback for Navigator 1.0 routers where `settings.name` tores the literal URL path (e.g., vanilla `MaterialApp`, `fluro`)
+3. **Browser URL** via `URLHelper().getCurrentPath()` — web only (unavailable in widget testers).
+
+### Why Declarative Routers Need an Explicit `pathProvider`
+
+Declarative routers like **GoRouter**, **auto_route**, and **Beamer** use `settings.name`
+to store internal symbolic names or configuration keys rather than concrete runtime URL paths.
+
+Without an explicit `pathProvider`, your generated `og:url` tags will fall back to internal route tokens (e.g., `HotelDetailRoute` or `hotel_details`) instead of the true browser path (e.g., `/de/hotels/2`).
+
+To ensure accurate SEO tracking, configure the `pathProvider` in `EasySEOManager.instance.init` for your specific routing engine:
+
+```dart
+// GoRouter
+pathProvider: (context) => GoRouter.maybeOf(context) ?.routerDelegate.currentConfiguration.uri.toString(),
+// auto_route
+pathProvider: (context) => context.router.currentPath,
+// Beamer
+pathProvider: (context) => (Beamer.of(context).currentBeamLocation.state as BeamState).uri.toString(),
+```
+
+Note: Vanilla Navigator 1.0 requires no configuration; its `settings.name` natively mirrors the literal URL path.
 
 ## Widget wrappers and HTML output
 Although both Flutter and HTML rely on a tree structure to define content, a Flutter widget tree cannot be converted into an HTML document entirely automatically. To generate optimized SEO metadata, we must explicitly flag specific parts of the widget tree. This architectural approach is necessary for several reasons:

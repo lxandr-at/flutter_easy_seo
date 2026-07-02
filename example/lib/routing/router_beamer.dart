@@ -95,6 +95,7 @@ class _BeamerRouterAdapter extends RouterAdapter {
             supportedLanguages: ['de', 'en', 'fr'],
             pages: ['/', '/hotels', '/hotels/:hotelId', '/reservations'],
             enableInteractiveMode: true,
+            pathProvider: (context) => (_beamerDelegate.currentBeamLocation.state as BeamState).uri.toString(),
             headTags: [
               const SEOServiceInfo(
                 serviceType: 'Hotel Reservation',

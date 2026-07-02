@@ -102,13 +102,21 @@ class SeoRouteKey implements Comparable<SeoRouteKey> {
 /// ```
 /// * [pathProvider] - Optional delegate to retrieve the current active path from the routing context.
 ///   When omitted, the path is resolved through a built-in fallback chain:
-///   1. [pathProvider] is **required** when using routers that store symbolic route names instead of
-///   URL paths in `settings.name` (e.g. **GoRouter**, **Beamer**). For example:
+///   1. [pathProvider] is **required** for most declarative routers (**GoRouter**, **auto_route**,
+///   **Beamer**) because they store symbolic route names or keys in `ModalRoute.settings.name`
+///   instead of URL paths. Examples:
 ///       ```dart
-///       pathProvider: (context) => GoRouter.maybeOf(context)?.routerDelegate.currentConfiguration.uri.toString(),
+///       // GoRouter
+///       pathProvider: (context) => GoRouter.maybeOf(context)
+///           ?.routerDelegate.currentConfiguration.uri.toString(),
+///       // auto_route
+///       pathProvider: (context) => context.router.currentPath,
+///       // Beamer
+///       pathProvider: (context) =>
+///           (Beamer.of(context).currentBeamLocation.state as BeamState).uri.toString(),
 ///       ```
-///   2. [ModalRoute.of(context)?.settings.name] — works automatically for **Navigator 1.0**,
-///      **auto_route**, **fluro**, and any router that stores the full path in `settings.name`.
+///   2. [ModalRoute.of(context)?.settings.name] — works automatically only for **Navigator 1.0**
+///      (e.g. vanilla `MaterialApp`, **fluro**), where `settings.name` equals the URL path.
 ///   3. [URLHelper().getCurrentPath()] — browser URL on web (hash-routing aware), empty on native.
 ///
 class EasySEOManager {
@@ -172,7 +180,9 @@ class EasySEOManager {
 
   EasySEOOnGenerateCallback? onGenerate;
 
-  /// Optional provider to get the current path from the context (e.g. from GoRouter)
+  /// Optional provider to get the current path from the context.
+  /// Required for GoRouter, auto_route, Beamer — routers that store symbolic
+  /// names in `settings.name` instead of the actual URL path.
   String? Function(BuildContext)? pathProvider;
 
   // This is now directly accessible via EasySEOConfig.instance.globals
@@ -277,8 +287,8 @@ class EasySEOManager {
     }
   }
   /// Returns the current active path using a layered fallback strategy:
-  /// 1. [pathProvider] — explicit user-configured delegate (GoRouter, Beamer).
-  /// 2. [ModalRoute.of(context)?.settings.name] — native route name (Navigator 1.0, auto_route, fluro).
+  /// 1. [pathProvider] — explicit user-configured delegate (GoRouter, auto_route, Beamer).
+  /// 2. [ModalRoute.of(context)?.settings.name] — works for Navigator 1.0 (vanilla, fluro).
   /// 3. [URLHelper().getCurrentPath()] — browser URL on web, empty string on native.
   String getCurrentPath(BuildContext context) {
     // Layer 1: Explicit pathProvider (user-configured, e.g., GoRouter)
