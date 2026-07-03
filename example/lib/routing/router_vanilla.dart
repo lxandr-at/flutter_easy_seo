@@ -18,7 +18,7 @@ class _VanillaRouterAdapter extends RouterAdapter {
           EasySEOManager.instance.init(
             baseUrl: 'https://hotel-booking.example.com',
             supportedLanguages: ['de', 'en', 'fr'],
-            pages: ['/', '/hotels', '/hotels/:hotelId', '/reservations'],
+            pages: ['/', '/hotels', '/hotels/:hotelId'],
             enableInteractiveMode: true,
             headTags: [
               const SEOServiceInfo(

@@ -25,10 +25,9 @@ class _GoRouterAdapter extends RouterAdapter {
           EasySEOManager.instance.init(
             baseUrl: 'https://hotel-booking.example.com',
             supportedLanguages: ['de', 'en', 'fr'],
-            pages: ['/', '/hotels', '/hotels/:hotelId', '/reservations'],
+            pages: ['/', '/hotels', '/hotels/:hotelId'],
             enableInteractiveMode: true,
-            pathProvider: (context) => GoRouter.maybeOf(context)
-                ?.routerDelegate.currentConfiguration.uri.toString(),
+            pathProvider: (context) => GoRouter.maybeOf(context)?.routerDelegate.currentConfiguration.uri.toString(),
             headTags: [
               const SEOServiceInfo(
                 serviceType: 'Hotel Reservation',
@@ -60,42 +59,36 @@ class _GoRouterAdapter extends RouterAdapter {
         // 1. The Main Shell Route for normal pages sharing the ShellLayout
         ShellRoute(
           navigatorKey: _shellNavigatorKey,
-          builder: (context, state, child) =>
-              ShellLayout(locale: _localeFromState(state), child: child),
+          builder: (context, state, child) => ShellLayout(locale: _localeFromState(state), child: child),
           routes: [
             GoRoute(
               path: '/:locale',
-              builder: (context, state) =>
-                  LandingPage(locale: _localeFromState(state)),
+              builder: (context, state) => LandingPage(locale: _localeFromState(state)),
               routes: [
                 GoRoute(
                   path: 'hotels',
-                  builder: (context, state) =>
-                      HotelListPage(locale: _localeFromState(state)),
+                  builder: (context, state) => HotelListPage(locale: _localeFromState(state)),
+                  routes: [
+                    GoRoute(
+                      path: ':hotelId',
+                      //parentNavigatorKey: _shellNavigatorKey,
+                      pageBuilder: (context, state) => DialogPage(
+                        key: state.pageKey,
+                        child: HotelDetailPage(
+                          locale: _localeFromState(state),
+                          hotelId: state.pathParameters['hotelId']!,
+                        ),
+                      ),
+                    ),
+                  ]
                 ),
                 GoRoute(
                   path: 'reservations',
-                  builder: (context, state) =>
-                      ReservationsPage(locale: _localeFromState(state)),
+                  builder: (context, state) => ReservationsPage(locale: _localeFromState(state)),
                 ),
               ],
             ),
           ],
-        ),
-
-        // 2. Clear Root-Level Route for the Dialog Page.
-        // This changes the browser URL and places the DialogPage on the root navigator
-        // without breaking the widget tree deactivation lifecycle.
-        GoRoute(
-          path: '/:locale/hotels/:hotelId',
-          parentNavigatorKey: _rootNavigatorKey,
-          pageBuilder: (context, state) => DialogPage(
-            key: state.pageKey,
-            child: HotelDetailPage(
-              locale: _localeFromState(state),
-              hotelId: state.pathParameters['hotelId']!,
-            ),
-          ),
         ),
       ],
     );

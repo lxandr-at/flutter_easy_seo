@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_seo/flutter_easy_seo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/app_translations.dart';
 import '../models/hotel.dart';
@@ -54,19 +53,12 @@ class _ReservationsPageState extends ConsumerState<ReservationsPage> {
           else
             Column(
               children: reservations.map((r) => _buildReservationCard(t, r)).toList(),
-            ).easySeoList(),
+            ),
           const SizedBox(height: 24),
         ],
       ),
-    ).easySeoMain(
-      children: [
-        SEOH1(t['reservation.title']!),
-      ],
     );
-    return EasySEOPage(
-      title: t['reservation.title']!,
-      child: body,
-    );
+    return body;
   }
 
   Widget _buildReservationCard(Map<String, String> t, Reservation r) {
@@ -107,40 +99,6 @@ class _ReservationsPageState extends ConsumerState<ReservationsPage> {
           ],
         ),
       ),
-    ).easySeoListItem(
-      children: [
-        SEODiv(
-          attributes: {'itemprop': 'item'},
-          jsonLd: {
-            '@type': 'HotelReservation',
-            'reservationFor': {
-              '@type': 'Hotel',
-              'name': r.hotelName,
-            },
-          },
-          children: [
-            SEOTime(
-              text: t['reservation.checkIn'],
-              dateTime: r.checkIn,
-              attributes: {'itemprop': 'checkinDate'},
-            ),
-            SEOTime(
-              text: t['reservation.checkOut'],
-              dateTime: r.checkOut,
-              attributes: {'itemprop': 'checkoutDate'},
-            ),
-            SEODiv(
-              jsonLd: {
-                '@type': 'MonetaryAmount',
-                'value': r.totalPrice,
-                'currency': 'EUR',
-              },
-              attributes: {'itemprop': 'totalPrice'},
-            ),
-          ],
-        ),
-        SEOH3(r.hotelName, attributes: {'itemprop': 'name'}),
-      ],
     );
   }
 }
