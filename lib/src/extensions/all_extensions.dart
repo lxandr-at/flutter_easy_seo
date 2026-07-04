@@ -88,12 +88,34 @@ extension NavigationRailSEO on NavigationRail {
 extension BottomNavigationBarSEO on BottomNavigationBar {
   Widget easySeo({
     bool isBreadcrumb = false,
+    String? globalName,
     String? className,
     Map<String, String>? attributes,
     List<SEOHtml> children = const [],
   }) {
     return EasySEONavWrapper(
       isBreadcrumb: isBreadcrumb,
+      globalName: globalName,
+      className: className,
+      attributes: attributes,
+      children: children,
+      child: this,
+    );
+  }
+}
+
+/// Extension for BottomNavigationBar widgets to add SEO capabilities
+extension NavigationBarSEO on NavigationBar {
+  Widget easySeo({
+    bool isBreadcrumb = false,
+    String? globalName,
+    String? className,
+    Map<String, String>? attributes,
+    List<SEOHtml> children = const [],
+  }) {
+    return EasySEONavWrapper(
+      isBreadcrumb: isBreadcrumb,
+      globalName: globalName,
       className: className,
       attributes: attributes,
       children: children,

@@ -54,13 +54,14 @@ class _HotelListPageState extends ConsumerState<HotelListPage> {
       ),
     ).easySeoMain(
       children: [
-        SEOH1(t['nav.hotels']!),
+        SEOH2(t['nav.hotels']!),
       ],
     );
     return EasySEOPage(
       rank: 0,
       title: t['nav.hotels']!,
       description: t['landing.hero.subtitle'],
+      includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],
       child: body,
     );
   }

@@ -90,15 +90,13 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
           const SizedBox(height: 32),
         ],
       ),
-    ).easySeoMain(
-      children: [],
-    );
+    ).easySeoMain();
     final mq = MediaQuery.of(context);
     return EasySEOPage(
       rank: 1,
       title: hotel.name,
       description: hotel.description,
-      includeGlobals: ['navigation_breadcrumb'],
+      includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],
       child: Center(
         child: Card(
           margin: const EdgeInsets.all(24),

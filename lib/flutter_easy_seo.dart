@@ -8,8 +8,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:meta/meta.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p; // Pure Dart package, no Flutter dependency
-import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 // Import the "facade" which handles the platform switching
 import 'src/output/easy_seo_file_output_facade.dart';

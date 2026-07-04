@@ -11,26 +11,15 @@ class AppNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = translations(locale);
-    return BottomNavigationBar(
-      currentIndex: _currentIndex(context),
-      onTap: (index) => _onTap(context, index),
-      items: [
-        BottomNavigationBarItem(icon: const Icon(Icons.home), label: t['nav.home']!),
-        BottomNavigationBarItem(icon: const Icon(Icons.hotel), label: t['nav.hotels']!),
-        BottomNavigationBarItem(icon: const Icon(Icons.calendar_today), label: t['reservation.title']!),
+    return NavigationBar(
+      selectedIndex: _currentIndex(context),
+      onDestinationSelected: (index) => _onTap(context, index),
+      destinations: [
+        NavigationDestination(icon: const Icon(Icons.home), label: t['nav.home']!).easySeoNavAnchor(path: '/$locale', text: t['nav.home']!),
+        NavigationDestination(icon: const Icon(Icons.hotel), label: t['nav.hotels']!).easySeoNavAnchor(path: '/$locale/hotels', text: t['nav.hotels']!),
+        NavigationDestination(icon: const Icon(Icons.calendar_today), label: t['reservation.title']!),
       ],
-    ).easySeoNav(
-      globalName: 'app-nav',
-      children: [
-        SEONav(
-          jsonLd: SEOHtmlJsonLd.siteNavigationData([
-            SEONavItem(text: t['nav.home']!, url: '/$locale'),
-            SEONavItem(text: t['nav.hotels']!, url: '/$locale/hotels'),
-            SEONavItem(text: t['reservation.title']!, url: '/$locale/reservations'),
-          ]),
-        ),
-      ],
-    );
+    ).easySeo(globalName: 'app-nav');
   }
 
   int _currentIndex(BuildContext context) {
