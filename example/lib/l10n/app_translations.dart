@@ -3,6 +3,12 @@ class AppTranslations {
 
   static const _data = <String, Map<String, String>>{
     'de': {
+      'demo.landing.title': 'Flutter Easy SEO Demo | Live Hotel Buchungsplattform',
+      'demo.landing.description': 'Live-Demo des flutter_easy_seo Packages. Im interaktiven Modus können Sie die generierte SEO-freundliche HTML-Struktur und die sitemap.xml live in der Vorschau prüfen.',
+      'demo.hotels.title': 'Hotels in Europa durchsuchen | Flutter Easy SEO Listing Demo',
+      'demo.hotels.description': 'Diese Seite demonstriert, wie das Package ein vollständiges, SEO-freundliches HTML-Dokument mit Headern, Footern, Navigationsmenüs und dem zentralen Hauptinhalt aufbaut.',
+      'demo.hotelsdetail.title': '| Dynamic Entity - Flutter Easy SEO',
+      'demo.hotelsdetail.description': 'Sehen Sie, wie flutter_easy_seo einen Flutter-Popup-Dialog als eigenständige, SEO-optimierte HTML-Unterseite rendert, inklusive dynamischem JSON-LD Entity-Schema.',
       'app.title': 'Hotel Buchungsplattform',
       'nav.home': 'Startseite',
       'nav.hotels': 'Hotels',
@@ -74,6 +80,12 @@ class AppTranslations {
       'calendar.sun': 'So',
     },
     'en': {
+      'demo.landing.title': 'Flutter Easy SEO Demo | Live Hotel Booking Platform',
+      'demo.landing.description': 'Live showcase for the flutter_easy_seo package. The Interactive Mode lets you preview the generated SEO-friendly HTML and sitemap.xml.',
+      'demo.hotels.title': 'Browse Hotels in Europe | Flutter Easy SEO Listing Demo',
+      'demo.hotels.description': 'This page demonstrates how the package constructs a complete SEO-friendly HTML document with headers, footers, navigation menus, and core main content.',
+      'demo.hotelsdetail.title': '| Dynamic Entity - Flutter Easy SEO',
+      'demo.hotelsdetail.description': 'See how flutter_easy_seo translates a Flutter popup dialog state into a fully indexable HTML route with dynamically hydrated JSON-LD entity schemas.',
       'app.title': 'Hotel Booking Platform',
       'nav.home': 'Home',
       'nav.hotels': 'Hotels',
@@ -145,6 +157,12 @@ class AppTranslations {
       'calendar.sun': 'Sun',
     },
     'fr': {
+      'demo.landing.title': 'Démo Flutter Easy SEO | Exemple de Réservation d''Hôtel',
+      'demo.landing.description': 'Démonstration en direct du package flutter_easy_seo. Le mode interactif vous permet de prévisualiser le sitemap.xml et le code HTML optimisé pour le SEO.',
+      'demo.hotels.title': 'Parcourir les Hôtels en Europe | Démo Listing Flutter Easy SEO',
+      'demo.hotels.description': 'Cette page démontre comment le package construit un document HTML complet et optimisé pour le SEO, avec en-têtes, pieds de page, menus de navigation et contenu principal.',
+      'demo.hotelsdetail.title': '| Entité Dynamique - Flutter Easy SEO',
+      'demo.hotelsdetail.description': 'Découvrez comment flutter_easy_seo convertit une boîte de dialogue contextuelle (popup) Flutter en une route HTML indexable avec des schémas d''entité JSON-LD dynamiques.',
       'app.title': 'Plateforme de Réservation Hôtelière',
       'nav.home': 'Accueil',
       'nav.hotels': 'Hôtels',

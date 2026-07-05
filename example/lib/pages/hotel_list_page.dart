@@ -59,8 +59,8 @@ class _HotelListPageState extends ConsumerState<HotelListPage> {
     );
     return EasySEOPage(
       rank: 0,
-      title: t['nav.hotels']!,
-      description: t['landing.hero.subtitle'],
+      title: t['demo.hotels.title']!,
+      description: t['demo.hotels.description'],
       includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],
       child: body,
     );

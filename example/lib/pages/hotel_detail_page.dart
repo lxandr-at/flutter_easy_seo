@@ -94,8 +94,8 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
     final mq = MediaQuery.of(context);
     return EasySEOPage(
       rank: 1,
-      title: hotel.name,
-      description: hotel.description,
+      title: '${hotel.name} ${t['demo.hotelsdetail.title']}',
+      description: t['demo.hotelsdetail.description'],
       includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],
       child: Center(
         child: Card(

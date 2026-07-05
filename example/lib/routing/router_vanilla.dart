@@ -16,7 +16,7 @@ class _VanillaRouterAdapter extends RouterAdapter {
       child: Builder(
         builder: (context) {
           EasySEOManager.instance.init(
-            baseUrl: 'https://hotel-booking.example.com',
+            baseUrl: 'https://fluttereasyseo.lxandr.at/example',
             supportedLanguages: ['de', 'en', 'fr'],
             pages: ['/', '/hotels', '/hotels/:hotelId'],
             enableInteractiveMode: true,

@@ -63,8 +63,8 @@ class _LandingPageState extends ConsumerState<LandingPage> {
       ],
     );
     return EasySEOPage(
-      title: t['app.title']!,
-      description: t['landing.hero.subtitle'],
+      title: t['demo.landing.title']!,
+      description: t['demo.landing.description'],
       includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],
       child: body,
     );
