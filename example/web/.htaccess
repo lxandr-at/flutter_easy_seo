@@ -31,32 +31,45 @@ DirectoryIndex index.html
   RewriteBase /example/
 
   # ============================================================
+  # TRAILING SLASH NORMALIZATION FOR NAKED /example CALLS
+  # ============================================================
+  # If someone hits 'domain.com/example', cleanly append the slash
+  # so the browser properly executes the <base href="/example/"> tag.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_URI} !(.*)/$
+  RewriteRule ^(.*)$ /example/$1/ [R=301,L]
+
+  # ============================================================
   # SECTION 1: BOT DETECTION & SEO SERVING
   # ============================================================
   # 1. Is it a Bot?
   RewriteCond %{HTTP_USER_AGENT} (googlebot|google-inspectiontool|chrome-lighthouse|lighthouse|gptbot|oai-searchbot|claudebot|perplexitybot|applebot-extended|bytespider|amazonbot|placid|guzzle|bingbot|yandex|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest\/0\.|pinterestbot|slackbot|telegrambot|vkShare|W3C_Validator) [NC,OR]
   RewriteCond %{QUERY_STRING} (^|&)bot=1(&|$) [NC]
 
-  # 2. Map the request to the nested snapshot directory.
+  # 2. Extract relative path after /example/ and remove any trailing slash
+  # Example: "/example/de/hotels/" or "/example/de/hotels" -> captures "de/hotels" into %1
+  RewriteCond %{REQUEST_URI} ^/example/(.*?)/?$
+
+  # 3. Map the request to the nested snapshot directory.
   # If URL is /example/de/hotels/1, $1 will be: de/hotels/1
   # Looks for: /var/www/fluttereasyseo/example/seo_snapshots/de/hotels/1/index.html
   RewriteCond %{DOCUMENT_ROOT}/example/seo_snapshots/$1/index.html -f
 
-# 3. Serve the file relative to the RewriteBase (/example/)
+  # 4. Serve the file relative to the RewriteBase (/example/)
   # Routes to: /example/seo_snapshots/de/hotels/1/index.html
   RewriteRule ^(.*)$ seo_snapshots/$1/index.html [L,T=text/html]
 
-# ============================================================
+  # ============================================================
   # SECTION 2: HUMAN NAVIGATION & FLUTTER ROUTING
   # ============================================================
 
   # 1. PRIMARY ROUTES: Serve Flutter app for Root and Language paths
   # This covers: / , /de, /en, /fr
-  RewriteRule ^(de|en|fr)?/?$ /index.html [L]
+  RewriteRule ^(de|en|fr)?/?$ index.html [L]
 
   # 2. DEEP LINKS: Serve Flutter app for specific pages
   # This covers: /de/hotels, /en/hetel, and /de/hotels/2
-  RewriteRule ^(de|en|fr)/hotels(/[^/]+)?/?$ /index.html [L]
+  RewriteRule ^(de|en|fr)/hotels(/[^/]+)?/?$ index.html [L]
 
   # 3. EXCLUSIONS: System files that should never be rerouted
   RewriteCond %{REQUEST_URI} ^/example/(robots\.txt|sitemap\.xml) [NC]
