@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /example/
+
+# Prevents bots from indexing the "raw" snapshots instead of the real URLs
+Disallow: /example/seo_snapshots/
+
+# Technical file with no SEO value
+Disallow: /example/version.json
+
+Sitemap: https://fluttereasyseo.lxandr.at/example/sitemap.xml

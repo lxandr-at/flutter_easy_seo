@@ -1,0 +1,71 @@
+DirectoryIndex index.html
+
+<IfModule mod_headers.c>
+    # 1. GLOBAL REDIRECT PROTECTION
+    # This prevents the 503 error by making sure the Service Worker
+    # doesn't "remember" a 301 redirect.
+    Header set Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+
+    # 2. APP SHELL & SENSITIVE FILES (Always Fresh)
+    # We include sw.js here. This replaces your two separate blocks.
+    <FilesMatch "^(index\.html|bootstrap\.js|sw\.js|version\.json)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        # Specifically for sw.js, we add the scope permission
+        Header set Service-Worker-Allowed "/example/"
+    </FilesMatch>
+
+    # 3. STATIC ASSETS (Aggressive Caching)
+    # Cache everything else for 1 year, EXCEPT the files matched above.
+    <FilesMatch ".+\.(js|css|png|jpe?g|gif|ico|svg|eot|ttf|woff|woff2|json|wasm)$">
+        # The negative lookahead isn't strictly needed if this block
+        # is placed AFTER the "Always Fresh" block in some configs,
+        # but keeping your logic for safety:
+        <If "! %{REQUEST_URI} =~ /^(index\.html|bootstrap\.js|sw\.js|version\.json)$/">
+            Header set Cache-Control "public, max-age=31536000, immutable"
+        </If>
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /example/
+
+  # ============================================================
+  # SECTION 1: BOT DETECTION & SEO SERVING
+  # ============================================================
+  # 1. Is it a Bot?
+  RewriteCond %{HTTP_USER_AGENT} (googlebot|google-inspectiontool|chrome-lighthouse|lighthouse|gptbot|oai-searchbot|claudebot|perplexitybot|applebot-extended|bytespider|amazonbot|placid|guzzle|bingbot|yandex|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest\/0\.|pinterestbot|slackbot|telegrambot|vkShare|W3C_Validator) [NC,OR]
+  RewriteCond %{QUERY_STRING} (^|&)bot=1(&|$) [NC]
+
+  # 2. Map the request to the nested snapshot directory.
+  # If URL is /example/de/hotels/1, $1 will be: de/hotels/1
+  # Looks for: /var/www/fluttereasyseo/example/seo_snapshots/de/hotels/1/index.html
+  RewriteCond %{DOCUMENT_ROOT}/example/seo_snapshots/$1/index.html -f
+
+# 3. Serve the file relative to the RewriteBase (/example/)
+  # Routes to: /example/seo_snapshots/de/hotels/1/index.html
+  RewriteRule ^(.*)$ seo_snapshots/$1/index.html [L,T=text/html]
+
+# ============================================================
+  # SECTION 2: HUMAN NAVIGATION & FLUTTER ROUTING
+  # ============================================================
+
+  # 1. PRIMARY ROUTES: Serve Flutter app for Root and Language paths
+  # This covers: / , /de, /en, /fr
+  RewriteRule ^(de|en|fr)?/?$ /index.html [L]
+
+  # 2. DEEP LINKS: Serve Flutter app for specific pages
+  # This covers: /de/hotels, /en/hetel, and /de/hotels/2
+  RewriteRule ^(de|en|fr)/hotels(/[^/]+)?/?$ /index.html [L]
+
+  # 3. EXCLUSIONS: System files that should never be rerouted
+  RewriteCond %{REQUEST_URI} ^/example/(robots\.txt|sitemap\.xml) [NC]
+  RewriteRule ^ - [L]
+
+  # 4. INVALID ROUTE FALLBACK: Send unknown paths back to Root
+  # If it's not a real file, not a directory, and not already index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !^/example/index\.html
+  RewriteRule ^.*$ /example/ [R=301,L]
+</IfModule>

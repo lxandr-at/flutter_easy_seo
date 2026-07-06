@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/"/>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/en</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/"/>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/fr</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/"/>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/de/hotels</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/en/hotels</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/fr/hotels</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/de/hotels/1</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/1"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/1"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/1"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/1"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/en/hotels/1</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/1"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/1"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/1"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/1"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/fr/hotels/1</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/1"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/1"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/1"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/1"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/de/hotels/2</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/2"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/2"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/2"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/2"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/en/hotels/2</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/2"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/2"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/2"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/2"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/fr/hotels/2</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/2"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/2"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/2"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/2"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/de/hotels/3</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/3"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/3"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/3"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/3"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/en/hotels/3</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/3"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/3"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/3"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/3"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/fr/hotels/3</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/3"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/3"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/3"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/3"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/de/hotels/4</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/4"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/4"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/4"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/4"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/en/hotels/4</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/4"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/4"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/4"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/4"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/fr/hotels/4</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/4"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/4"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/4"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/4"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/de/hotels/5</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/5"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/5"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/5"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/5"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/en/hotels/5</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/5"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/5"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/5"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/5"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/fr/hotels/5</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/5"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/5"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/5"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/5"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/de/hotels/6</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/6"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/6"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/6"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/6"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/en/hotels/6</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/6"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/6"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/6"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/6"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://fluttereasyseo.lxandr.at/example/fr/hotels/6</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://fluttereasyseo.lxandr.at/example/de/hotels/6"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://fluttereasyseo.lxandr.at/example/en/hotels/6"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://fluttereasyseo.lxandr.at/example/fr/hotels/6"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fluttereasyseo.lxandr.at/example/de/hotels/6"/>
+    <priority>0.8</priority>
+    <changefreq>daily</changefreq>
+  </url>
+</urlset>
