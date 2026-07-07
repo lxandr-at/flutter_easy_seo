@@ -11,7 +11,7 @@ a headless widget tester:
     2. [Automated Mode via Widget Tester](#automated-mode-via-widget-tester)
 5. [**Serve**](#serving-content-to-search-engine-bots) these static HTML pages to search engine bots (and the flutter app to human users).
 
-## What problem gets solved?
+## Why `flutter_easy_seo`?
 
 ### The Problem
 
@@ -36,6 +36,7 @@ The example project for the `flutter_easy_seo` package is available as a live we
 This example features a mocked hotel reservation web app that demonstrates several key features of the `flutter_easy_seo` package in action:
 - **EasySEOPages:** Showcases a Landing Page, a Hotels List Page, and a Hotel Details Popup Dialog—demonstrating how a popup can be seamlessly turned into a dedicated, SEO-friendly HTML page.
 - **Semantic Wrappers:** Highlights how to wrap widgets to generate SEO-relevant output for headers, main sections, footers, navigation, breadcrumbs, FAQs, and lists, alongside structured JSON-LD data (e.g., Hotel Details complete with Guest Reviews).
+- **Live DOM Injection:** While the app runs for human users, the package actively injects the exact same semantic HTML directly into the browser DOM.
 - **Interactive Mode:** Allows you to preview and download generated SEO HTML content, providing a visual presentation of the page elements currently flagged for SEO output using distinct colored borders.
 - **Locale Support:** Native support for locales within the route structure, which are automatically factored into the `sitemap.xml` file generation.
 - **Dynamic Routes:** Automatically detects any anchor URL in generated pages that matches a configured dynamic route pattern, dynamically appending it to the `sitemap.xml`.
