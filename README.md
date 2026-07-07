@@ -176,6 +176,43 @@ The simple example above will generate the following HTML and sitemap.xml:
 </urlset>
 ```
 
+### Configuration and Orchestration with `EasySEOManager` Singleton
+
+Call `EasySEOManager.instance.init(...)` in your `main()` function to configure the global singleton:
+
+| Parameter | Description |
+|---|---|
+| `enabled` | Globally controls whether SEO generation is active. |
+| `enableFileOutput` | Writes generated HTML files to the local storage target. |
+| `enableLiveOutput` | Injects the generated HTML into the live browser DOM. |
+| `disableOnGenerate` | Disables the `onGenerate` callback. Set to `true` in automated widget tests to keep the app's `onGenerate` config unchanged. |
+| `enableInteractiveMode` | Shows a widget overlay for debugging and interactive HTML generation. |
+| `showResultDialog` | Whether a modal dialog is presented in interactive mode to preview the generated output. |
+| `showHighlights` | When `true`, renders colored borders around widgets flagged for SEO tracking. |
+| `renderMode` | The `SEORenderMode` — controls which output formats are generated (html+jsonld, html-only, microdata, etc.). |
+| `onGenerate` | Callback invoked when an HTML page is generated (e.g. to stream the result to a REST endpoint). |
+| `baseUrl` | The root domain URL for absolute canonical/alternate links. Falls back to the current browser URL on web. |
+| `supportedLanguages` | Language codes for prefix-routing (e.g. `['en', 'de']`). The first entry is the default language. Used for `hreflang` alternate links and sitemap generation. |
+| `pages` | Static and dynamic route patterns for the sitemap. Dynamic routes (e.g. `products/:id`) auto-collect matching URLs from generated HTML. |
+| `headTags` | Global `<meta>`, `<link>`, and `<script>` tags injected into the document `<head>` on every page. |
+| `pathProvider` | Delegate to retrieve the current active path. **Required** for GoRouter, auto_route, and Beamer — see [pathProvider section](#providing-a-pathprovider-for-declarative-routers). |
+
+### Wrap the root of your target view with `EasySEOPage` to flag it for HTML generation
+
+Wrap the page content with `EasySEOPage` and provide at minimum a `title`:
+
+| Parameter | Description |
+|---|---|
+| `child` | The widget tree of the page content to render and inspect. |
+| `title` | The canonical page title — generates `<title>`, `og:title`, `twitter:title`, and `<meta name="title">`. |
+| `description` | Optional page description — generates `description`, `og:description`, and `twitter:description` meta tags. |
+| `disabled` | When `true`, disables SEO generation locally for this specific page. |
+| `headTags` | Page-level `<head>` tags that override (rather than append to) global `headTags`. |
+| `includeGlobals` | List of `EasySEOBaseWrapper.globalName` ids to include in the generated `<body>` even when they live outside this page's widget tree (e.g. header, footer, navigation in a `ShellRoute`). |
+| `whenDone` | Async callback executed before HTML generation to ensure async state (e.g. Riverpod providers) is resolved. |
+| `rank` | Numeric priority for disambiguating multiple `EasySEOPage` instances in the same tree (e.g. a list page with a detail dialog — set `rank: 1` on the dialog). |
+| `renderMode` | Overrides the global `SEORenderMode` for this page only. |
+
 ### Providing a `pathProvider` for Declarative Routers
 
 `EasySEOManager.getCurrentPath()` retrieves the resolved URL path to populate meta tags like `og:url`.
