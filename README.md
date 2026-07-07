@@ -29,9 +29,35 @@ This package implements a dual-layer strategy to bridge the Flutter-to-SEO gap c
    - **Anti-Cloaking Compliance:** Search engines like Google frequently run undercover audits using stealth, human-like user agents to verify that users see the same content as the bots. Live injection ensures your content remains identical across all testing profiles.
    - **Unknown Crawlers:** It provides a safe fallback for AI crawlers, scrapers, or third-party bots that do not announce themselves as a bot to your server, but still rely on reading a rendered HTML structure after execution.
 
+## Live Example (The `/example` Web App)
+
+The example project for the `flutter_easy_seo` package is available as a live web app with Interactive Mode enabled.
+
+This example features a mocked hotel reservation web app that demonstrates several key features of the `flutter_easy_seo` package in action:
+- **EasySEOPages:** Showcases a Landing Page, a Hotels List Page, and a Hotel Details Popup Dialog—demonstrating how a popup can be seamlessly turned into a dedicated, SEO-friendly HTML page.
+- **Semantic Wrappers:** Highlights how to wrap widgets to generate SEO-relevant output for headers, main sections, footers, navigation, breadcrumbs, FAQs, and lists, alongside structured JSON-LD data (e.g., Hotel Details complete with Guest Reviews).
+- **Interactive Mode:** Allows you to preview and download generated SEO HTML content, providing a visual presentation of the page elements currently flagged for SEO output using distinct colored borders.
+- **Locale Support:** Native support for locales within the route structure, which are automatically factored into the `sitemap.xml` file generation.
+- **Dynamic Routes:** Automatically detects any anchor URL in generated pages that matches a configured dynamic route pattern, dynamically appending it to the `sitemap.xml`.
+
+These are the direct links to the demo pages:
+- Landing Page (`https://fluttereasyseo.lxandr.at/example/en`):
+    - <a href="https://fluttereasyseo.lxandr.at/example/en" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
+    - <a href="https://fluttereasyseo.lxandr.at/example/en?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
+- Hotels Overview Page (`https://fluttereasyseo.lxandr.at/example/en/hotels`):
+    - <a href="https://fluttereasyseo.lxandr.at/example/en/hotels" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
+    - <a href="https://fluttereasyseo.lxandr.at/example/en/hotels?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
+- Hotels Details Page (`https://fluttereasyseo.lxandr.at/example/en/hotels/2`):
+    - <a href="https://fluttereasyseo.lxandr.at/example/en/hotels/2" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
+    - <a href="https://fluttereasyseo.lxandr.at/example/en/hotels/2?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
+
+- The visually unappealing SEO versions will be indexed, whereas the flutter web app will not:
+
+    ![Indexed Real World Example](./docs/images/live_example_listing.png)
+
 ## Real World Example
 
-Besides the example in the repo, you can also take a look at a real world example that uses this `flutter_easy_seo` package:<br> 
+Besides the example in the repo, you can also take a look at a real world example that uses the`flutter_easy_seo` package:<br> 
 - Landing Page (`https://preisvergleich.lxandr.at/en`):
     - <a href="https://preisvergleich.lxandr.at/en" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
     - <a href="https://preisvergleich.lxandr.at/en?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
@@ -42,9 +68,9 @@ Besides the example in the repo, you can also take a look at a real world exampl
     - <a href="https://preisvergleich.lxandr.at/en/compare/1" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
     - <a href="https://preisvergleich.lxandr.at/en/compare/1?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
 
-- The visually unappealing SEO versions will be indexed, whereas the visually pleasing user versions will not:
+- The visually unappealing SEO versions will be indexed, whereas the visually pleasing flutter web app will not:
 
-    ![Easy SEO Architecture Overview](./docs/images/real_world_listing.png)
+    ![Indexed Package Live Example](./docs/images/real_world_listing.png)
 
 ## Main Features
 
@@ -375,9 +401,9 @@ ComplexAnimatedHeaderWidget().easySeoHeader(
 </header>
 ```
 
-### NavigationRail, BottomNavigationBar or Widget to `<nav>`
+### NavigationRail, NavigationBar or Widget to `<nav>`
 ```dart
-NavigationRail( // or BottomNavigationBar(...
+NavigationRail( // or NavigationBar(...
   ...
   destinations: [
     NavigationRailDestination(
@@ -714,7 +740,7 @@ By default, this wrapper configures the testing environment to:
 - Mock the `path_provider` storage target to the local directory ('.').
 - Mock the `connectivity_plus` status to a constant 'wifi' state.
 - Initialize an empty, functional `shared_preferences` storage block.
-- uppress visual overflow errors from failing the build pipeline.
+- Suppress visual overflow errors from failing the build pipeline.
 - Configure a fixed, standard desktop viewport resolution of 1920x1080.
 - Enforce automated cleanup to prevent orphan cache files in your workspace.
 
