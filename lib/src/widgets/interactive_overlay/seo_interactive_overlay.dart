@@ -14,6 +14,42 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
   void initState() {
     super.initState();
     _isMinimized = EasySEOManager.instance.interactiveMinimized;
+    _reportSize();
+  }
+
+  void _reportSize() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final renderBox = context.findRenderObject() as RenderBox?;
+      if (renderBox != null && renderBox.hasSize) {
+        final size = renderBox.size;
+        final manager = EasySEOManager.instance;
+        if (manager.panelSize.value != size) {
+          manager.panelSize.value = size;
+        }
+      }
+    });
+  }
+
+  void _startDrag() {
+    final manager = EasySEOManager.instance;
+    if (manager.panelPosition.value == null) {
+      final renderBox = context.findRenderObject() as RenderBox?;
+      if (renderBox != null && renderBox.hasSize) {
+        manager.panelPosition.value = renderBox.localToGlobal(Offset.zero);
+      }
+    }
+  }
+
+  void _onDragUpdate(DragUpdateDetails details) {
+    final manager = EasySEOManager.instance;
+    final current = manager.panelPosition.value;
+    if (current != null) {
+      manager.panelPosition.value = Offset(
+        current.dx + details.delta.dx,
+        current.dy + details.delta.dy,
+      );
+    }
   }
 
   void _showSitemapDialog(
@@ -22,17 +58,38 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
     String content,
     String fileName,
   ) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        final scrollController = ScrollController();
-        return _SeoDialog(
-          title: title,
-          content: _SeoCodeDisplay(text: content, scrollController: scrollController),
-          actions: [_SeoDialogActions(content: content, fileName: fileName)],
-        );
-      },
+    final panelEntry = EasySEOManager.instance.panelOverlayEntry;
+    if (panelEntry == null) return;
+
+    final scrollController = ScrollController();
+    OverlayEntry? entry;
+    entry = OverlayEntry(
+      builder: (_) => PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) entry?.remove();
+        },
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () => entry?.remove(),
+                child: Container(color: Colors.black54),
+              ),
+            ),
+            Center(
+              child: _SeoDialog(
+                title: title,
+                content: _SeoCodeDisplay(text: content, scrollController: scrollController),
+                actions: [_SeoDialogActions(content: content, fileName: fileName)],
+                onClose: () => entry?.remove(),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+    Overlay.of(context).insertAll([entry], above: panelEntry);
   }
 
   void _showHtmlPreviewDialog(
@@ -41,27 +98,50 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
     SeoSuccess result,
     String fileName,
   ) {
-    showDialog(
-      context: context,
-      builder: (_) => _SeoPreviewDialog(
-        title: title,
-        initialResult: result,
-        fileName: fileName,
+    final panelEntry = EasySEOManager.instance.panelOverlayEntry;
+    if (panelEntry == null) return;
+
+    OverlayEntry? entry;
+    entry = OverlayEntry(
+      builder: (_) => PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) entry?.remove();
+        },
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () => entry?.remove(),
+                child: Container(color: Colors.black54),
+              ),
+            ),
+            Center(
+              child: _SeoPreviewDialog(
+                title: title,
+                initialResult: result,
+                fileName: fileName,
+                onClose: () => entry?.remove(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+    Overlay.of(context).insertAll([entry], above: panelEntry);
   }
 
   Widget _buildMinimized(BuildContext context) {
     return Tooltip(
       message: 'Expand EasySEO Overlay',
-      child: InkWell(
+      child: GestureDetector(
         onTap: () => setState(() {
           _isMinimized = false;
           EasySEOManager.instance.interactiveMinimized = false;
         }),
-        borderRadius: BorderRadius.circular(28),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+        onPanStart: (_) => _startDrag(),
+        onPanUpdate: (details) => _onDragUpdate(details),
+        child: Container(
           width: 56,
           height: 56,
           decoration: BoxDecoration(
@@ -96,6 +176,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    _reportSize();
     if (_isMinimized) {
       return _buildMinimized(context);
     }
@@ -144,24 +225,48 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Centered horizontal drag handle
+                  Center(
+                    child: GestureDetector(
+                      onPanStart: (_) => _startDrag(),
+                      onPanUpdate: (details) => _onDragUpdate(details),
+                      child: Tooltip(
+                        message: 'Drag to move',
+                        child: Container(
+                          width: 48,
+                          height: 5,
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withAlpha(60),
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   // Header Row with Title and Minimize Button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: const [
-                          Icon(Icons.analytics, color: Color(0xFF00D2FF), size: 16),
-                          SizedBox(width: 8),
-                          Text(
-                            'EasySEO Interactive Panel',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Outfit',
+                      Expanded(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.analytics, color: Color(0xFF00D2FF), size: 16),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                                'EasySEO Interactive Panel',
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Outfit',
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       IconButton(
                         constraints: const BoxConstraints(),

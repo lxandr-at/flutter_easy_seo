@@ -4,11 +4,13 @@ class _SeoPreviewDialog extends StatefulWidget {
   final String title;
   final String fileName;
   final SeoSuccess initialResult;
+  final VoidCallback? onClose;
 
   const _SeoPreviewDialog({
     required this.title,
     required this.initialResult,
     required this.fileName,
+    this.onClose,
   });
 
   @override
@@ -46,6 +48,7 @@ class _SeoPreviewDialogState extends State<_SeoPreviewDialog> {
   Widget build(BuildContext context) {
     final scrollController = ScrollController();
     return _SeoDialog(
+      onClose: widget.onClose,
       title: widget.title,
       modeSelector: Wrap(
         spacing: 6,

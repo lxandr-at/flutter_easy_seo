@@ -137,27 +137,45 @@ class EasySEOManager {
   final ValueNotifier<bool> showHighlights = ValueNotifier(false);
   final ValueNotifier<SEORenderMode> renderMode = ValueNotifier(SEORenderMode.full);
   bool interactiveMinimized = false;
+  final ValueNotifier<Offset?> panelPosition = ValueNotifier(null);
+  final ValueNotifier<Size?> panelSize = ValueNotifier(null);
 
   int _overlayRefCount = 0;
   OverlayEntry? _overlayEntry;
+
+  OverlayEntry? get panelOverlayEntry => _overlayEntry;
 
   void showOverlay(BuildContext context) {
     _overlayRefCount++;
     if (_overlayRefCount == 1) {
       _overlayEntry = OverlayEntry(
-        builder: (_) => const Positioned(
-          left: 0,
-          right: 0,
-          bottom: 16,
-          child: Material(
+        builder: (_) => const _PanelPositioner(
+          defaultChild: Material(
             type: MaterialType.transparency,
-            child: Center(
-              child: EasySEOInteractiveOverlay(),
-            ),
+            child: Center(child: EasySEOInteractiveOverlay()),
+          ),
+          customChild: Material(
+            type: MaterialType.transparency,
+            child: EasySEOInteractiveOverlay(),
           ),
         ),
       );
       Navigator.of(context, rootNavigator: true).overlay!.insert(_overlayEntry!);
+    }
+  }
+
+  void _reclampPanelPosition(Size screen) {
+    final position = panelPosition.value;
+    if (position == null) return;
+    final size = panelSize.value;
+    final clampW = (size?.width ?? 56).clamp(56, screen.width);
+    final clampH = (size?.height ?? 56).clamp(56, screen.height);
+    final clamped = Offset(
+      position.dx.clamp(0, screen.width - clampW),
+      position.dy.clamp(0, screen.height - clampH),
+    );
+    if (clamped != position) {
+      panelPosition.value = clamped;
     }
   }
 
@@ -319,6 +337,7 @@ class EasySEOManager {
     bool disableOnGenerate = false,
     bool enableInteractiveMode = false,
     bool showResultDialog = true,
+    bool showHighlights = false,
     SEORenderMode? renderMode,
     EasySEOOnGenerateCallback? onGenerate,
     String? baseUrl,
@@ -333,6 +352,7 @@ class EasySEOManager {
     this.disableOnGenerate.value = disableOnGenerate;
     this.enableInteractiveMode.value = enableInteractiveMode;
     this.showResultDialog.value = showResultDialog;
+    this.showHighlights.value = showHighlights;
     if (renderMode != null) this.renderMode.value = renderMode;
     this.onGenerate = onGenerate;
     this.baseUrl = baseUrl;
@@ -594,4 +614,62 @@ class EasySEOUrls {
     required this.alternateUrls,
     this.xDefaultUrl,
   });
+}
+
+class _PanelPositioner extends StatefulWidget {
+  final Widget defaultChild;
+  final Widget customChild;
+
+  const _PanelPositioner({
+    required this.defaultChild,
+    required this.customChild,
+  });
+
+  @override
+  State<_PanelPositioner> createState() => _PanelPositionerState();
+}
+
+class _PanelPositionerState extends State<_PanelPositioner> {
+  final manager = EasySEOManager.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    manager.panelPosition.addListener(_onChanged);
+    manager.panelSize.addListener(_onChanged);
+  }
+
+  @override
+  void dispose() {
+    manager.panelPosition.removeListener(_onChanged);
+    manager.panelSize.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  void _onChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    manager._reclampPanelPosition(MediaQuery.of(context).size);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final position = manager.panelPosition.value;
+    if (position == null) {
+      return Positioned(left: 0, right: 0, bottom: 16, child: widget.defaultChild);
+    }
+    final screen = MediaQuery.of(context).size;
+    final size = manager.panelSize.value;
+    final clampW = (size?.width ?? 56).clamp(56, screen.width);
+    final clampH = (size?.height ?? 56).clamp(56, screen.height);
+    final clamped = Offset(
+      position.dx.clamp(0, screen.width - clampW),
+      position.dy.clamp(0, screen.height - clampH),
+    );
+    return Positioned(left: clamped.dx, top: clamped.dy, child: widget.customChild);
+  }
 }

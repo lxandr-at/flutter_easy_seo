@@ -20,6 +20,9 @@ class _VanillaRouterAdapter extends RouterAdapter {
             supportedLanguages: ['de', 'en', 'fr'],
             pages: ['/', '/hotels', '/hotels/:hotelId'],
             enableInteractiveMode: true,
+            enableLiveOutput: true,
+            disableOnGenerate: true,
+            showHighlights: true,
             headTags: [
               const SEOServiceInfo(
                 serviceType: 'Hotel Reservation',

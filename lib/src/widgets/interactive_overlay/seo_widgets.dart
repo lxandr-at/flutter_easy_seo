@@ -199,12 +199,14 @@ class _SeoDialog extends StatelessWidget {
   final Widget? modeSelector;
   final Widget content;
   final List<Widget> actions;
+  final VoidCallback? onClose;
 
   const _SeoDialog({
     required this.title,
     this.modeSelector,
     required this.content,
     required this.actions,
+    this.onClose,
   });
 
   @override
@@ -235,7 +237,7 @@ class _SeoDialog extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.white70),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: onClose,
                 ),
               ],
             ),
