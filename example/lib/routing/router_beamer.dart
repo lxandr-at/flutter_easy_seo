@@ -25,7 +25,7 @@ class _AppBeamLocation extends BeamLocation<BeamState> {
       return [
         BeamPage(
           key: ValueKey('shell-$locale-${_contentKey(path, locale)}'),
-          child: ShellLayout(locale: locale, child: HotelListPage(locale: locale)),
+          child: ShellLayout(locale: locale, child: HotelListPage(locale: locale, route: path)),
         ),
         BeamPage(
           key: ValueKey('hotel-${hotelMatch.group(1)}'),
@@ -41,7 +41,7 @@ class _AppBeamLocation extends BeamLocation<BeamState> {
               child: child,
             ),
           ),
-          child: HotelDetailPage(locale: locale, hotelId: hotelMatch.group(1)!),
+          child: HotelDetailPage(locale: locale, hotelId: hotelMatch.group(1)!, route: path),
         ),
       ];
     }
@@ -55,10 +55,10 @@ class _AppBeamLocation extends BeamLocation<BeamState> {
   }
 
   Widget _buildContent(String path, String locale) {
-    if (path == '/$locale') return LandingPage(locale: locale);
-    if (path == '/$locale/hotels') return HotelListPage(locale: locale);
-    if (path == '/$locale/reservations') return ReservationsPage(locale: locale);
-    return LandingPage(locale: locale);
+    if (path == '/$locale') return LandingPage(locale: locale, route: path);
+    if (path == '/$locale/hotels') return HotelListPage(locale: locale, route: path);
+    if (path == '/$locale/reservations') return ReservationsPage(locale: locale, route: path);
+    return LandingPage(locale: locale, route: path);
   }
 
   String _contentKey(String path, String locale) {

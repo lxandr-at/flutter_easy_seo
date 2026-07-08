@@ -19,6 +19,7 @@ dependencies:
   beamer: ^1.7.0
   auto_route: ^11.1.0
   sw: ^0.1.5
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

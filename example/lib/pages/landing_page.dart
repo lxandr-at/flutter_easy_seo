@@ -12,7 +12,8 @@ import '../widgets/raw_seo_demo.dart';
 @RoutePage()
 class LandingPage extends ConsumerStatefulWidget {
   final String locale;
-  const LandingPage({super.key, @PathParam.inherit('locale') required this.locale});
+  final String route;
+  const LandingPage({super.key, @PathParam.inherit('locale') required this.locale, this.route = ''});
 
   @override
   ConsumerState<LandingPage> createState() => _LandingPageState();
@@ -62,7 +63,9 @@ class _LandingPageState extends ConsumerState<LandingPage> {
         ),
       ],
     );
+    final route = widget.route.isNotEmpty ? widget.route : '/${widget.locale}';
     return EasySEOPage(
+      key: ValueKey(route),
       title: t['demo.landing.title']!,
       description: t['demo.landing.description'],
       includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],

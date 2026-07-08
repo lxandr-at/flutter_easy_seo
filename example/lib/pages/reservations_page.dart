@@ -10,7 +10,8 @@ import '../widgets/breadcrumb.dart';
 @RoutePage()
 class ReservationsPage extends ConsumerStatefulWidget {
   final String locale;
-  const ReservationsPage({super.key, @PathParam.inherit('locale') required this.locale});
+  final String route;
+  const ReservationsPage({super.key, @PathParam.inherit('locale') required this.locale, this.route = ''});
 
   @override
   ConsumerState<ReservationsPage> createState() => _ReservationsPageState();

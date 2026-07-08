@@ -12,7 +12,8 @@ import '../widgets/hotel_card.dart';
 @RoutePage()
 class HotelListPage extends ConsumerStatefulWidget {
   final String locale;
-  const HotelListPage({super.key, @PathParam.inherit('locale') required this.locale});
+  final String route;
+  const HotelListPage({super.key, @PathParam.inherit('locale') required this.locale, this.route = ''});
 
   @override
   ConsumerState<HotelListPage> createState() => _HotelListPageState();
@@ -67,7 +68,9 @@ class _HotelListPageState extends ConsumerState<HotelListPage> {
         SEOH2(t['nav.hotels']!),
       ],
     );
+    final route = widget.route.isNotEmpty ? widget.route : '/${widget.locale}/hotels';
     return EasySEOPage(
+      key: ValueKey(route),
       rank: 0,
       title: t['demo.hotels.title']!,
       description: t['demo.hotels.description'],

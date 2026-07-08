@@ -1,165 +1,103 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-easy-seo="title">
-      Démo Flutter Easy SEO | Exemple de Réservation dHôtel
-    </title>
-    <meta data-easy-seo="meta:name:title" name="title" content="Démo Flutter Easy SEO | Exemple de Réservation dHôtel">
-    <link data-easy-seo="link:rel:canonical" rel="canonical" href="https://fluttereasyseo.lxandr.at/example/fr">
-    <meta data-easy-seo="meta:property:og:title" property="og:title" content="Démo Flutter Easy SEO | Exemple de Réservation dHôtel">
-    <meta data-easy-seo="meta:property:og:description" property="og:description" content="Démonstration en direct du package flutter_easy_seo. Le mode interactif vous permet de prévisualiser le sitemap.xml et le code HTML optimisé pour le SEO.">
-    <meta data-easy-seo="meta:property:og:url" property="og:url" content="https://fluttereasyseo.lxandr.at/example/fr">
-    <meta data-easy-seo="meta:name:twitter:card" name="twitter:card" content="summary_large_image">
-    <meta data-easy-seo="meta:name:twitter:title" name="twitter:title" content="Démo Flutter Easy SEO | Exemple de Réservation dHôtel">
-    <meta data-easy-seo="meta:name:twitter:description" name="twitter:description" content="Démonstration en direct du package flutter_easy_seo. Le mode interactif vous permet de prévisualiser le sitemap.xml et le code HTML optimisé pour le SEO.">
-    <meta data-easy-seo="meta:name:description" name="description" content="Démonstration en direct du package flutter_easy_seo. Le mode interactif vous permet de prévisualiser le sitemap.xml et le code HTML optimisé pour le SEO.">
-    <link data-easy-seo="link:alternate:de" rel="alternate" href="https://fluttereasyseo.lxandr.at/example/" hreflang="de">
-    <link data-easy-seo="link:alternate:en" rel="alternate" href="https://fluttereasyseo.lxandr.at/example/en" hreflang="en">
-    <link data-easy-seo="link:alternate:fr" rel="alternate" href="https://fluttereasyseo.lxandr.at/example/fr" hreflang="fr">
-    <link data-easy-seo="link:alternate:x-default" rel="alternate" href="https://fluttereasyseo.lxandr.at/example/" hreflang="x-default">
-    <script data-easy-seo="script:application/ld+json:1067425235" type="application/ld+json">
-      {"@context":"https://schema.org","@type":"Service","mainEntityOfPage":{"@type":"WebPage"},"serviceType":"Hotel Reservation","provider":{"@type":"Organization","name":"Hotel Buchungsplattform","logo":"/logo.png","url":"https://fluttereasyseo.lxandr.at/example/fr"},"areaServed":[{"@type":"Country","name":"DE"},{"@type":"Country","name":"AT"},{"@type":"Country","name":"CH"},{"@type":"Country","name":"FR"}]}
-    </script>
-  </head>
-  <body>
-    <header>
-      <h1>
-        Plateforme de Réservation Hôtelière
-      </h1>
-      <p>
-        Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
-      </p>
-    </header>
-    <nav>
-      <ul>
-        <li>
-          <a href="https://fluttereasyseo.lxandr.at/example/fr">
-            Accueil
-          </a>
-        </li>
-        <li>
-          <a href="https://fluttereasyseo.lxandr.at/example/fr/hotels">
-            Hôtels
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"ItemList","numberOfItems":2,"itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"SiteNavigationElement","name":"Accueil","url":"https://fluttereasyseo.lxandr.at/example/fr"}},{"@type":"ListItem","position":2,"item":{"@type":"SiteNavigationElement","name":"Hôtels","url":"https://fluttereasyseo.lxandr.at/example/fr/hotels"}}]}
-    </script>
-    <nav aria-label="Breadcrumb">
-      <ol style="display: flex; list-style: none; padding: 0;">
-        <li>
-          <a href="https://fluttereasyseo.lxandr.at/example/fr" aria-current="page">
-            Accueil
-          </a>
-        </li>
-      </ol>
-    </nav>
-    <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://fluttereasyseo.lxandr.at/example/fr"}]}
-    </script>
-    <main>
-      <section>
-        <h1>
-          Trouvez Votre Hôtel de Rêve
-        </h1>
-        <p>
-          Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
-        </p>
-      </section>
-      <section>
-        <h2>
-          Pourquoi Nous Choisir
-        </h2>
-        <article>
-          <p>
-            Meilleur Prix – Nous garantissons le tarif le plus bas pour chaque hôtel.
-          </p>
-        </article>
-        <article>
-          <p>
-            Grand Choix – Plus de 500 hôtels sélectionnés à travers l'Europe.
-          </p>
-        </article>
-        <article>
-          <p>
-            Assistance 24/7 – Notre équipe est là pour vous aider à tout moment.
-          </p>
-        </article>
-      </section>
-      <section>
-        <div class="mainEntity">
-          <h3 class="name">
-            Comment réserver un hôtel?
-          </h3>
-          <div class="acceptedAnswer">
-            <p class="text">
-              Sélectionnez simplement un hôtel dans la liste, choisissez vos dates et cliquez sur "Réserver".
-            </p>
-          </div>
-        </div>
-        <div class="mainEntity">
-          <h3 class="name">
-            Puis-je annuler ma réservation gratuitement?
-          </h3>
-          <div class="acceptedAnswer">
-            <p class="text">
-              Oui, la plupart des réservations peuvent être annulées gratuitement jusqu'à 48 heures avant l'arrivée.
-            </p>
-          </div>
-        </div>
-        <div class="mainEntity">
-          <h3 class="name">
-            Quels modes de paiement sont acceptés?
-          </h3>
-          <div class="acceptedAnswer">
-            <p class="text">
-              Nous acceptons les cartes de crédit (Visa, Mastercard), PayPal et les virements bancaires.
-            </p>
-          </div>
-        </div>
-      </section>
-      <h3>
-        Raw SEO Composition
-      </h3>
-      <span>
-        This text uses SEOSpan directly in the generated HTML.
-      </span>
-      <time datetime="2026-06-28T00:00:00.000">
-        Published
-      </time>
-      <p>
-        Paragraph built from SEOHtml subclasses.
-      </p>
-      <div>
-        <span>
-          Nested SEOSpan inside SEODiv
-        </span>
-        <div>
-          <span>
-            Demo
-          </span>
-          <span class="name">
-            SEO Demo Example
-          </span>
-        </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-easy-seo="title">Démo Flutter Easy SEO | Exemple de Réservation dHôtel</title>
+  <meta data-easy-seo="meta:name:title" name="title" content="Démo Flutter Easy SEO | Exemple de Réservation dHôtel">
+  <link data-easy-seo="link:rel:canonical" rel="canonical" href="https://fluttereasyseo.lxandr.at/example/fr">
+  <meta data-easy-seo="meta:property:og:title" property="og:title" content="Démo Flutter Easy SEO | Exemple de Réservation dHôtel">
+  <meta data-easy-seo="meta:property:og:description" property="og:description" content="Démonstration en direct du package flutter_easy_seo. Le mode interactif vous permet de prévisualiser le sitemap.xml et le code HTML optimisé pour le SEO.">
+  <meta data-easy-seo="meta:property:og:url" property="og:url" content="https://fluttereasyseo.lxandr.at/example/fr">
+  <meta data-easy-seo="meta:name:twitter:card" name="twitter:card" content="summary_large_image">
+  <meta data-easy-seo="meta:name:twitter:title" name="twitter:title" content="Démo Flutter Easy SEO | Exemple de Réservation dHôtel">
+  <meta data-easy-seo="meta:name:twitter:description" name="twitter:description" content="Démonstration en direct du package flutter_easy_seo. Le mode interactif vous permet de prévisualiser le sitemap.xml et le code HTML optimisé pour le SEO.">
+  <meta data-easy-seo="meta:name:description" name="description" content="Démonstration en direct du package flutter_easy_seo. Le mode interactif vous permet de prévisualiser le sitemap.xml et le code HTML optimisé pour le SEO.">
+  <link data-easy-seo="link:alternate:de" rel="alternate" href="https://fluttereasyseo.lxandr.at/example/" hreflang="de">
+  <link data-easy-seo="link:alternate:en" rel="alternate" href="https://fluttereasyseo.lxandr.at/example/en" hreflang="en">
+  <link data-easy-seo="link:alternate:fr" rel="alternate" href="https://fluttereasyseo.lxandr.at/example/fr" hreflang="fr">
+  <link data-easy-seo="link:alternate:x-default" rel="alternate" href="https://fluttereasyseo.lxandr.at/example/" hreflang="x-default">
+  <script data-easy-seo="script:application/ld+json:174249512" type="application/ld+json">{"@context":"https://schema.org","@type":"Service","mainEntityOfPage":{"@type":"WebPage"},"serviceType":"Hotel Reservation","provider":{"@type":"Organization","name":"Hotel Buchungsplattform","logo":"/logo.png","url":"https://fluttereasyseo.lxandr.at/example/fr"},"areaServed":[{"@type":"Country","name":"DE"},{"@type":"Country","name":"AT"},{"@type":"Country","name":"CH"},{"@type":"Country","name":"FR"}]}</script>
+
+</head>
+<body>
+<header>
+  <h1>Plateforme de Réservation Hôtelière</h1>
+  <p>Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.</p>
+</header>
+<nav>
+  <ul>
+    <li>
+      <a href="https://fluttereasyseo.lxandr.at/example/fr">Accueil</a>
+    </li>
+    <li>
+      <a href="https://fluttereasyseo.lxandr.at/example/fr/hotels">Hôtels</a>
+    </li>
+  </ul>
+</nav>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","numberOfItems":2,"itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"SiteNavigationElement","name":"Accueil","url":"https://fluttereasyseo.lxandr.at/example/fr"}},{"@type":"ListItem","position":2,"item":{"@type":"SiteNavigationElement","name":"Hôtels","url":"https://fluttereasyseo.lxandr.at/example/fr/hotels"}}]}</script>
+<nav aria-label="Breadcrumb">
+  <ol style="display: flex; list-style: none; padding: 0;">
+    <li>
+      <a href="https://fluttereasyseo.lxandr.at/example/fr" aria-current="page">Accueil</a>
+    </li>
+  </ol>
+</nav>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://fluttereasyseo.lxandr.at/example/fr"}]}</script>
+<main>
+  <section>
+    <h1>Trouvez Votre Hôtel de Rêve</h1>
+    <p>Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.</p>
+  </section>
+  <section>
+    <h2>Pourquoi Nous Choisir</h2>
+    <article>
+      <p>Meilleur Prix – Nous garantissons le tarif le plus bas pour chaque hôtel.</p>
+    </article>
+    <article>
+      <p>Grand Choix – Plus de 500 hôtels sélectionnés à travers l'Europe.</p>
+    </article>
+    <article>
+      <p>Assistance 24/7 – Notre équipe est là pour vous aider à tout moment.</p>
+    </article>
+  </section>
+  <section>
+    <div class="mainEntity">
+      <h3 class="name">Comment réserver un hôtel?</h3>
+      <div class="acceptedAnswer">
+        <p class="text">Sélectionnez simplement un hôtel dans la liste, choisissez vos dates et cliquez sur "Réserver".</p>
       </div>
-      <article>
-        <span class="name">
-          Plateforme de Réservation Hôtelière
-        </span>
-        <span class="description">
-          Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
-        </span>
-      </article>
-    </main>
-    <script type="application/ld+json">
-      {"@context":"https://schema.org","@graph":[{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Comment réserver un hôtel?","acceptedAnswer":{"@type":"Answer","text":"Sélectionnez simplement un hôtel dans la liste, choisissez vos dates et cliquez sur \"Réserver\"."}},{"@type":"Question","name":"Puis-je annuler ma réservation gratuitement?","acceptedAnswer":{"@type":"Answer","text":"Oui, la plupart des réservations peuvent être annulées gratuitement jusqu'à 48 heures avant l'arrivée."}},{"@type":"Question","name":"Quels modes de paiement sont acceptés?","acceptedAnswer":{"@type":"Answer","text":"Nous acceptons les cartes de crédit (Visa, Mastercard), PayPal et les virements bancaires."}}]},{"@type":"CreativeWork","name":"SEO Demo Example"},{"@type":"WebPage","name":"Plateforme de Réservation Hôtelière","description":"Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait."}]}
-    </script>
-    <footer>
-    </footer>
-  </body>
+    </div>
+    <div class="mainEntity">
+      <h3 class="name">Puis-je annuler ma réservation gratuitement?</h3>
+      <div class="acceptedAnswer">
+        <p class="text">Oui, la plupart des réservations peuvent être annulées gratuitement jusqu'à 48 heures avant l'arrivée.</p>
+      </div>
+    </div>
+    <div class="mainEntity">
+      <h3 class="name">Quels modes de paiement sont acceptés?</h3>
+      <div class="acceptedAnswer">
+        <p class="text">Nous acceptons les cartes de crédit (Visa, Mastercard), PayPal et les virements bancaires.</p>
+      </div>
+    </div>
+  </section>
+  <h3>Raw SEO Composition</h3>
+  <span>This text uses SEOSpan directly in the generated HTML.</span>
+  <time datetime="2026-06-28T00:00:00.000">Published</time>
+  <p>Paragraph built from SEOHtml subclasses.</p>
+  <div>
+    <span>Nested SEOSpan inside SEODiv</span>
+    <div>
+      <span>Demo</span>
+      <span class="name">SEO Demo Example</span>
+    </div>
+  </div>
+  <article>
+    <span class="name">Plateforme de Réservation Hôtelière</span>
+    <span class="description">Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.</span>
+  </article>
+</main>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Comment réserver un hôtel?","acceptedAnswer":{"@type":"Answer","text":"Sélectionnez simplement un hôtel dans la liste, choisissez vos dates et cliquez sur \"Réserver\"."}},{"@type":"Question","name":"Puis-je annuler ma réservation gratuitement?","acceptedAnswer":{"@type":"Answer","text":"Oui, la plupart des réservations peuvent être annulées gratuitement jusqu'à 48 heures avant l'arrivée."}},{"@type":"Question","name":"Quels modes de paiement sont acceptés?","acceptedAnswer":{"@type":"Answer","text":"Nous acceptons les cartes de crédit (Visa, Mastercard), PayPal et les virements bancaires."}}]},{"@type":"CreativeWork","name":"SEO Demo Example"},{"@type":"WebPage","name":"Plateforme de Réservation Hôtelière","description":"Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait."}]}</script>
+<footer></footer>
+</body>
 </html>

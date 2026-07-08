@@ -63,7 +63,7 @@ class _VanillaRouterAdapter extends RouterAdapter {
         settings: settings,
         builder: (_) => ShellLayout(
           locale: validLocale,
-          child: LandingPage(locale: validLocale),
+          child: LandingPage(locale: validLocale, route: path),
         ),
       );
     }
@@ -73,7 +73,7 @@ class _VanillaRouterAdapter extends RouterAdapter {
         settings: settings,
         builder: (_) => ShellLayout(
           locale: validLocale,
-          child: HotelListPage(locale: validLocale),
+          child: HotelListPage(locale: validLocale, route: path),
         ),
       );
     }
@@ -83,7 +83,7 @@ class _VanillaRouterAdapter extends RouterAdapter {
         settings: settings,
         builder: (_) => ShellLayout(
           locale: validLocale,
-          child: ReservationsPage(locale: validLocale),
+          child: ReservationsPage(locale: validLocale, route: path),
         ),
       );
     }
@@ -94,7 +94,7 @@ class _VanillaRouterAdapter extends RouterAdapter {
       final hotelId = hotelMatch.group(1)!;
       return buildDialogRoute(
         settings: settings,
-        child: HotelDetailPage(locale: validLocale, hotelId: hotelId),
+        child: HotelDetailPage(locale: validLocale, hotelId: hotelId, route: path),
       );
     }
 

@@ -290,12 +290,23 @@ class EasySEOManager {
   void gatherFromHtml(String html) {
     final hrefRegex = RegExp(r'href="([^"]+)"');
     final matches = hrefRegex.allMatches(html);
+
+    String? basePath;
+    if (baseUrl != null) {
+      final baseUri = Uri.tryParse(baseUrl!);
+      basePath = (baseUri != null && baseUri.path != '/') ? baseUri.path : null;
+    }
+
     for (final match in matches) {
       final href = match.group(1);
       if (href != null && href.isNotEmpty) {
         final uri = Uri.tryParse(href);
         if (uri != null) {
-          final path = uri.path;
+          String path = uri.path;
+          if (basePath != null && path.startsWith(basePath)) {
+            path = path.substring(basePath.length);
+            if (!path.startsWith('/')) path = '/$path';
+          }
           final parsed = parsePath(path);
           if (shouldGather(parsed.pagePath)) {
             addGatheredPage(path);

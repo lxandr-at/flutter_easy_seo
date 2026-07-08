@@ -69,7 +69,7 @@ class _GoRouterAdapter extends RouterAdapter {
             final locale = _localeFromState(state);
             return _GoRouterShell(
               locale: locale,
-              child: LandingPage(locale: locale),
+              child: LandingPage(locale: locale, route: state.uri.path),
             );
           },
           routes: [
@@ -82,15 +82,15 @@ class _GoRouterAdapter extends RouterAdapter {
               routes: [
                 GoRoute(
                   path: 'hotels',
-                  builder: (context, state) => HotelListPage(locale: _localeFromState(state)),
+                  builder: (context, state) => HotelListPage(locale: _localeFromState(state), route: state.uri.path),
                 ),
                 GoRoute(
                   path: 'hotels/:hotelId',
-                  builder: (context, state) => HotelListPage(locale: _localeFromState(state)),
+                  builder: (context, state) => HotelListPage(locale: _localeFromState(state), route: state.uri.path),
                 ),
                 GoRoute(
                   path: 'reservations',
-                  builder: (context, state) => ReservationsPage(locale: _localeFromState(state)),
+                  builder: (context, state) => ReservationsPage(locale: _localeFromState(state), route: state.uri.path),
                 ),
               ],
             ),
@@ -193,7 +193,7 @@ class _GoRouterShell extends StatelessWidget {
                         child: SizedBox(
                           width: 900,
                           height: 700,
-                          child: HotelDetailPage(locale: locale, hotelId: hotelId),
+                          child: HotelDetailPage(locale: locale, hotelId: hotelId, route: state.uri.path),
                         ),
                       ),
                     ),

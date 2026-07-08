@@ -15,7 +15,8 @@ import '../widgets/review_list.dart';
 class HotelDetailPage extends ConsumerStatefulWidget {
   final String locale;
   final String hotelId;
-  const HotelDetailPage({super.key, @PathParam('locale') required this.locale, @PathParam('hotelId') required this.hotelId});
+  final String route;
+  const HotelDetailPage({super.key, @PathParam('locale') required this.locale, @PathParam('hotelId') required this.hotelId, this.route = ''});
 
   @override
   ConsumerState<HotelDetailPage> createState() => _HotelDetailPageState();
@@ -37,7 +38,11 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
   @override
   void dispose() {
     if (_breadcrumbPushed) {
-      Future.microtask(() => _breadcrumbNotifier.pop());
+      Future.microtask(() {
+        try {
+          _breadcrumbNotifier.pop();
+        } catch (_) {}
+      });
     }
     super.dispose();
   }
@@ -92,7 +97,9 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
       ),
     ).easySeoMain();
     final mq = MediaQuery.of(context);
+    final route = widget.route.isNotEmpty ? widget.route : '/${widget.locale}/hotels/${widget.hotelId}';
     return EasySEOPage(
+      key: ValueKey(route),
       rank: 1,
       title: '${hotel.name} ${t['demo.hotelsdetail.title']}',
       description: t['demo.hotelsdetail.description'],
