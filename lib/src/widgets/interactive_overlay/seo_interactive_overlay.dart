@@ -189,7 +189,6 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
         manager.enableFileOutput,
         manager.showResultDialog,
         manager.showHighlights,
-        manager.renderMode,
       ]),
       builder: (context, _) {
         return LayoutBuilder(
@@ -329,7 +328,6 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
                         onChanged: (val) => manager.showHighlights.value = val,
                         tooltip: 'Show colored borders around SEO-wrapped widgets',
                       ),
-                      _buildModeDropdown(),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -471,58 +469,4 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
     );
   }
 
-  Widget _buildModeDropdown() {
-    final manager = EasySEOManager.instance;
-    return Tooltip(
-      message: 'Set global SEORenderMode',
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.white.withAlpha(10),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withAlpha(20), width: 1),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.style, color: Color(0xFF00D2FF), size: 14),
-            const SizedBox(width: 4),
-            DropdownButton<SEORenderMode>(
-              value: manager.renderMode.value,
-              isDense: true,
-              dropdownColor: const Color(0xFF2C3E50),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Outfit',
-              ),
-              underline: const SizedBox(),
-              items: SEORenderMode.values.map((mode) {
-                return DropdownMenuItem<SEORenderMode>(
-                  value: mode,
-                  child: Padding(
-                    padding: EdgeInsets.zero,
-                    child: Text(
-                      _seoRenderModeLabels[mode] ?? mode.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontFamily: 'Outfit',
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-              onChanged: (mode) {
-                if (mode != null) {
-                  manager.renderMode.value = mode;
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

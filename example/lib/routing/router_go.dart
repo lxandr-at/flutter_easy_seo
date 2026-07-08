@@ -26,6 +26,9 @@ class _GoRouterAdapter extends RouterAdapter {
             supportedLanguages: ['de', 'en', 'fr'],
             pages: ['/', '/hotels', '/hotels/:hotelId'],
             enableInteractiveMode: true,
+            showHighlights: true,
+            disableOnGenerate: true,
+            enableLiveOutput: true,
             pathProvider: (context) => GoRouter.maybeOf(context)?.routerDelegate.currentConfiguration.uri.toString(),
             headTags: [
               const SEOServiceInfo(

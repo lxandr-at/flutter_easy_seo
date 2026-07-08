@@ -32,6 +32,7 @@ class _SeoPreviewDialogState extends State<_SeoPreviewDialog> {
   Future<void> _onModeChanged(SEORenderMode mode) async {
     if (mode == _selectedMode) return;
     _selectedMode = mode;
+    EasySEOManager.instance.renderMode.value = mode;
     setState(() => _isRegenerating = true);
     final result = await EasySEOManager.instance.generateActive(mode: mode);
     if (mounted && result is SeoSuccess) {

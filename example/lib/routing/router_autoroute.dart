@@ -20,6 +20,9 @@ class _AutoRouteRouterAdapter extends RouterAdapter {
             supportedLanguages: ['de', 'en', 'fr'],
             pages: ['/', '/hotels', '/hotels/:hotelId'],
             enableInteractiveMode: true,
+            showHighlights: true,
+            disableOnGenerate: true,
+            enableLiveOutput: true,
             pathProvider: (context) => context.router.currentPath,
             headTags: [
               const SEOServiceInfo(
