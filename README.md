@@ -222,7 +222,7 @@ It resolves the path using a three-layer fallback chain:
 2. **`ModalRoute.of(context)?.settings.name`** — fallback for Navigator 1.0 routers where `settings.name` tores the literal URL path (e.g., vanilla `MaterialApp`, `fluro`)
 3. **Browser URL** via `URLHelper().getCurrentPath()` — web only (unavailable in widget testers).
 
-### Why Declarative Routers Need an Explicit `pathProvider`
+#### Why Declarative Routers Need an Explicit `pathProvider`?
 
 Declarative routers like **GoRouter**, **auto_route**, and **Beamer** use `settings.name`
 to store internal symbolic names or configuration keys rather than concrete runtime URL paths.

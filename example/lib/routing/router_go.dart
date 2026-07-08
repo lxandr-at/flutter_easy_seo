@@ -6,7 +6,6 @@ import '../pages/hotel_detail_page.dart';
 import '../pages/hotel_list_page.dart';
 import '../pages/landing_page.dart';
 import '../pages/reservations_page.dart';
-import '../widgets/dialog_page.dart';
 import '../widgets/shell_layout.dart';
 import 'nav_adapter.dart';
 
@@ -54,33 +53,40 @@ class _GoRouterAdapter extends RouterAdapter {
   GoRouter _createRouter(String initialLocale) {
     return GoRouter(
       navigatorKey: _rootNavigatorKey,
-      initialLocation: '/$initialLocale',
+      redirect: (context, state) {
+        if (state.uri.pathSegments.isEmpty) return '/$initialLocale';
+        return null;
+      },
       routes: [
-        // 1. The Main Shell Route for normal pages sharing the ShellLayout
-        ShellRoute(
-          navigatorKey: _shellNavigatorKey,
-          builder: (context, state, child) => ShellLayout(locale: _localeFromState(state), child: child),
+        GoRoute(
+          path: '/:locale',
+          parentNavigatorKey: _rootNavigatorKey,
+          builder: (context, state) {
+            // When sub-routes exist (e.g. /de/hotels, /de/hotels/123),
+            // the landing page shrinks to nothing and the ShellRoute's
+            // content fills the screen.
+            if (state.uri.pathSegments.length > 1) return const SizedBox.shrink();
+            final locale = _localeFromState(state);
+            return _GoRouterShell(
+              locale: locale,
+              child: LandingPage(locale: locale),
+            );
+          },
           routes: [
-            GoRoute(
-              path: '/:locale',
-              builder: (context, state) => LandingPage(locale: _localeFromState(state)),
+            ShellRoute(
+              navigatorKey: _shellNavigatorKey,
+              builder: (context, state, child) => _GoRouterShell(
+                locale: _localeFromState(state),
+                child: child,
+              ),
               routes: [
                 GoRoute(
                   path: 'hotels',
                   builder: (context, state) => HotelListPage(locale: _localeFromState(state)),
-                  routes: [
-                    GoRoute(
-                      path: ':hotelId',
-                      //parentNavigatorKey: _shellNavigatorKey,
-                      pageBuilder: (context, state) => DialogPage(
-                        key: state.pageKey,
-                        child: HotelDetailPage(
-                          locale: _localeFromState(state),
-                          hotelId: state.pathParameters['hotelId']!,
-                        ),
-                      ),
-                    ),
-                  ]
+                ),
+                GoRoute(
+                  path: 'hotels/:hotelId',
+                  builder: (context, state) => HotelListPage(locale: _localeFromState(state)),
                 ),
                 GoRoute(
                   path: 'reservations',
@@ -89,6 +95,10 @@ class _GoRouterAdapter extends RouterAdapter {
               ],
             ),
           ],
+        ),
+        GoRoute(
+          path: '/:locale/:path(.*)',
+          builder: (context, state) => const Center(child: Text('Page not found!')),
         ),
       ],
     );
@@ -107,6 +117,11 @@ class _GoRouterAdapter extends RouterAdapter {
 
   @override
   void pop(BuildContext context) {
+    final path = getCurrentPath(context);
+    if (RegExp(r'^/[^/]+/hotels/[^/]+$').hasMatch(path)) {
+      go(context, path.replaceAll(RegExp(r'/[^/]+$'), ''));
+      return;
+    }
     if (context.canPop()) context.pop();
   }
 
@@ -128,6 +143,67 @@ class _GoRouterAdapter extends RouterAdapter {
   String replaceLocale(BuildContext context, String newLocale) {
     final segs = getPathSegments(context);
     return '/${[newLocale, ...segs.skip(1)].join('/')}';
+  }
+}
+
+/// Shell builder that wraps [ShellLayout] and conditionally renders
+/// the hotel detail overlay when `hotelId` is present in the path.
+///
+/// This avoids creating a separate GoRouter dialog route with `pageBuilder`,
+/// which would introduce a second [PopScope] in the shell navigator and
+/// cause the "Multiple widgets used the same GlobalKey" crash.
+class _GoRouterShell extends StatelessWidget {
+  final String locale;
+  final Widget child;
+
+  const _GoRouterShell({required this.locale, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final state = GoRouterState.of(context);
+    final hotelId = state.pathParameters['hotelId'];
+
+    return PopScope(
+      canPop: hotelId == null,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) context.go('/$locale/hotels');
+      },
+      child: Stack(
+        children: [
+          ShellLayout(locale: locale, child: child),
+          if (hotelId != null)
+            Positioned.fill(
+              child: Material(
+                color: Colors.black54,
+                child: Stack(
+                  children: [
+                    GestureDetector(
+                      onTap: () => context.go('/$locale/hotels'),
+                      child: const SizedBox.expand(),
+                    ),
+                    Center(
+                      child: Material(
+                        type: MaterialType.canvas,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        elevation: 24,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: SizedBox(
+                          width: 900,
+                          height: 700,
+                          child: HotelDetailPage(locale: locale, hotelId: hotelId),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }
 
