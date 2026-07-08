@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/app_translations.dart';
+import '../models/hotel.dart';
 import '../providers/breadcrumb_provider.dart';
 import '../providers/hotel_provider.dart';
 import '../widgets/breadcrumb.dart';
@@ -23,7 +24,16 @@ class _HotelListPageState extends ConsumerState<HotelListPage> {
   @override
   Widget build(BuildContext context) {
     final t = translations(widget.locale);
-    final hotels = ref.watch(hotelsProvider);
+    final hotelsAsync = ref.watch(hotelsProvider);
+
+    return hotelsAsync.when(
+      data: (hotels) => _buildContent(t, hotels),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Error: $e')),
+    );
+  }
+
+  Widget _buildContent(Map<String, String> t, List<Hotel> hotels) {
     if (!_breadcrumbSet) {
       _breadcrumbSet = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -62,6 +72,7 @@ class _HotelListPageState extends ConsumerState<HotelListPage> {
       title: t['demo.hotels.title']!,
       description: t['demo.hotels.description'],
       includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],
+      whenDone: () async => await ref.read(hotelsProvider.future),
       child: body,
     );
   }
