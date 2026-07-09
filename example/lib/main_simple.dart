@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() {
+  usePathUrlStrategy();
+  WidgetsFlutterBinding.ensureInitialized();
   EasySEOManager.instance.init(
       enableInteractiveMode: kDebugMode, // enable interactive mode in debug mode
       enableLiveOutput: kDebugMode, // inject to DOM in debug mode

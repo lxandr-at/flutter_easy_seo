@@ -1,15 +1,16 @@
 # flutter_easy_seo
 
 A Flutter package that generates SEO-friendly HTML from the live widget tree for search engine bots.
-1. [**Initialize**](#simple-usage-example) **`EasySEOManager`** within your `main()` function.
-2. [**Wrap**](#simple-usage-example) the root of your target view with **`EasySEOPage`** to flag it for HTML generation.
-3. [**Expose**](#widget-wrappers-and-html-output) content to the HTML body by wrapping your UI elements with components 
-like `EasySEOTextWrapper`, or by using their equivalent widget extension methods like `.easySeoText()`.
-4. [**Generate**](#generating-seo-friendly-html) HTML content, either interactively by clicking through your web app or automatically in 
-a headless widget tester:
+
+1. [**Initialize, Flag Views as Pages, and Expose Widgets**](#quick-start):
+    - Use [**`EasySEOManager`**](#easyseomanager-singleton) within your `main()` function.
+    - Use [**`EasySEOPage`**](#easyseopage) to wrap the root of your target view to flag it for HTML generation.
+    - Use [**`EasySEOTextWrapper` / `.easySeoText()`**](#widget-wrappers--html-output) and other widgets (or their corresponding extension methods) on UI elements to expose them for SEO HTML generation.
+2. [**Generate**](#generating-seo-friendly-html) HTML content, either interactively by clicking through your web app or automatically via a headless widget tester:
     1. [Interactive Mode](#interactive-mode)
     2. [Automated Mode via Widget Tester](#automated-mode-via-widget-tester)
-5. [**Serve**](#serving-content-to-search-engine-bots) these static HTML pages to search engine bots (and the flutter app to human users).
+3. [**Serve**](#serving-content-to-search-engine-bots) these static HTML pages to search engine bots while serving the Flutter app to human users.
+4. [**See Web App Live in Action**](#examples-live)
 
 ## Why `flutter_easy_seo`?
 
@@ -17,9 +18,10 @@ a headless widget tester:
 
 - **Search Bots Need Text**: For a web application to rank, search engine bots must parse the site's textual and structural content.
 - **Flutter is a Blank Canvas**: To a crawler, a baseline Flutter Web app looks like an empty page. Flutter does not use a document-based HTML DOM; instead, it paints pixels directly onto a single, flat ``<canvas>`` via CanvasKit or WebAssembly. 
-- **No SSR or Hydration**: Standard architectural workarounds like Server-Side Rendering (SSR) or DOM hydration are fundamentally impossible within Flutter’s rendering pipeline.
+- **No SSR or Hydration**: Standard architectural workarounds like Server-Side Rendering (SSR) or DOM hydration are fundamentally impossible within Flutter's rendering pipeline.
 
 ### The Solution
+
 This package implements a dual-layer strategy to bridge the Flutter-to-SEO gap completely:
 
 1. **[Dynamic Rendering 🌐](https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering) (Static File Serving)**: The package pre-generates your views into pure, static HTML files. When a search bot requests a page, your server instantly delivers this static file. Because it requires zero engine initialization, the bot gets the full text content instantly.
@@ -29,58 +31,13 @@ This package implements a dual-layer strategy to bridge the Flutter-to-SEO gap c
    - **Anti-Cloaking Compliance:** Search engines like Google frequently run undercover audits using stealth, human-like user agents to verify that users see the same content as the bots. Live injection ensures your content remains identical across all testing profiles.
    - **Unknown Crawlers:** It provides a safe fallback for AI crawlers, scrapers, or third-party bots that do not announce themselves as a bot to your server, but still rely on reading a rendered HTML structure after execution.
 
-## Live Example (The `/example` Web App)
-
-The example project for the `flutter_easy_seo` package is available as a live web app with Interactive Mode enabled.
-
-This example features a mocked hotel reservation web app that demonstrates several key features of the `flutter_easy_seo` package in action:
-- **EasySEOPages:** Showcases a Landing Page, a Hotels List Page, and a Hotel Details Popup Dialog—demonstrating how a popup can be seamlessly turned into a dedicated, SEO-friendly HTML page.
-- **Semantic Wrappers:** Highlights how to wrap widgets to generate SEO-relevant output for headers, main sections, footers, navigation, breadcrumbs, FAQs, and lists, alongside structured JSON-LD data (e.g., Hotel Details complete with Guest Reviews).
-- **Live DOM Injection:** While the app runs for human users, the package actively injects the exact same semantic HTML directly into the browser DOM.
-- **Interactive Mode:** Allows you to preview and download generated SEO HTML content, providing a visual presentation of the page elements currently flagged for SEO output using distinct colored borders.
-- **Locale Support:** Native support for locales within the route structure, which are automatically factored into the `sitemap.xml` file generation.
-- **Dynamic Routes:** Automatically detects any anchor URL in generated pages that matches a configured dynamic route pattern, dynamically appending it to the `sitemap.xml`.
-
-These are the direct links to the demo pages:
-- Landing Page (`https://fluttereasyseo.lxandr.at/example/en`):
-    - <a href="https://fluttereasyseo.lxandr.at/example/en" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
-    - <a href="https://fluttereasyseo.lxandr.at/example/en?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
-- Hotels Overview Page (`https://fluttereasyseo.lxandr.at/example/en/hotels`):
-    - <a href="https://fluttereasyseo.lxandr.at/example/en/hotels" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
-    - <a href="https://fluttereasyseo.lxandr.at/example/en/hotels?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
-- Hotels Details Page (`https://fluttereasyseo.lxandr.at/example/en/hotels/2`):
-    - <a href="https://fluttereasyseo.lxandr.at/example/en/hotels/2" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
-    - <a href="https://fluttereasyseo.lxandr.at/example/en/hotels/2?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
-
-- The visually unappealing SEO versions will be indexed, whereas the flutter web app will not:
-
-    ![Indexed Real World Example](./docs/images/live_example_listing.png)
-
-## Real World Example
-
-Besides the example in the repo, you can also take a look at a real world example that uses the`flutter_easy_seo` package:<br> 
-- Landing Page (`https://preisvergleich.lxandr.at/en`):
-    - <a href="https://preisvergleich.lxandr.at/en" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
-    - <a href="https://preisvergleich.lxandr.at/en?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
-- Product Price Compare Page (`https://preisvergleich.lxandr.at/en/compare`):
-    - <a href="https://preisvergleich.lxandr.at/en/compare" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
-    - <a href="https://preisvergleich.lxandr.at/en/compare?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
-- Product Price Compare Details Page (`https://preisvergleich.lxandr.at/en/compare/1`):
-    - <a href="https://preisvergleich.lxandr.at/en/compare/1" target="_blank" rel="noopener noreferrer">User Version 🌐</a>
-    - <a href="https://preisvergleich.lxandr.at/en/compare/1?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
-
-- The visually unappealing SEO versions will be indexed, whereas the visually pleasing flutter web app will not:
-
-    ![Indexed Package Live Example](./docs/images/real_world_listing.png)
-
-## Main Features
-
-- Generate complete SEO-friendly HTML documents from the Flutter live widget tree
-- Automatic sitemap.xml generation
-- SEO-relevant html tags and head section info and meta data (Twitter, Open Graph) and custom meta tags
-- Interactive Mode with UI Overlay
-- Automatic Mode via Flutter Widget Tester
-- JSON-LD and Microdata support
+#### Main features include:
+- Complete SEO-friendly HTML documents from the live widget tree
+- Automatic `sitemap.xml` generation
+- SEO-relevant `<head>` tags and metadata (Twitter, Open Graph, custom meta tags)
+- **Interactive Mode** with UI overlay for debugging and manual generation
+- **Automated Mode** via Flutter Widget Tester for CI and scheduled generation
+- JSON-LD structured data and Microdata support
 
 ## Installation
 
@@ -91,16 +48,7 @@ dependencies:
   flutter_easy_seo: ^0.0.1
 ```
 
-## Architecture Overview
-The architecture consists of 4 main parts:
-- **EasySEOManger:** Singleton for orchestration and configuration.
-- **EasySEOPage:** Wraps (part of) a widget tree to genearate an SEO-friendly html version.
-- **Widget wrappers, HTML helper, etc.:** Create specific HMTL, jsonld and microdata output.
-- **File generation:** Generate HTML and sitemap.xml files either interactively or automatically with a widget tester.
-
-![Easy SEO Architecture Overview](./docs/images/architecture_overview.png)
-
-## Simple Usage Example
+## Quick Start
 
 1. **Initialize** `EasySEOManager` within your `main()` function.
 2. **Wrap** the root of your target view with `EasySEOPage` to flag it for HTML generation.
@@ -111,13 +59,14 @@ like `EasySEOTextWrapper`, or by using their equivalent widget extension methods
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() {
-   // ... other code
-
+   usePathUrlStrategy();
+   WidgetsFlutterBinding.ensureInitialized();
    EasySEOManager.instance.init(
-      enableInteractiveMode: kDebugMode, // enable interactive mode in debug mode
-      enableLiveOutput: kDebugMode, // inject to DOM in debug mode
+      enableInteractiveMode: kDebugMode,
+      enableLiveOutput: kDebugMode,
       baseUrl: "https://mysite.com",
       pathProvider: // **REQUIRED when using router packages**
    );
@@ -144,7 +93,8 @@ class MyApp extends StatelessWidget {
    }
 }
 ```
-The simple example above will generate the following HTML and sitemap.xml:
+
+The example above generates:
 ```html
 <!DOCTYPE html>
 <html lang="de">
@@ -176,7 +126,17 @@ The simple example above will generate the following HTML and sitemap.xml:
 </urlset>
 ```
 
-### Configuration and Orchestration with `EasySEOManager` Singleton
+## Configuration
+
+The architecture consists of 4 main parts:
+- **EasySEOManager:** Singleton for orchestration and configuration.
+- **EasySEOPage:** Wraps (part of) a widget tree to generate an SEO-friendly HTML version.
+- **Widget wrappers, HTML helpers, etc.:** Create specific HTML, JSON-LD and microdata output.
+- **File generation:** Generate HTML and sitemap.xml files either interactively or automatically with a widget tester.
+
+![Easy SEO Architecture Overview](./docs/images/architecture_overview.png)
+
+### EasySEOManager Singleton
 
 Call `EasySEOManager.instance.init(...)` in your `main()` function to configure the global singleton:
 
@@ -197,7 +157,7 @@ Call `EasySEOManager.instance.init(...)` in your `main()` function to configure 
 | `headTags` | Global `<meta>`, `<link>`, and `<script>` tags injected into the document `<head>` on every page. |
 | `pathProvider` | Delegate to retrieve the current active path. **Required** for GoRouter, auto_route, and Beamer — see [pathProvider section](#providing-a-pathprovider-for-declarative-routers). |
 
-### Wrap the root of your target view with `EasySEOPage` to flag it for HTML generation
+### EasySEOPage
 
 Wrap the page content with `EasySEOPage` and provide at minimum a `title`:
 
@@ -219,10 +179,10 @@ Wrap the page content with `EasySEOPage` and provide at minimum a `title`:
 It resolves the path using a three-layer fallback chain:
 
 1. **`pathProvider`** callback (explicitly configured) — highest priority.
-2. **`ModalRoute.of(context)?.settings.name`** — fallback for Navigator 1.0 routers where `settings.name` tores the literal URL path (e.g., vanilla `MaterialApp`, `fluro`)
+2. **`ModalRoute.of(context)?.settings.name`** — fallback for Navigator 1.0 routers where `settings.name` stores the literal URL path (e.g., vanilla `MaterialApp`, `fluro`)
 3. **Browser URL** via `URLHelper().getCurrentPath()` — web only (unavailable in widget testers).
 
-#### Why Declarative Routers Need an Explicit `pathProvider`?
+#### Why Declarative Routers Need an Explicit `pathProvider`
 
 Declarative routers like **GoRouter**, **auto_route**, and **Beamer** use `settings.name`
 to store internal symbolic names or configuration keys rather than concrete runtime URL paths.
@@ -233,7 +193,7 @@ To ensure accurate SEO tracking, configure the `pathProvider` in `EasySEOManager
 
 ```dart
 // GoRouter
-pathProvider: (context) => GoRouter.maybeOf(context) ?.routerDelegate.currentConfiguration.uri.toString(),
+pathProvider: (context) => GoRouter.maybeOf(context)?.routerDelegate.currentConfiguration.uri.toString(),
 // auto_route
 pathProvider: (context) => context.router.currentPath,
 // Beamer
@@ -242,148 +202,21 @@ pathProvider: (context) => (Beamer.of(context).currentBeamLocation.state as Beam
 
 Note: Vanilla Navigator 1.0 requires no configuration; its `settings.name` natively mirrors the literal URL path.
 
-## Widget wrappers and HTML output
+## Widget Wrappers & HTML Output
+
 Although both Flutter and HTML rely on a tree structure to define content, a Flutter widget tree cannot be converted into an HTML document entirely automatically. To generate optimized SEO metadata, we must explicitly flag specific parts of the widget tree. This architectural approach is necessary for several reasons:
 
 1. **SEO-Focused Filtering:** We only want to extract content that directly impacts search engine indexing and discoverability.
 2. **Structural Mismatches:** Many Flutter layout widgets lack a meaningful HTML equivalent. While structural components like `Center` or `Padding` are essential for a full visual CSS layout, they serve no purpose in an SEO-friendly, text-first HTML document.
 3. **Contextual Layout Mapping:** A single Flutter widget can represent entirely different semantic HTML elements depending on its context. For example, a `Row` of images could map to a site `<header>` containing an `<h1>` and `<a>` tags, or it could simply translate to a standard `<div>` containing `<img>` elements.
 
-Note: For some flutter widgets the html content can be automatically extracted:
+Note: For some Flutter widgets the HTML content can be automatically extracted:
 - **`Text()`**: `easySeoP` and `easySeoH1..H6` automatically extract the text content
 - **`Image.network, Image.asset`**: `easySeo` automatically extracts the `src`
 
-### Custom output generation
-#### With core classes
+### HTML + JSON-LD Examples
 
-At the core of this mapping system are the **SEOHtml** class and its derived elements, which allow you to define any custom HTML tree. While these are used automatically by our widget wrappers, you can also use them directly if the built-in extensions and helper methods don't fit your needs. For example, if the `EasySEOFaqWrapper` weren't available, you could build a custom FAQ structure like this:
-```dart
-Column(
-  children: [
-    Text('Frequently Asked Questions'),
-    Text('Q1: How does this work?'),
-    Text('A1: It generates HTML from the widget tree.'),
-    Text('Q2: Is it fast?'),
-    Text('A2: Yes, it runs asynchronously.'),
-  ],
-).easySeoHtml(children: [
-  SEOSection(
-    attributes: {'itemscope': null, 'itemtype': 'https://schema.org/FAQPage'},
-    jsonLd: {
-      '@type': 'FAQPage',
-      'mainEntity': [
-        {'@type': 'Question', 'name': 'How does this work?',
-         'acceptedAnswer': {'@type': 'Answer', 'text': 'It generates HTML from the widget tree.'}},
-        {'@type': 'Question', 'name': 'Is it fast?',
-         'acceptedAnswer': {'@type': 'Answer', 'text': 'Yes, it runs asynchronously.'}},
-      ],
-    },
-    children: [
-      SEODiv(attributes: {'itemprop': 'mainEntity', 'itemscope': null, 'itemtype': 'https://schema.org/Question'},
-        children: [
-          SEOH3('How does this work?', attributes: {'itemprop': 'name'}),
-          SEODiv(attributes: {'itemprop': 'acceptedAnswer', 'itemscope': null, 'itemtype': 'https://schema.org/Answer'},
-            children: [
-              SEOParagraph('It generates HTML from the widget tree.', attributes: {'itemprop': 'text'}),
-            ]),
-        ]),
-    ]),
-])
-```
-```html
-<section class="faq-page">
-  <div class="mainEntity">
-    <h3 class="name">How does this work?</h3>
-    <div class="acceptedAnswer">
-      <p class="text">It generates HTML from the widget tree.</p>
-    </div>
-  </div>
-</section>
-<script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question", 
-      "name": "How does this work?", 
-      "acceptedAnswer": {
-        "@type": "Answer", 
-        "text": "It generates HTML from the widget tree."
-      }
-    },
-    {
-      "@type": "Question", 
-      "name": "Is it fast?", 
-      "acceptedAnswer": {
-        "@type": "Answer", 
-        "text": "Yes, it runs asynchronously."
-      }
-    }
-  ]
-}</script>
-```
-
-#### With custom wrappers by extending `EasySEOBaseWrapper`
-
-If none of the built-in wrappers fit your needs, you can create your own by extending `EasySEOBaseWrapper` and implementing `toSEOHtml()`. Return the semantic core only — the processor automatically layers on:
-
-- **`className`** / **`attributes`** — merged onto the root tag's attributes
-- **`jsonLd`** — applied only if your `toSEOHtml()` result doesn't already have its own
-- **`children`** (additional tags) — heading tags sorted first, then non-heading tags last
-
-```dart
-class MyFooterWrapper extends EasySEOBaseWrapper {
-  const MyFooterWrapper({
-    super.key,
-    required super.child,
-    super.className,
-    super.attributes,
-    super.globalName,
-    super.children,
-  });
-
-  @override
-  SEOHtml toSEOHtml({
-    required List<SEOHtml> children,
-    required List<SEONavItem> navItems,
-    required BuildContext context,
-  }) {
-    // Return semantic core + jsonLd directly in the class.
-    // className, attributes, and additional children
-    // are auto-merged by SEOWidgetTreeProcessor._mergeWrapperAttrs().
-    // jsonLd from the returned SEOHtml takes priority over
-    // any constructor-level jsonLd, so setting it here is sufficient.
-    return SEOHtml(
-      tag: 'footer',
-      children: children,
-      jsonLd: {'@type': 'WPFooter'},
-    );
-  }
-}
-```
-
-Usage:
-```dart
-MyFooterWrapper(
-  className: 'site-footer',
-  child: Column(children: [
-    Text('© 2026 MyCorp').easySeoP(),
-  ]),
-)
-```
-
-This produces:
-```html
-<footer class="site-footer">
-  <p>© 2026 MyCorp</p>
-</footer>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WPFooter"}</script>
-```
-
-
-## Examples of HTML + JSON-LD output using wrappers and extensions methods
-
-### Text() or any Widget to `<p>, <h1> ... <h6>`
+#### Text() or any Widget to `<p>, <h1> ... <h6>`
 ```dart
 // Text() to <p> - default behaviour
 EasySEOTextWrapper(child: Text('Hello World')) // or
@@ -411,7 +244,7 @@ FancyVisualHeader().easySeoH1(text: "Main Topic")
 <h1>Main Topic</h1>
 ```
 
-### Image() to `<img>`
+#### Image() to `<img>`
 ```dart
 Image.network('https://picsum.photos/seed/home/800/400').easySeo(alt: 'Net Image')
 Image.asset('/images/asset.png').easySeo(alt: 'Asset Image')
@@ -421,7 +254,7 @@ Image.asset('/images/asset.png').easySeo(alt: 'Asset Image')
 <img src="/images/asset.png" alt="Asset Image"/>
 ```
 
-### Widget() to `<header>`
+#### Widget() to `<header>`
 ```dart
 ComplexAnimatedHeaderWidget().easySeoHeader(
  h1: "App Web Version",
@@ -439,7 +272,7 @@ ComplexAnimatedHeaderWidget().easySeoHeader(
 </header>
 ```
 
-### NavigationRail, NavigationBar or Widget to `<nav>`
+#### NavigationRail, NavigationBar or Widget to `<nav>`
 ```dart
 NavigationRail( // or NavigationBar(...
   ...
@@ -512,7 +345,8 @@ Column(
 }
 </script>
 ```
-### Widget to breadcrumb `<nav>`
+
+#### Widget to breadcrumb `<nav>`
 ```dart
 Row(
   children: [
@@ -566,7 +400,8 @@ Row(
 }
 </script>
 ```
-### Widget (e.g. 'ProductCardWidget') to `<article>` + 'Product' JSON-LD
+
+#### Widget (e.g. 'ProductCardWidget') to `<article>` + 'Product' JSON-LD
 ```dart
 // var product = ...
 // var prices = ...
@@ -685,12 +520,137 @@ ProductCardWidget().easySeoProduct(
 </script>
 ```
 
+### Custom Output Generation
+
+#### With core classes
+
+At the core of this mapping system are the **SEOHtml** class and its derived elements, which allow you to define any custom HTML tree. While these are used automatically by our widget wrappers, you can also use them directly if the built-in extensions and helper methods don't fit your needs. For example, if the `EasySEOFaqWrapper` weren't available, you could build a custom FAQ structure like this:
+```dart
+Column(
+  children: [
+    Text('Frequently Asked Questions'),
+    Text('Q1: How does this work?'),
+    Text('A1: It generates HTML from the widget tree.'),
+    Text('Q2: Is it fast?'),
+    Text('A2: Yes, it runs asynchronously.'),
+  ],
+).easySeoHtml(children: [
+  SEOSection(
+    attributes: {'itemscope': null, 'itemtype': 'https://schema.org/FAQPage'},
+    jsonLd: {
+      '@type': 'FAQPage',
+      'mainEntity': [
+        {'@type': 'Question', 'name': 'How does this work?',
+         'acceptedAnswer': {'@type': 'Answer', 'text': 'It generates HTML from the widget tree.'}},
+        {'@type': 'Question', 'name': 'Is it fast?',
+         'acceptedAnswer': {'@type': 'Answer', 'text': 'Yes, it runs asynchronously.'}},
+      ],
+    },
+    children: [
+      SEODiv(attributes: {'itemprop': 'mainEntity', 'itemscope': null, 'itemtype': 'https://schema.org/Question'},
+        children: [
+          SEOH3('How does this work?', attributes: {'itemprop': 'name'}),
+          SEODiv(attributes: {'itemprop': 'acceptedAnswer', 'itemscope': null, 'itemtype': 'https://schema.org/Answer'},
+            children: [
+              SEOParagraph('It generates HTML from the widget tree.', attributes: {'itemprop': 'text'}),
+            ]),
+        ]),
+    ]),
+])
+```
+```html
+<section class="faq-page">
+  <div class="mainEntity">
+    <h3 class="name">How does this work?</h3>
+    <div class="acceptedAnswer">
+      <p class="text">It generates HTML from the widget tree.</p>
+    </div>
+  </div>
+</section>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question", 
+      "name": "How does this work?", 
+      "acceptedAnswer": {
+        "@type": "Answer", 
+        "text": "It generates HTML from the widget tree."
+      }
+    },
+    {
+      "@type": "Question", 
+      "name": "Is it fast?", 
+      "acceptedAnswer": {
+        "@type": "Answer", 
+        "text": "Yes, it runs asynchronously."
+      }
+    }
+  ]
+}</script>
+```
+
+#### With custom wrappers by extending `EasySEOBaseWrapper`
+
+If none of the built-in wrappers fit your needs, you can create your own by extending `EasySEOBaseWrapper` and implementing `toSEOHtml()`. Return the semantic core only — the processor automatically layers on:
+
+- **`className`** / **`attributes`** — merged onto the root tag's attributes
+- **`jsonLd`** — applied only if your `toSEOHtml()` result doesn't already have its own
+- **`children`** (additional tags) — heading tags sorted first, then non-heading tags last
+
+```dart
+class MyFooterWrapper extends EasySEOBaseWrapper {
+  const MyFooterWrapper({
+    super.key,
+    required super.child,
+    super.className,
+    super.attributes,
+    super.globalName,
+    super.children,
+  });
+
+  @override
+  SEOHtml toSEOHtml({
+    required List<SEOHtml> children,
+    required List<SEONavItem> navItems,
+    required BuildContext context,
+  }) {
+    return SEOHtml(
+      tag: 'footer',
+      children: children,
+      jsonLd: {'@type': 'WPFooter'},
+    );
+  }
+}
+```
+
+Usage:
+```dart
+MyFooterWrapper(
+  className: 'site-footer',
+  child: Column(children: [
+    Text('© 2026 MyCorp').easySeoP(),
+  ]),
+)
+```
+
+This produces:
+```html
+<footer class="site-footer">
+  <p>© 2026 MyCorp</p>
+</footer>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WPFooter"}</script>
+```
+
 ## Generating SEO-Friendly HTML
+
 The generation of SEO-friendly versions of the Flutter web application can be accomplished in two different ways:
 1. **Interactive Mode:** Utilizes a UI overlay for real-time visualization and control.
 2. [**Automated Mode:**](#automated-mode-via-widget-tester) Executes programmatically via the Flutter widget tester.
 
 ### Interactive Mode
+
 Interactive mode serves two primary purposes:
 1. **Debugging:** It allows you to inspect the specific HTML content generated for each page and test different output formats (e.g., HTML only, HTML + JSON-LD, or Microdata). It also provides visual debugging by rendering colored borders around the widgets currently flagged for SEO tracking based on their wrapper type.
 2. **HTML Generation:** As you navigate through the web application, you can dynamically capture the generated content. The package supports automatically downloading the output as a file, downloading on demand, copying it to the clipboard, or streaming it directly to a backend REST endpoint via the `EasySEOManager.onGenerate` callback.
@@ -698,6 +658,7 @@ Interactive mode serves two primary purposes:
 ![Easy SEO Interactive Mode](./docs/images/interactive_mode.png)
 
 ### Automated Mode via Widget Tester
+
 While Interactive Mode is ideal for manual verification and rapid debugging, it is impractical for large-scale production applications with high-cardinality routing, such as an e-commerce platform with hundreds of product detail pages. For these use cases, an automated, headless pipeline is required.
 
 Leveraging the `WidgetTester` framework allows for fully automated, headless HTML generation. Although programmatic widget testing in Flutter introduces specific synchronization challenges, the `flutter_easy_seo` package provides structural primitives and helpers to streamline the implementation.
@@ -711,7 +672,7 @@ When engineering an automated generation script, several critical architectural 
 
 - [**Headless Environment Limitations & Mocking:**](#headless-environment-limitations--mocking) Because the headless test runner does not execute within a true browser context, certain web-specific APIs are unavailable. For example, browser-native URL retrieval hooks fail and must be injected via alternate configuration methods. Furthermore, dependencies that use platform-specific guards can cause runtime exceptions; while code may use `if (!kIsWeb)` to guard a mobile package like path_provider, `kIsWeb` evaluates to `false` in a standard command-line test environment. Consequently, these platform-dependent packages must be explicitly mocked.
 
-#### **Asynchronous Content Settlement**
+#### Asynchronous Content Settlement
 
 The most critical factor when generating SEO-friendly HTML content is ensuring the page has fully loaded. A standard `tester.pumpAndSettle()` is often insufficient when a page fetches asynchronous data (e.g., from a Riverpod database provider) or dynamically updates its locale state.
 
@@ -732,7 +693,8 @@ This function temporarily bypasses the synchronous `FakeAsync` testing zone to a
 
 - **Custom Guard Verification (`extraCheck`):** Even after the route mounts and the data resolves, race conditions can still occur. For example, during a dynamic language switch (e.g., `/de/prices` to `/en/prices`), the route structure matches immediately, but localized text assets may take an extra frame to propagate. Pass an extraCheck callback to verify that the rendered UI elements align perfectly with your underlying localization state before taking the snapshot.
 
-#### **Dynamic Route Discovery**
+#### Dynamic Route Discovery
+
 When data is loaded dynamically from a database, a web application will typically utilize dynamic routing. For example, a product overview page may link to individual product detail pages where a unique product ID forms part of the URL path. You can define these dynamic paths within `flutter_easy_seo` as follows:
 ```dart
 EasySEOManager.instance.init(
@@ -752,7 +714,8 @@ for (final route in gatheredRoutes) {
 }
 ```
 
-#### **Asynchronous Context Execution**
+#### Asynchronous Context Execution
+
 When the widget tester requires real-world operations to complete—such as asynchronous data loading—the following utility function can be used. This underpins the implementation of the `waitForRoute` method described above.
 ```dart
 Future<void> waitUntilReady(
@@ -762,7 +725,8 @@ Future<void> waitUntilReady(
   })
 ```
 
-#### **Headless Environment Limitations & Mocking**
+#### Headless Environment Limitations & Mocking
+
 Certain browser dependencies and platform capabilities used in a Flutter web application are unavailable in a headless widget testing environment. To address this, the `flutter_easy_seo` package provides out-of-the-box mocks and sensible environmental defaults.
 
 Use this wrapper function to initialize your test definitions instead of the standard `testWidgets`:
@@ -792,6 +756,7 @@ void setRouteBeforePumpWidget(WidgetTester tester, String initialRoute)
 The final link in the architecture chain is serving your generated, SEO-friendly HTML files to search engine crawlers. This process consists of two primary operational phases:
 
 ### 1. HTML Snapshot Storage Strategies
+
 Depending on your infrastructure setup, you can persist the generated HTML files in any directory accessible to your web server. 
 
 * **Static Embeds (Small Sites):** For small or static websites where content updates are infrequent, snapshots can be placed directly into Flutter's `web/` folder directory. They will then be included in standard build and deployment workflows.
@@ -802,7 +767,6 @@ Depending on your infrastructure setup, you can persist the generated HTML files
         A["Interactive Mode or<br>Widget Tester"] -->|Sends generated HTML| B("Server REST Endpoint")
         B -->|Writes Static Output| C[("Web Folder / Storage")]
 
-        %% Styling to match professional tech docs
         style A fill:#1351B4,stroke:#fff,stroke-width:2px,color:#fff
         style B fill:#008060,stroke:#fff,stroke-width:2px,color:#fff
         style C fill:#4A5568,stroke:#fff,stroke-width:2px,color:#fff
@@ -832,6 +796,7 @@ Depending on your infrastructure setup, you can persist the generated HTML files
     ```
 
 ### 2. User-Agent Request Routing
+
 Next, you must configure your production web server to transparently intercept web spiders and serve these static HTML files while leaving human users unaffected. 
 
 When deploying to an **Apache-2.0** environment, you can implement this conditional reverse-proxy logic directly inside your `.htaccess` file:
@@ -860,6 +825,45 @@ When deploying to an **Apache-2.0** environment, you can implement this conditio
   # (Your standard Flutter web routing rules continue here...)
 </IfModule>
 ```
+## Examples (Live)
+
+### Package `/example` 
+
+The example project of the `flutter_easy_seo` package is available as a live web app with Interactive Mode enabled.
+
+This example features a mocked hotel reservation web app that demonstrates several key features of the `flutter_easy_seo` package in action:
+- **EasySEOPages:** Showcases a Landing Page, a Hotels List Page, and a Hotel Details Popup Dialog—demonstrating how a popup can be seamlessly turned into a dedicated, SEO-friendly HTML page.
+- **Semantic Wrappers:** Highlights how to wrap widgets to generate SEO-relevant output for headers, main sections, footers, navigation, breadcrumbs, FAQs, and lists, alongside structured JSON-LD data (e.g., Hotel Details complete with Guest Reviews).
+- **Live DOM Injection:** While the app runs for human users, the package actively injects the exact same semantic HTML directly into the browser DOM.
+- **Interactive Mode:** Allows you to preview and download generated SEO HTML content, providing a visual presentation of the page elements currently flagged for SEO output using distinct colored borders.
+- **Locale Support:** Native support for locales within the route structure, which are automatically factored into the `sitemap.xml` file generation.
+- **Dynamic Routes:** Automatically detects any anchor URL in generated pages that matches a configured dynamic route pattern, dynamically appending it to the `sitemap.xml`.
+
+These are the direct links to the demo pages:
+- Landing Page (`https://fluttereasyseo.lxandr.at/example/en`):
+    - <a href="https://fluttereasyseo.lxandr.at/example/en" target="_blank" rel="noopener noreferrer">User Version 🌐</a>/ <a href="https://fluttereasyseo.lxandr.at/example/en?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
+- Hotels Overview Page (`https://fluttereasyseo.lxandr.at/example/en/hotels`):
+    - <a href="https://fluttereasyseo.lxandr.at/example/en/hotels" target="_blank" rel="noopener noreferrer">User Version 🌐</a>/ <a href="https://fluttereasyseo.lxandr.at/example/en/hotels?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
+- Hotels Details Page (`https://fluttereasyseo.lxandr.at/example/en/hotels/2`):
+    - <a href="https://fluttereasyseo.lxandr.at/example/en/hotels/2" target="_blank" rel="noopener noreferrer">User Version 🌐</a>/ <a href="https://fluttereasyseo.lxandr.at/example/en/hotels/2?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
+
+- The visually unappealing SEO versions will be indexed, whereas the flutter web app will not:
+
+    ![Indexed Real World Example](./docs/images/live_example_listing.png)
+
+### Real World Example
+
+Besides the `/example` of the package, you can also take a look at a real world example that uses the`flutter_easy_seo`:<br> 
+- Landing Page (`https://preisvergleich.lxandr.at/en`):
+    - <a href="https://preisvergleich.lxandr.at/en" target="_blank" rel="noopener noreferrer">User Version 🌐</a>/ <a href="https://preisvergleich.lxandr.at/en?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
+- Product Price Compare Page (`https://preisvergleich.lxandr.at/en/compare`):
+    - <a href="https://preisvergleich.lxandr.at/en/compare" target="_blank" rel="noopener noreferrer">User Version 🌐</a>/ <a href="https://preisvergleich.lxandr.at/en/compare?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
+- Product Price Compare Details Page (`https://preisvergleich.lxandr.at/en/compare/1`):
+    - <a href="https://preisvergleich.lxandr.at/en/compare/1" target="_blank" rel="noopener noreferrer">User Version 🌐</a>/ <a href="https://preisvergleich.lxandr.at/en/compare/1?bot=1" target="_blank" rel="noopener noreferrer">SEO Version 🌐</a>
+
+- The visually unappealing SEO versions will be indexed, whereas the visually pleasing flutter web app will not:
+
+    ![Indexed Package Live Example](./docs/images/real_world_listing.png)
 
 ## License
 
