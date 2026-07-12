@@ -63,22 +63,27 @@ DirectoryIndex index.html
   # SECTION 2: HUMAN NAVIGATION & FLUTTER ROUTING
   # ============================================================
 
-  # 1. PRIMARY ROUTES: Serve Flutter app for Root and Language paths
-  # This covers: / , /de, /en, /fr
-  RewriteRule ^(de|en|fr)?/?$ index.html [L]
-
-  # 2. DEEP LINKS: Serve Flutter app for specific pages
-  # This covers: /de/hotels, /en/hetel, and /de/hotels/2
-  RewriteRule ^(de|en|fr)/hotels(/[^/]+)?/?$ index.html [L]
-
-  # 3. EXCLUSIONS: System files that should never be rerouted
-  RewriteCond %{REQUEST_URI} ^/example/(robots\.txt|sitemap\.xml) [NC]
+  # 1. OPTIMIZATION: Bypass routing for actual files, directories, or symbolic links.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d [OR]
+  RewriteCond %{REQUEST_FILENAME} -l
   RewriteRule ^ - [L]
 
-  # 4. INVALID ROUTE FALLBACK: Send unknown paths back to Root
-  # If it's not a real file, not a directory, and not already index.html
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
+  # 2. EXCLUSIONS: Protect critical system files inside /example/ from being hijacked
+  # Evaluates against the full absolute URL path to catch /example/robots.txt or /example/de/robots.txt
+  RewriteCond %{REQUEST_URI} ^/example/(?:[a-z]{2}(?:[_\-][a-zA-Z]{2})?/)?(robots\.txt|sitemap\.xml) [NC]
+  RewriteRule ^ - [L]
+
+  # 3. GENERIC ROOT & LOCALE ROUTING (Relative to /example/)
+  # Matches: /example/ , /example/de , /example/de_AT , /example/en-US
+  RewriteRule ^([a-z]{2}(?:[_\-][a-zA-Z]{2})?)?/?$ index.html [L]
+
+  # 4. GENERIC DEEP LINK ROUTING (Relative to /example/)
+  # Matches: /example/de/hotels , /example/de_AT/hotels/vienna
+  RewriteRule ^([a-z]{2}(?:[_\-][a-zA-Z]{2})?)/(.+)$ index.html [L]
+
+  # 5. INVALID ROUTE FALLBACK: Safe fallback back to the /example/ subdirectory root
+  # If it hasn't matched anything above, isn't index.html, and isn't a real asset.
   RewriteCond %{REQUEST_URI} !^/example/index\.html
   RewriteRule ^.*$ /example/ [R=301,L]
 </IfModule>

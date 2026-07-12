@@ -1,6 +1,13 @@
 # flutter_easy_seo
+⚖️ **License:** Free for solo developers & micro-startups. Teams of 6+ or organizations making greater than $1M revenue require a commercial tier. See [License Details](#%EF%B8%8F-license--commercial-usage).
 
-A Flutter package that generates SEO-friendly HTML from the live widget tree for search engine bots.
+
+### *“At this time, Flutter is not suitable for static websites with text-rich flow-based content... application output doesn't align with what search engines need to properly index.”*
+— [**Official Flutter Documentation**](https://docs.flutter.dev/platform-integration/web/faq)
+
+## **We fixed that.** 
+
+`flutter_easy_seo` is a production-grade rendering engine that flattens your live Flutter widget tree into optimized, semantic, bot-readable HTML and metadata. By bridging your client-side application state with server-side delivery requirements, it gives you full control over how search engine crawlers index your dynamic canvas.
 
 1. [**Initialize, Flag Views as Pages, and Expose Widgets**](#quick-start):
     - Use [**`EasySEOManager`**](#easyseomanager-singleton) within your `main()` function.
@@ -10,7 +17,7 @@ A Flutter package that generates SEO-friendly HTML from the live widget tree for
     1. [Interactive Mode](#interactive-mode)
     2. [Automated Mode via Widget Tester](#automated-mode-via-widget-tester)
 3. [**Serve**](#serving-content-to-search-engine-bots) these static HTML pages to search engine bots while serving the Flutter app to human users.
-4. [**See Web App Live in Action**](#examples-live)
+4. [**See Web App Live in Action**](#examples-live) (Live Examples)
 
 ## Why `flutter_easy_seo`?
 
@@ -45,7 +52,11 @@ Add `flutter_easy_seo` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_easy_seo: ^0.0.1
+  flutter_easy_seo: ^1.0.0
+```
+or
+```bash
+flutter pub add flutter_easy_seo
 ```
 
 ## Quick Start
@@ -829,7 +840,7 @@ When deploying to an **Apache-2.0** environment, you can implement this conditio
 
 ### Package `/example` 
 
-The example project of the `flutter_easy_seo` package is available as a live web app with Interactive Mode enabled.
+The example project of the `flutter_easy_seo` package is available as a live web app with Interactive Mode enabled. It is a fairly complex example that also demonstrates the capabilities and setup (e.g `.htaccess`) of the full pipeline using the `flutter_easy_seo` package. Read the [./example/README.md](./example/README.md) for a thorough description.
 
 This example features a mocked hotel reservation web app that demonstrates several key features of the `flutter_easy_seo` package in action:
 - **EasySEOPages:** Showcases a Landing Page, a Hotels List Page, and a Hotel Details Popup Dialog—demonstrating how a popup can be seamlessly turned into a dedicated, SEO-friendly HTML page.
@@ -865,6 +876,21 @@ Besides the `/example` of the package, you can also take a look at a real world 
 
     ![Indexed Package Live Example](./docs/images/real_world_listing.png)
 
-## License
+## ⚖️ License & Commercial Usage
 
-MIT License
+This package is distributed under a custom **Source-Available Small Business License**. 
+
+* **Indie Devs & Micro-Startups (5 or fewer people AND less than $1M revenue):** 🟢 **100% FREE** for unlimited projects.
+* **Growing Studios & Enterprises:** 🔴 A commercial license is required. 
+
+👉 [**Get a Commercial License instantly on Polar**][polar-checkout]
+
+### Available Tiers:
+* 💼 **Studio Tier (€79)** — For teams of **6 to 15 people** (unlimited projects).
+* 🚀 **Enterprise Tier (€249)** — For teams of **16+ people OR organizations making greater than $1M annual revenue** (unlimited projects).
+
+*Both tiers grant instant, automated access to your unique license key (`FEZSEO-...`) and legal waiver clearance via Polar.*
+
+*For full legal terms, see the [LICENSE](./LICENSE) file.*
+
+[polar-checkout]: https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_pcqLLJqmvM9AB5hn9DKFFjrm69WhLehb6KfGg2ZSnjO/redirect

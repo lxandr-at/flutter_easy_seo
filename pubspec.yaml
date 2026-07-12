@@ -1,6 +1,6 @@
 name: flutter_easy_seo
-description: A Flutter package for generating SEO-friendly HTML from widget trees for search engine bots.
-version: 0.0.1
+description: Generates SEO HTML from Flutter widget trees for search engine bots. FREE for individuals and small businesses (≤ 5 employees, < $1M revenue). Commercial license required for enterprises.
+version: 1.0.0
 homepage: https://github.com/yourusername/flutter_easy_seo
 
 environment:
