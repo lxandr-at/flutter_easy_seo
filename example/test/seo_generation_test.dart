@@ -7,6 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as p;
 
+import 'seo_sync_service.dart' show SEOSyncService;
+
+bool sendToRestApi = false;
+
 void main() {
   setUpAll(() {
     TestWidgetsFlutterBinding.ensureInitialized();
@@ -108,51 +112,55 @@ String _exampleRoot() {
 }
 
 Future<void> sendAndWait(String fullHtml, String currentLanguage, String path) async {
-  /// ALTERNATIVE: Use a service to send the generated data to a REST endpoint
-  /// that stores the files in your web server so they can be delivered
-  /// to search bots.
-  // debugPrint('🚀 [TEST] Sending generated SEO HTML to server for path: $path');
-  // await SEOSyncService().sendGeneratedData(
-  //   html: fullHtml,
-  //   language: currentLanguage,
-  //   path: '$path/index',
-  // );
-  // await Future.delayed(const Duration(seconds: 1));
-
-  // --- Snapshot to local filesystem ---
-  final exampleRoot = _exampleRoot();
-  final cleanPath = path.replaceAll(RegExp(r'^/+|/+$'), '');
-  final parts = cleanPath.isEmpty ? <String>[] : cleanPath.split('/');
-  final targetDir = Directory(
-    p.joinAll([exampleRoot, 'web', 'seo_snapshots', ...parts]),
-  );
-  if (!targetDir.existsSync()) targetDir.createSync(recursive: true);
-  File(p.join(targetDir.path, 'index.html')).writeAsStringSync(fullHtml);
-  debugPrint('📁 [TEST] Saved to: ${targetDir.path}${p.separator}index.html');
-  await Future.delayed(const Duration(milliseconds: 100));
+  if (sendToRestApi) {
+    // Use a service to send the generated data to a REST endpoint
+    // that stores the files in your web server so they can be delivered
+    // to search bots.
+    debugPrint('🚀 [TEST] Sending generated SEO HTML to server for path: $path');
+    await SEOSyncService().sendGeneratedData(
+      html: fullHtml,
+      path: path,
+      forceIOClient: true,
+    );
+    await Future.delayed(const Duration(seconds: 1));
+  } else {
+    // --- Snapshot to local filesystem ---
+    final exampleRoot = _exampleRoot();
+    final cleanPath = path.replaceAll(RegExp(r'^/+|/+$'), '');
+    final parts = cleanPath.isEmpty ? <String>[] : cleanPath.split('/');
+    final targetDir = Directory(
+      p.joinAll([exampleRoot, 'web', 'seo_snapshots', ...parts]),
+    );
+    if (!targetDir.existsSync()) targetDir.createSync(recursive: true);
+    File(p.join(targetDir.path, 'index.html')).writeAsStringSync(fullHtml);
+    debugPrint('📁 [TEST] Saved to: ${targetDir.path}${p.separator}index.html');
+    await Future.delayed(const Duration(milliseconds: 100));
+  }
 }
 
 Future<void> generateAndSendSitemap(WidgetTester tester) async {
   String sitemapContent = EasySEOManager.instance.generateSitemapContent();
   if (sitemapContent.isNotEmpty) {
     await tester.runAsync(() async {
-      /// ALTERNATIVE: Use a service to send the generated sitemap.xml to a REST endpoint
-      /// that stores the files in your web server.
-      // debugPrint('🚀 [TEST] Sending generated sitemap.xml to server!');
-      // await SEOSyncService().sendSitemap(
-      //     sitemapXmlContent: sitemapContent,
-      // );
-      // await Future.delayed(const Duration(seconds: 1));
-
-      // --- Snapshot to local filesystem ---
-      final exampleRoot = _exampleRoot();
-      final targetDir = Directory(
-        p.joinAll([exampleRoot, 'web']),
-      );
-      if (!targetDir.existsSync()) targetDir.createSync(recursive: true);
-      File(p.join(targetDir.path, 'sitemap.xml')).writeAsStringSync(sitemapContent);
-      debugPrint('📁 [TEST] Saved to: ${targetDir.path}${p.separator}sitemap.xml');
-      await Future.delayed(const Duration(milliseconds: 100));
+      if (sendToRestApi) {
+        //Use a service to send the generated sitemap.xml to a REST endpoint
+        // that stores the files in your web server.
+        debugPrint('🚀 [TEST] Sending generated sitemap.xml to server!');
+        await SEOSyncService().sendSitemap(
+            sitemapXmlContent: sitemapContent,
+        );
+        await Future.delayed(const Duration(seconds: 1));
+      } else {
+        // --- Snapshot to local filesystem ---
+        final exampleRoot = _exampleRoot();
+        final targetDir = Directory(
+          p.joinAll([exampleRoot, 'web']),
+        );
+        if (!targetDir.existsSync()) targetDir.createSync(recursive: true);
+        File(p.join(targetDir.path, 'sitemap.xml')).writeAsStringSync(sitemapContent);
+        debugPrint('📁 [TEST] Saved to: ${targetDir.path}${p.separator}sitemap.xml');
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
     });
   }
 }

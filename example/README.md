@@ -23,7 +23,7 @@ flutter run -d chrome
 flutter test test/seo_generation_test.dart
 ```
 
-Generated snapshot files appear under `web/seo_snapshots/`. Open `web/sitemap.xml` to inspect the sitemap.
+The test writes snapshot files to `web/seo_snapshots/` and `web/sitemap.xml` by default (`sendToRestApi = false`, line 12). Set it to `true` to upload generated HTML to a REST endpoint instead.
 
 ---
 
@@ -351,8 +351,10 @@ Key components of the pipeline:
 - **`setRouteBeforePumpWidget`** — simulates the browser address bar having a specific URL loaded before the app builds.
 - **`waitForRoute`** — yields the `FakeAsync` zone to let real async operations settle, waits for `ValueKey(route)` to appear in the tree, resolves `EasySEOPage.whenDone`, and supports `extraCheck` for custom guards (e.g., localization propagation).
 - **`generateActive()`** — calls `EasySEOManager.instance.generateActive()` inside `tester.runAsync()` to allow real I/O.
-- **`sendAndWait()`** — writes the full HTML snapshot to `web/seo_snapshots/<path>/index.html`.
-- **`generateAndSendSitemap()`** — calls `EasySEOManager.instance.generateSitemapContent()` and writes `web/sitemap.xml`.
+- **`sendAndWait()`** — when `sendToRestApi = true`, sends the generated HTML to a REST endpoint via `SEOSyncService.sendGeneratedData()`; when `false`, writes to `web/seo_snapshots/<path>/index.html`.
+- **`generateAndSendSitemap()`** — calls `EasySEOManager.instance.generateSitemapContent()` and either sends it via `SEOSyncService.sendSitemap()` or writes `web/sitemap.xml` locally, controlled by `sendToRestApi`.
+- **`sendToRestApi`** (line 12) — global boolean that switches between REST API delivery and local filesystem snapshots.
+- **`SEOSyncService`** (`test/seo_sync_service.dart`) — REST client that sends generated HTML as `multipart/form-data` POSTs to `https://localhost/api/generatedSEOPage` and `https://localhost/api/generatedSitemap`, with `X-API-Key` header and `app_name`/`path` fields. The endpoint parameters (`apiKey`, `apiUrl`, `appName`) are hardcoded as `final` fields (lines 8-10) — edit them directly for your server. The `forceIOClient` parameter enables an `IOClient` with `badCertificateCallback` for local development against self-signed HTTPS endpoints.
 
 Run the test:
 
@@ -360,7 +362,7 @@ Run the test:
 flutter test test/seo_generation_test.dart
 ```
 
-After completion, inspect `web/seo_snapshots/` for the generated HTML files and `web/sitemap.xml` for the sitemap.
+After completion, the snapshots are either delivered to the configured REST endpoint (`sendToRestApi = true`) or written to `web/seo_snapshots/` and `web/sitemap.xml` (`sendToRestApi = false`).
 
 ### 9. Serving to Bots
 
@@ -507,7 +509,8 @@ example/
 │       ├── dialog_page.dart          ← Page<dynamic> for dialog routes
 │       └── raw_seo_demo.dart         ← easySeoHtml with SEOHtml subclasses
 ├── test/
-│   └── seo_generation_test.dart      ← Automated SEO generation pipeline
+│   ├── seo_generation_test.dart      ← Automated SEO generation pipeline
+│   └── seo_sync_service.dart         ← REST client for delivering snapshots to server
 └── web/
     ├── .htaccess                     ← Bot detection + snapshot serving
     ├── index.html
