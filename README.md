@@ -883,7 +883,7 @@ This package is distributed under a custom **Source-Available Small Business Lic
 * **Indie Devs & Micro-Startups (5 or fewer people AND less than $1M revenue):** 🟢 **100% FREE** for unlimited projects.
 * **Growing Studios & Enterprises:** 🔴 A commercial license is required. 
 
-👉 [**Get a Commercial License instantly on Polar**][polar-checkout]
+👉 **!! COMING SOON !!** [**Get a Commercial License instantly on Polar**][polar-checkout]
 
 ### Available Tiers:
 * 💼 **Studio Tier (€79)** — For teams of **6 to 15 people** (unlimited projects).
@@ -893,4 +893,4 @@ This package is distributed under a custom **Source-Available Small Business Lic
 
 *For full legal terms, see the [LICENSE](./LICENSE) file.*
 
-[polar-checkout]: https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_pcqLLJqmvM9AB5hn9DKFFjrm69WhLehb6KfGg2ZSnjO/redirect
+[polar-checkout]: 
