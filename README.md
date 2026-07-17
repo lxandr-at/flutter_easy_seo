@@ -1,5 +1,5 @@
 # flutter_easy_seo
-⚖️ **License:** Free for solo developers & micro-startups. Teams of 6+ or organizations making greater than $1M revenue require a commercial tier. See [License Details](#%EF%B8%8F-license--commercial-usage).
+⚖️ **License:** Free for solo developers & micro-startups. Teams of 6+ or organizations making greater than $1M revenue require a commercial tier (including GitHub access of server side projects complementing this package). See [License Details](#%EF%B8%8F-license--commercial-usage).
 
 
 ### *“At this time, Flutter is not suitable for static websites with text-rich flow-based content... application output doesn't align with what search engines need to properly index.”*
@@ -145,7 +145,7 @@ The architecture consists of 4 main parts:
 - **Widget wrappers, HTML helpers, etc.:** Create specific HTML, JSON-LD and microdata output.
 - **File generation:** Generate HTML and sitemap.xml files either interactively or automatically with a widget tester.
 
-![Easy SEO Architecture Overview](./docs/images/architecture_overview.png)
+![Easy SEO Architecture Overview](doc/images/architecture_overview.png)
 
 ### EasySEOManager Singleton
 
@@ -666,7 +666,7 @@ Interactive mode serves two primary purposes:
 1. **Debugging:** It allows you to inspect the specific HTML content generated for each page and test different output formats (e.g., HTML only, HTML + JSON-LD, or Microdata). It also provides visual debugging by rendering colored borders around the widgets currently flagged for SEO tracking based on their wrapper type.
 2. **HTML Generation:** As you navigate through the web application, you can dynamically capture the generated content. The package supports automatically downloading the output as a file, downloading on demand, copying it to the clipboard, or streaming it directly to a backend REST endpoint via the `EasySEOManager.onGenerate` callback.
 
-![Easy SEO Interactive Mode](./docs/images/interactive_mode.png)
+![Easy SEO Interactive Mode](doc/images/interactive_mode.png)
 
 ### Automated Mode via Widget Tester
 
@@ -860,7 +860,7 @@ These are the direct links to the demo pages:
 
 - The visually unappealing SEO versions will be indexed, whereas the flutter web app will not:
 
-    ![Indexed Real World Example](./docs/images/live_example_listing.png)
+    ![Indexed Real World Example](doc/images/live_example_listing.png)
 
 ### Real World Example
 
@@ -874,7 +874,7 @@ Besides the `/example` of the package, you can also take a look at a real world 
 
 - The visually unappealing SEO versions will be indexed, whereas the visually pleasing flutter web app will not:
 
-    ![Indexed Package Live Example](./docs/images/real_world_listing.png)
+    ![Indexed Package Live Example](doc/images/real_world_listing.png)
 
 ## ⚖️ License & Commercial Usage
 
@@ -886,8 +886,12 @@ This package is distributed under a custom **Source-Available Small Business Lic
 👉 [**Get a Commercial License instantly on Polar**][polar-checkout]
 
 ### Available Tiers:
-* 💼 **Studio Tier (€79)** — For teams of **6 to 15 people** (unlimited projects).
-* 🚀 **Enterprise Tier (€249)** — For teams of **16+ people OR organizations making greater than $1M annual revenue** (unlimited projects).
+* 💼 **Studio Tier (\$79)** — For teams of **6 to 15 people** (unlimited projects).
+  -  Includes access to GitHub `flutter_easy_seo_api`: <br>A FastAPI-based service designed to receive and store dynamically generated SEO HTML pages from a Flutter application using the flutter_easy_seo package. See [README.md](https://gist.github.com/BearAndBunny/bee86a706db69b60e3cc367930045b93)
+
+* 🚀 **Enterprise Tier (\$249)** — For teams of **16+ people OR organizations making greater than $1M annual revenue** (unlimited projects).
+  -  Includes access to GitHub `flutter_easy_seo_api`: <br>A FastAPI-based service designed to receive and store dynamically generated SEO HTML pages from a Flutter application using the flutter_easy_seo package. See [README.md](https://gist.github.com/BearAndBunny/bee86a706db69b60e3cc367930045b93)
+  -  Includes access to GitHub `flutter_easy_seo_server`: <br>A turnkey Docker deployment stack that pairs Caddy 2 (automatic HTTPS, edge caching, bot detection) with `flutter_easy_seo_api` service to receive SEO-friendly HTML files. See [README.md](https://gist.github.com/BearAndBunny/3ee01e8202489e42385e2ae8544c5a2e)
 
 *Both tiers grant instant, automated access to your unique license key (`FEZSEO-...`) and legal waiver clearance via Polar.*
 
