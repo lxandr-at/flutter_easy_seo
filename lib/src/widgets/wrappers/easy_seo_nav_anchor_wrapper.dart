@@ -1,5 +1,15 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
+/// Produces `<li><a>` pairs for use inside [EasySEONavWrapper].
+///
+/// Must be used as a child of [EasySEONavWrapper] to form a valid
+/// navigation structure. Each instance contributes both the visual `<a>` tag
+/// (via [EasySEOLinkWrapper.toSEOHtml]) and registers an [SEONavItem] during
+/// tree traversal, which the parent [EasySEONavWrapper] collects for JSON-LD
+/// generation.
+///
+/// Using this wrapper outside of [EasySEONavWrapper] will produce orphaned
+/// `<li>` elements without a containing `<ul>` or `<ol>`.
 class EasySeoNavAnchorWrapper extends EasySEOLinkWrapper {
   const EasySeoNavAnchorWrapper({
     super.key,

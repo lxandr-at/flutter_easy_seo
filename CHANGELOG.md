@@ -1,3 +1,6 @@
+## 1.0.1
+- refactor to make some public elements private
+- code doc comments
 ## 1.0.0
 - Complete SEO-friendly HTML documents from the live widget tree
 - Automatic `sitemap.xml` generation

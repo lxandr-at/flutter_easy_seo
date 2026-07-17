@@ -1,9 +1,34 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
+/// Callback invoked after a page is generated.
+///
+/// Receives the [EasySEOGenerationResult] (either [SeoSuccess] with the full
+/// HTML document or [SeoSkipped] when generation was suppressed). Use this to
+/// send the result to a REST endpoint, write to disk, or integrate with other
+/// services.
 typedef EasySEOOnGenerateCallback = void Function(EasySEOGenerationResult generatedData);
 
+/// Sortable key for the page-controller registry.
+///
+/// Used as the key in the [SplayTreeMap] that stores registered
+/// [EasySEOPageController] instances. The [compareTo] ordering ensures that
+/// deeper, longer, or lower-ranked paths resolve predictably.
+///
+/// The comparison follows a four-level cascade:
+/// 1. **Path depth** (slash count) — shallower routes sort first.
+/// 2. **Path length** — shorter strings sort before longer ones.
+/// 3. **Explicit [rank]** — within identical paths, rank 0 sorts before rank 1.
+/// 4. **Alphabetical** — final tie-breaker to guarantee total order.
+@visibleForTesting
 class SeoRouteKey implements Comparable<SeoRouteKey> {
+  /// The URL path string for this route key.
   final String path;
+
+  /// Explicit rank for tie-breaking identical paths.
+  ///
+  /// A lower rank sorts before a higher one when [path] and depth match.
+  /// This is used to resolve overlapping route registrations (e.g. a parent
+  /// page registered before its child).
   final int rank;
 
   const SeoRouteKey({
@@ -13,6 +38,12 @@ class SeoRouteKey implements Comparable<SeoRouteKey> {
 
   int get _slashCount => '/'.allMatches(path).length;
 
+  /// Compares this key with [other] using a four-level cascade:
+  ///
+  /// 1. **Slash count** — fewer slashes (shallower routes) sort first.
+  /// 2. **Path length** — shorter strings before longer ones.
+  /// 3. **Rank** — within identical paths, lower rank sorts first.
+  /// 4. **Alphabetical** — final tie-breaker for sibling routes.
   @override
   int compareTo(SeoRouteKey other) {
     // 1. Primary Sort: Slash Count (Deeper sub-routes always move to the back)
@@ -33,14 +64,17 @@ class SeoRouteKey implements Comparable<SeoRouteKey> {
     return path.compareTo(other.path);
   }
 
+  /// Equality based on [path] and [rank].
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
           other is SeoRouteKey && rank == other.rank && path == other.path;
 
+  /// Combined hash of [rank] and [path].
   @override
   int get hashCode => rank.hashCode ^ path.hashCode;
 
+  /// Formatted as `$path [Rank: $rank]`.
   @override
   String toString() => '$path [Rank: $rank]';
 }
@@ -123,29 +157,56 @@ class EasySEOManager {
   // singleton
   EasySEOManager._internal();
   static final EasySEOManager _instance = EasySEOManager._internal();
+
+  /// Global singleton instance of the SEO manager.
+  ///
+  /// All configuration and generated state is accessed through this instance.
   static EasySEOManager get instance => _instance;
 
   // --- Instance Properties ---
 
-  // ValueNotifiers are now instance-level, accessible via EasySEOConfig.instance
+  /// Globally controls whether SEO generation is active.
+  ///
+  /// When `false`, all page generation and HTML output is suppressed.
   final ValueNotifier<bool> enabled = ValueNotifier(true);
+
+  /// When `true`, generated HTML files are written to the local storage target.
   final ValueNotifier<bool> enableFileOutput = ValueNotifier(false);
+
+  /// When `true`, generated HTML is injected into the live DOM.
   final ValueNotifier<bool> enableLiveOutput = ValueNotifier(false);
+
+  /// Disables the [onGenerate] callback.
+  ///
+  /// Set to `true` in automated widget tests to prevent the callback from
+  /// firing without altering the app's [onGenerate] configuration.
   final ValueNotifier<bool> disableOnGenerate = ValueNotifier(false);
+
+  /// Shows a widget overlay inside the UI for debugging and interactive HTML
+  /// generation.
   final ValueNotifier<bool> enableInteractiveMode = ValueNotifier(false);
+
+  /// Dictates whether a modal dialog is shown in interactive mode to preview
+  /// the generated output.
   final ValueNotifier<bool> showResultDialog = ValueNotifier(true);
+
+  /// Highlights SEO wrapper widgets with coloured debug borders.
   final ValueNotifier<bool> showHighlights = ValueNotifier(false);
+
+  /// Controls the rendering format (microdata, JSON-LD, or both).
+  ///
+  /// Passed down to [SEOHtml.toHtmlString] during page generation.
   final ValueNotifier<SEORenderMode> renderMode = ValueNotifier(SEORenderMode.full);
-  bool interactiveMinimized = false;
-  final ValueNotifier<Offset?> panelPosition = ValueNotifier(null);
-  final ValueNotifier<Size?> panelSize = ValueNotifier(null);
+  bool _interactiveMinimized = false;
+  final ValueNotifier<Offset?> _panelPosition = ValueNotifier(null);
+  final ValueNotifier<Size?> _panelSize = ValueNotifier(null);
 
   int _overlayRefCount = 0;
   OverlayEntry? _overlayEntry;
 
-  OverlayEntry? get panelOverlayEntry => _overlayEntry;
+  OverlayEntry? get _panelOverlayEntry => _overlayEntry;
 
-  void showOverlay(BuildContext context) {
+  void _showOverlay(BuildContext context) {
     _overlayRefCount++;
     if (_overlayRefCount == 1) {
       _overlayEntry = OverlayEntry(
@@ -165,9 +226,9 @@ class EasySEOManager {
   }
 
   void _reclampPanelPosition(Size screen) {
-    final position = panelPosition.value;
+    final position = _panelPosition.value;
     if (position == null) return;
-    final size = panelSize.value;
+    final size = _panelSize.value;
     final clampW = (size?.width ?? 56).clamp(56, screen.width);
     final clampH = (size?.height ?? 56).clamp(56, screen.height);
     final clamped = Offset(
@@ -175,11 +236,11 @@ class EasySEOManager {
       position.dy.clamp(0, screen.height - clampH),
     );
     if (clamped != position) {
-      panelPosition.value = clamped;
+      _panelPosition.value = clamped;
     }
   }
 
-  void hideOverlay() {
+  void _hideOverlay() {
     _overlayRefCount--;
     if (_overlayRefCount <= 0) {
       _overlayRefCount = 0;
@@ -188,23 +249,71 @@ class EasySEOManager {
     }
   }
 
-  String? baseUrl;
-  List<String> supportedLanguages = const [];
-  List<String> pages = const [];
-  List<EasySEOHeadTagSource> headTags = const [];
-  List<String> dynamicPathPatterns = const [];
+  String? _baseUrl;
+
+  /// The root domain URL used to build absolute URLs (canonical, alternate).
+  ///
+  /// If not provided and the app runs as a web app, the URL is retrieved from
+  /// the current browser URL at generation time. When `null`, relative paths
+  /// are returned as-is by [formatFullUrl].
+  String? get baseUrl => _baseUrl;
+
+  List<String> _supportedLanguages = const [];
+
+  /// Language codes used for prefix-routing (e.g. `['en', 'de']`).
+  ///
+  /// The first language is the default, which may map to `/` without a prefix.
+  /// These are used when generating the sitemap and resolving alternate URLs.
+  List<String> get supportedLanguages => _supportedLanguages;
+
+  List<String> _pages = const [];
+
+  /// Static route paths used to build the sitemap.
+  ///
+  /// Dynamic patterns (containing `:`) are automatically extracted into
+  /// [dynamicPathPatterns] during [init] and excluded from this list.
+  List<String> get pages => _pages;
+
+  List<EasySEOHeadTagSource> _headTags = const [];
+
+  /// Global default head tag sources injected into every generated page.
+  ///
+  /// These are merged with per-page head tags (from [EasySEOPage.headTags])
+  /// when [EasySEOPage.includeGlobals] is `true`.
+  List<EasySEOHeadTagSource> get headTags => _headTags;
+
+  List<String> _dynamicPathPatterns = const [];
+
+  /// Dynamic route patterns auto-extracted from [pages] during [init].
+  ///
+  /// Patterns contain `:` segments (e.g. `products/:id`). URLs in generated
+  /// HTML that match these patterns are automatically gathered via
+  /// [shouldGather] / [addGatheredPage] so they appear in the sitemap.
+  @visibleForTesting
+  List<String> get dynamicPathPatterns => _dynamicPathPatterns;
 
   final Set<String> _gatheredPages = {};
 
-  EasySEOOnGenerateCallback? onGenerate;
+  EasySEOOnGenerateCallback? _onGenerate;
+  EasySEOOnGenerateCallback? get onGenerate => _onGenerate;
+  set onGenerate(EasySEOOnGenerateCallback? cb) => _onGenerate = cb;
 
   /// Optional provider to get the current path from the context.
   /// Required for GoRouter, auto_route, Beamer — routers that store symbolic
   /// names in `settings.name` instead of the actual URL path.
-  String? Function(BuildContext)? pathProvider;
+  String? Function(BuildContext)? _pathProvider;
+  String? Function(BuildContext)? get pathProvider => _pathProvider;
+  set pathProvider(String? Function(BuildContext)? p) => _pathProvider = p;
 
-  // This is now directly accessible via EasySEOConfig.instance.globals
-  final Map<String, BuildContext> globals = {};
+  final Map<String, BuildContext> _globals = {};
+
+  /// Named global widget contexts for cross-page inclusion.
+  ///
+  /// Widgets with a [EasySEOBaseWrapper.globalName] register their
+  /// [BuildContext] here during [State.initState]. When generating a page,
+  /// the manager can pull these globals into the output even though they
+  /// are rendered outside the current page's widget tree.
+  Map<String, BuildContext> get globals => _globals;
 
   // ------ EasySEO widget registry ----------
   // The stack of registered controllers
@@ -213,8 +322,18 @@ class EasySEOManager {
   final _stack = SplayTreeMap<SeoRouteKey, EasySEOPageController>((key1, key2) => key1.compareTo(key2));
 
   /// Returns the controller that currently has authority (the deepest/newest one)
-  EasySEOPageController? get activeController => _stack.values.lastOrNull;
+  EasySEOPageController? get _activeController => _stack.values.lastOrNull;
 
+  /// Registers a page controller under a [SeoRouteKey].
+  ///
+  /// Returns `true` if the registration succeeded, or `false` if the key is
+  /// already taken by a **different** controller (conflict). When the key is
+  /// already held by the **same** controller the request is accepted.
+  ///
+  /// During registration the path is parsed; if it matches a dynamic pattern
+  /// (see [shouldGather]) it is added to the gathered-pages set so it appears
+  /// in the sitemap.
+  @visibleForTesting
   bool register(SeoRouteKey key, EasySEOPageController controller) {
     final existing = _stack[key];
     if (existing != null && existing != controller) return false;
@@ -236,7 +355,7 @@ class EasySEOManager {
     return true;
   }
 
-  void unregister(SeoRouteKey key, EasySEOPageController controller) {
+  void _unregister(SeoRouteKey key, EasySEOPageController controller) {
     if (_stack[key] != controller) return;
     debugPrint('🗑️ [EasySEO] Unregistering controller: $key, ${_stack.length}');
     _stack.remove(key);
@@ -245,14 +364,14 @@ class EasySEOManager {
   /// Global trigger for the headless test or automated syncs
   Future<EasySEOGenerationResult> generateActive({SEORenderMode? mode}) async {
     debugPrint('🗑️ [EasySEO] generateActive() for: ${_stack.keys.lastOrNull ?? "unknown"}');
-    final controller = activeController;
+    final controller = _activeController;
     if (controller == null) return SeoSkipped("No active EasySEO controller found in registry.");
     return await controller.generate(mode: mode);
   }
 
-  bool seoPageIsReady() {
+  bool _seoPageIsReady() {
     // TODO sealed bool class
-    final controller = activeController;
+    final controller = _activeController;
     if (controller == null) {
       debugPrint('⚠️ No active EasySEO controller found in registry.');
       return true;
@@ -260,19 +379,31 @@ class EasySEOManager {
     return controller.isReady();
   }
 
+  /// Clears the registry, gathered pages, and interactive-minimized state.
+  ///
+  /// Called between test cases to reset the manager to a clean state.
   @visibleForTesting
   void clear() {
     _stack.clear();
     _gatheredPages.clear();
-    interactiveMinimized = false;
+    _interactiveMinimized = false;
   }
 
-  /// Checks if a page path matches any registered dynamic path pattern.
+  /// Checks whether [pagePath] matches any registered dynamic path pattern.
+  ///
+  /// Dynamic patterns are extracted from [pages] during [init] (routes
+  /// containing `:`, e.g. `products/:id`). Returns `true` if the path
+  /// matches at least one pattern via [URLHelper.isPathMatch].
+  @visibleForTesting
   bool shouldGather(String pagePath) {
-    return dynamicPathPatterns.any((pattern) => URLHelper().isPathMatch(pagePath, pattern));
+    return _dynamicPathPatterns.any((pattern) => URLHelper().isPathMatch(pagePath, pattern));
   }
 
-  /// Manually add a dynamic route path to the gathered list
+  /// Manually adds a dynamic route path to the gathered-pages set.
+  ///
+  /// The path is normalised (leading `/` added, `/` → `''`) before insertion
+  /// into the set. Gathered pages appear in [getAllRoutes] and the sitemap.
+  @visibleForTesting
   void addGatheredPage(String path) {
     final parsed = parsePath(path);
     String pagePath = parsed.pagePath;
@@ -287,13 +418,13 @@ class EasySEOManager {
 
   /// Extracts all URLs from the given HTML string (e.g. href attributes)
   /// and gathers them if they match any registered dynamic path patterns.
-  void gatherFromHtml(String html) {
+  void _gatherFromHtml(String html) {
     final hrefRegex = RegExp(r'href="([^"]+)"');
     final matches = hrefRegex.allMatches(html);
 
     String? basePath;
-    if (baseUrl != null) {
-      final baseUri = Uri.tryParse(baseUrl!);
+    if (_baseUrl != null) {
+      final baseUri = Uri.tryParse(_baseUrl!);
       basePath = (baseUri != null && baseUri.path != '/') ? baseUri.path : null;
     }
 
@@ -319,10 +450,10 @@ class EasySEOManager {
   /// 1. [pathProvider] — explicit user-configured delegate (GoRouter, auto_route, Beamer).
   /// 2. [ModalRoute.of(context)?.settings.name] — works for Navigator 1.0 (vanilla, fluro).
   /// 3. [URLHelper().getCurrentPath()] — browser URL on web, empty string on native.
-  String getCurrentPath(BuildContext context) {
+  String _getCurrentPath(BuildContext context) {
     // Layer 1: Explicit pathProvider (user-configured, e.g., GoRouter)
-    if (pathProvider != null) {
-      final path = pathProvider!(context);
+    if (_pathProvider != null) {
+      final path = _pathProvider!(context);
       if (path != null && path.isNotEmpty) return path;
     }
 
@@ -365,11 +496,11 @@ class EasySEOManager {
     this.showResultDialog.value = showResultDialog;
     this.showHighlights.value = showHighlights;
     if (renderMode != null) this.renderMode.value = renderMode;
-    this.onGenerate = onGenerate;
-    this.baseUrl = baseUrl;
-    this.supportedLanguages = supportedLanguages;
-    this.headTags = headTags;
-    this.pathProvider = pathProvider;
+    this._onGenerate = onGenerate;
+    this._baseUrl = baseUrl;
+    this._supportedLanguages = supportedLanguages;
+    this._headTags = headTags;
+    this._pathProvider = pathProvider;
 
     // Automatically extract any dynamic patterns containing colons from the pages list
     final List<String> staticPages = [];
@@ -385,8 +516,8 @@ class EasySEOManager {
       }
     }
 
-    this.pages = staticPages;
-    dynamicPathPatterns = extractedDynamicPatterns;
+    this._pages = staticPages;
+    _dynamicPathPatterns = extractedDynamicPatterns;
   }
 
   /// Helper to check if any SEO output is active
@@ -402,9 +533,16 @@ class EasySEOManager {
     }).join('/');
   }
 
-  /// Formats a path into a full URL using the configured [baseUrl]
+  /// Builds an absolute URL from a relative [path].
+  ///
+  /// If [baseUrl] is not set, falls back to [PlatformHelper.host] and
+  /// [PlatformHelper.protocol] for the domain. When all sources are empty
+  /// the [path] is returned unchanged.
+  ///
+  /// The path is lower-cased and URI-encoded segment by segment to produce
+  /// a clean, slash-joined absolute URL without a trailing slash.
   String formatFullUrl(String path) {
-    String? bUrl = baseUrl;
+    String? bUrl = _baseUrl;
     if (bUrl == null || bUrl.isEmpty) {
       final host = PlatformHelper.host;
       final protocol = PlatformHelper.protocol;
@@ -422,7 +560,7 @@ class EasySEOManager {
 
   /// Helper to generate the correct relative path for a given language
   String _getUrlForLang(String? lang, String pagePath, {String cleanBase = ''}) {
-    final String? firstLang = supportedLanguages.firstOrNull;
+    final String? firstLang = _supportedLanguages.firstOrNull;
     final targetLang = lang ?? firstLang;
     final encodedPath = _encodePath(pagePath);
 
@@ -442,8 +580,8 @@ class EasySEOManager {
 
   /// Returns a list of all routes that can be built from supportedLanguages and pages.
   List<String> getAllRoutes({bool gatheredOnly = false}) {
-    final languages = UnmodifiableListView(supportedLanguages);
-    final List<String> rawPages = pages.isEmpty ? [''] : pages;
+    final languages = UnmodifiableListView(_supportedLanguages);
+    final List<String> rawPages = _pages.isEmpty ? [''] : _pages;
 
     final Set<String> uniqueCleanPages = {};
     if (!gatheredOnly) {
@@ -479,12 +617,12 @@ class EasySEOManager {
 
   /// Generate sitemap.xml content
   String generateSitemapContent() {
-    final baseUrl = this.baseUrl;
+    final baseUrl = this._baseUrl;
     if (baseUrl == null || baseUrl.isEmpty) return '';
 
     final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
-    final languages = UnmodifiableListView(supportedLanguages);
-    final List<String> rawPages = pages.isEmpty ? [''] : pages;
+    final languages = UnmodifiableListView(_supportedLanguages);
+    final List<String> rawPages = _pages.isEmpty ? [''] : _pages;
 
     final Set<String> uniqueCleanPages = {};
     for (final p in rawPages) {
@@ -554,8 +692,8 @@ class EasySEOManager {
   }
 
   /// Returns the effective base URL without trailing slash (falls back to PlatformHelper if empty)
-  String getEffectiveCleanBaseUrl() {
-    String? bUrl = baseUrl;
+  String _getEffectiveCleanBaseUrl() {
+    String? bUrl = _baseUrl;
     if (bUrl == null || bUrl.isEmpty) {
       final host = PlatformHelper.host;
       final protocol = PlatformHelper.protocol;
@@ -569,6 +707,7 @@ class EasySEOManager {
 
   /// Parses a given path into a [pagePath] (language-independent page path)
   /// and the [detectedLang] (if a language prefix is present in the path).
+  @visibleForTesting
   ({String pagePath, String? detectedLang}) parsePath(String path) {
     final cleanPath = path.trim();
     // Split the path to check segments
@@ -576,7 +715,7 @@ class EasySEOManager {
 
     String? detectedLang;
     List<String> pageSegments = segments;
-    if (segments.isNotEmpty && supportedLanguages.contains(segments.first)) {
+    if (segments.isNotEmpty && _supportedLanguages.contains(segments.first)) {
       detectedLang = segments.first;
       pageSegments = segments.sublist(1);
     }
@@ -586,23 +725,24 @@ class EasySEOManager {
   }
 
   /// Unified resolver that takes any path, parses it, and returns the canonical, alternate, and x-default URLs
+  @visibleForTesting
   EasySEOUrls resolveSeoUrls(String path) {
     final parsed = parsePath(path.toLowerCase());
     final pagePath = parsed.pagePath;
     final detectedLang = parsed.detectedLang;
-    final cleanBase = getEffectiveCleanBaseUrl();
+    final cleanBase = _getEffectiveCleanBaseUrl();
 
     // Canonical language defaults to the first supported language if none is detected.
-    final canonicalLang = detectedLang ?? supportedLanguages.firstOrNull;
+    final canonicalLang = detectedLang ?? _supportedLanguages.firstOrNull;
     final canonicalUrl = _getUrlForLang(canonicalLang, pagePath, cleanBase: cleanBase);
 
     final Map<String, String> alternateUrls = {};
-    for (final lang in supportedLanguages) {
+    for (final lang in _supportedLanguages) {
       alternateUrls[lang] = _getUrlForLang(lang, pagePath, cleanBase: cleanBase);
     }
 
     String? xDefaultUrl;
-    final firstLang = supportedLanguages.firstOrNull;
+    final firstLang = _supportedLanguages.firstOrNull;
     if (firstLang != null) {
       xDefaultUrl = _getUrlForLang(firstLang, pagePath, cleanBase: cleanBase);
     }
@@ -615,9 +755,16 @@ class EasySEOManager {
   }
 }
 
+/// Holds the resolved set of canonical, alternate-language, and x-default URLs
+/// for a single page, as produced by [EasySEOManager.resolveSeoUrls].
 class EasySEOUrls {
+  /// The canonical (primary) URL for this page.
   final String canonicalUrl;
+
+  /// Map of language code → alternate URL for every [EasySEOManager.supportedLanguages].
   final Map<String, String> alternateUrls;
+
+  /// The `x-default` fallback URL (typically maps to the first language).
   final String? xDefaultUrl;
 
   const EasySEOUrls({
@@ -646,14 +793,14 @@ class _PanelPositionerState extends State<_PanelPositioner> {
   @override
   void initState() {
     super.initState();
-    manager.panelPosition.addListener(_onChanged);
-    manager.panelSize.addListener(_onChanged);
+    manager._panelPosition.addListener(_onChanged);
+    manager._panelSize.addListener(_onChanged);
   }
 
   @override
   void dispose() {
-    manager.panelPosition.removeListener(_onChanged);
-    manager.panelSize.removeListener(_onChanged);
+    manager._panelPosition.removeListener(_onChanged);
+    manager._panelSize.removeListener(_onChanged);
     super.dispose();
   }
 
@@ -669,12 +816,12 @@ class _PanelPositionerState extends State<_PanelPositioner> {
 
   @override
   Widget build(BuildContext context) {
-    final position = manager.panelPosition.value;
+    final position = manager._panelPosition.value;
     if (position == null) {
       return Positioned(left: 0, right: 0, bottom: 16, child: widget.defaultChild);
     }
     final screen = MediaQuery.of(context).size;
-    final size = manager.panelSize.value;
+    final size = manager._panelSize.value;
     final clampW = (size?.width ?? 56).clamp(56, screen.width);
     final clampH = (size?.height ?? 56).clamp(56, screen.height);
     final clamped = Offset(

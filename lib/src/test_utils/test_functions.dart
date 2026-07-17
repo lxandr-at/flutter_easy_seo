@@ -53,7 +53,7 @@ Future<void> waitForRoute(
     final routeExists = find.byKey(ValueKey(route)).evaluate().isNotEmpty;
 
     // 2. Core package lifecycle readiness check
-    final seoReady = EasySEOManager.instance.seoPageIsReady();
+    final seoReady = EasySEOManager.instance._seoPageIsReady();
 
     // 3. Evaluate the user-defined hook if it was provided
     if (extraCheck != null) {

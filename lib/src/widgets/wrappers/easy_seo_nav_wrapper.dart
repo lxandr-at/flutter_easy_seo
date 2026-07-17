@@ -1,6 +1,25 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
+/// Wraps child widgets in a semantic `<nav>` element with JSON-LD structured
+/// data for navigation or breadcrumbs.
+///
+/// This wrapper must be used together with [EasySeoNavAnchorWrapper]. Each
+/// [EasySeoNavAnchorWrapper] child contributes a `<li><a>` pair to the
+/// generated HTML and registers an [SEONavItem] that the traversal collects
+/// and passes back to this wrapper for JSON-LD output.
+///
+/// **Standard navigation** (default, [isBreadcrumb] = `false`):
+/// Renders `<nav><ul><li><a>...</a></li>...</ul></nav>` with
+/// `SiteNavigationElement` JSON-LD.
+///
+/// **Breadcrumb navigation** ([isBreadcrumb] = `true`):
+/// Renders `<nav aria-label="Breadcrumb"><ol><li><a>...</a> › </li>...</ol></nav>`
+/// with `BreadcrumbList` JSON-LD and `aria-current="page"` on the final link.
 class EasySEONavWrapper extends EasySEOBaseWrapper {
+  /// When `true`, renders as a breadcrumb with ordered list, `›` separators,
+  /// `aria-current="page"` on the last item and `BreadcrumbList` JSON-LD.
+  /// When `false` (default), renders an unordered list with
+  /// `SiteNavigationElement` JSON-LD.
   final bool isBreadcrumb;
 
   const EasySEONavWrapper({

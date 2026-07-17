@@ -1,5 +1,17 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
+/// Recursively walks a Flutter widget tree to produce SEO-optimised HTML.
+///
+/// The traversal depth-first visits every [Element] starting from a root,
+/// identifies [EasySEOWrapper] widgets, resolves globally-registered widgets
+/// (see [EasySEOBaseWrapper.globalName]), merges wrapper-level attributes and
+/// JSON-LD with element-level values, collects navigation items from
+/// [EasySeoNavAnchorWrapper] nodes, and bubbles heading priority from children
+/// up to parents so that section-level wrappers reflect the most prominent
+/// heading they contain.
+///
+/// Results are sorted so that footers appear last, then by heading priority
+/// (h1 first), while preserving the original child order within equal groups.
 class SEOWidgetTreeProcessor {
   Set<String>? _skipGlobals;
 
@@ -57,6 +69,25 @@ class SEOWidgetTreeProcessor {
     );
   }
 
+  /// Entry point for widget-tree to HTML conversion.
+  ///
+  /// Traverses [rootElement] and any named global widgets listed in
+  /// [includeGlobals] (looked up from [EasySEOManager.globals]), converts
+  /// every [EasySEOWrapper] encountered into its [SEOHtml] representation,
+  /// and returns the concatenated HTML string.
+  ///
+  /// **Parameters**
+  ///
+  /// * [rootElement] — The root widget element whose tree is walked.
+  /// * [includeGlobals] — List of [EasySEOBaseWrapper.globalName] strings.
+  ///   Matching globally-registered widgets are processed first, in list order,
+  ///   before the main tree is traversed. This allows components rendered
+  ///   outside the current page (e.g. a persistent nav or footer) to be
+  ///   included in the generated HTML.
+  /// * [mode] — Controls the rendering format passed to [SEOHtml.toHtmlString]
+  ///   (e.g. microdata only, JSON-LD only, or both).
+  ///
+  /// **Returns** A complete body-level HTML string with all wrappers resolved.
   String processWidgetTree(Element rootElement, List<String> includeGlobals, {SEORenderMode mode = SEORenderMode.microdataAndJsonLd}) {
     final rootResults = <_BuildResult>[];
 
@@ -170,11 +201,22 @@ class _BuildResult {
   const _BuildResult(this.html, this.navItems, [this.priority = 6, this.order = 0]);
 }
 
+/// Holds the resolved set of `<head>` metadata tags for a single page.
+///
+/// Produced by [EasySEOManager] during page generation after merging per-page
+/// head tags with global head tags. The [headTags] list typically includes
+/// canonical URL, hreflang alternates, Open Graph properties, Twitter card
+/// meta tags, meta description, and the page title.
 class SEOPageMetadata {
+  /// The ordered list of head tags to emit inside the `<head>` element.
   final List<EasySEOHeadTag> headTags;
 
   SEOPageMetadata({this.headTags = const []});
 
+  /// Renders every [headTags] entry to its HTML `<meta>` / `<link>` / `<title>`
+  /// string (via [EasySEOHeadTag.toHtml]), each indented by two spaces and
+  /// separated by newlines. Returns the result suitable for direct placement
+  /// inside `<head>...</head>`.
   String generateMetadata() {
     final buffer = StringBuffer();
     for (final tag in headTags) {
@@ -185,7 +227,21 @@ class SEOPageMetadata {
   }
 }
 
+/// Minimal utility that wraps pre-generated body content and optional head
+/// metadata into a standards-compliant HTML5 document skeleton.
 class SEOHtmlDocumentGenerator {
+  /// Assembles a complete HTML document string.
+  ///
+  /// Produces `<!DOCTYPE html>` followed by `<html>`, `<head>` (with charset
+  /// and viewport meta tags baked in), and `<body>` containing [bodyContent].
+  ///
+  /// **Parameters**
+  ///
+  /// * [bodyContent] — The already-processed body HTML to place inside
+  ///   `<body>...</body>`. This is the output of [SEOWidgetTreeProcessor.processWidgetTree].
+  /// * [metadata] — Optional string returned by [SEOPageMetadata.generateMetadata]
+  ///   to be injected inside `<head>`.
+  /// * [lang] — Language attribute on the `<html>` element (default `'en'`).
   static String generateFullDocument({
     required String bodyContent,
     String? metadata,

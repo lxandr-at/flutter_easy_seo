@@ -13,7 +13,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
   @override
   void initState() {
     super.initState();
-    _isMinimized = EasySEOManager.instance.interactiveMinimized;
+    _isMinimized = EasySEOManager.instance._interactiveMinimized;
     _reportSize();
   }
 
@@ -24,8 +24,8 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
       if (renderBox != null && renderBox.hasSize) {
         final size = renderBox.size;
         final manager = EasySEOManager.instance;
-        if (manager.panelSize.value != size) {
-          manager.panelSize.value = size;
+        if (manager._panelSize.value != size) {
+          manager._panelSize.value = size;
         }
       }
     });
@@ -33,19 +33,19 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
 
   void _startDrag() {
     final manager = EasySEOManager.instance;
-    if (manager.panelPosition.value == null) {
+    if (manager._panelPosition.value == null) {
       final renderBox = context.findRenderObject() as RenderBox?;
       if (renderBox != null && renderBox.hasSize) {
-        manager.panelPosition.value = renderBox.localToGlobal(Offset.zero);
+        manager._panelPosition.value = renderBox.localToGlobal(Offset.zero);
       }
     }
   }
 
   void _onDragUpdate(DragUpdateDetails details) {
     final manager = EasySEOManager.instance;
-    final current = manager.panelPosition.value;
+    final current = manager._panelPosition.value;
     if (current != null) {
-      manager.panelPosition.value = Offset(
+      manager._panelPosition.value = Offset(
         current.dx + details.delta.dx,
         current.dy + details.delta.dy,
       );
@@ -58,7 +58,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
     String content,
     String fileName,
   ) {
-    final panelEntry = EasySEOManager.instance.panelOverlayEntry;
+    final panelEntry = EasySEOManager.instance._panelOverlayEntry;
     if (panelEntry == null) return;
 
     final scrollController = ScrollController();
@@ -98,7 +98,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
     SeoSuccess result,
     String fileName,
   ) {
-    final panelEntry = EasySEOManager.instance.panelOverlayEntry;
+    final panelEntry = EasySEOManager.instance._panelOverlayEntry;
     if (panelEntry == null) return;
 
     OverlayEntry? entry;
@@ -137,7 +137,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
       child: GestureDetector(
         onTap: () => setState(() {
           _isMinimized = false;
-          EasySEOManager.instance.interactiveMinimized = false;
+          EasySEOManager.instance._interactiveMinimized = false;
         }),
         onPanStart: (_) => _startDrag(),
         onPanUpdate: (details) => _onDragUpdate(details),
@@ -274,7 +274,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
                         tooltip: 'Minimize Panel',
                         onPressed: () => setState(() {
                           _isMinimized = true;
-                          EasySEOManager.instance.interactiveMinimized = true;
+                          EasySEOManager.instance._interactiveMinimized = true;
                         }),
                       ),
                     ],

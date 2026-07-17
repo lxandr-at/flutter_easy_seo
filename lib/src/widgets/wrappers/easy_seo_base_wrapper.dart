@@ -1,6 +1,10 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
+/// Interface for wrapper widgets that can produce an [SEOHtml] node for the
+/// generated HTML output.
 abstract class EasySEOWrapper {
+  /// Builds the [SEOHtml] representation of this wrapper, including its
+  /// [children], [navItems], and the current [BuildContext].
   SEOHtml toSEOHtml({
     required List<SEOHtml> children,
     required List<SEONavItem> navItems,
@@ -8,6 +12,8 @@ abstract class EasySEOWrapper {
   });
 }
 
+/// Base class for all SEO wrapper widgets that decorate a [child] widget tree
+/// with semantic HTML tags, attributes, JSON-LD, and optional global registration.
 abstract class EasySEOBaseWrapper extends StatefulWidget implements EasySEOWrapper {
   const EasySEOBaseWrapper({
     super.key,
@@ -19,14 +25,30 @@ abstract class EasySEOBaseWrapper extends StatefulWidget implements EasySEOWrapp
     List<SEOHtml> children = const [],
   }) : _children = children;
 
+  /// The widget tree being wrapped.
   final Widget child;
+
+  /// Optional CSS class name applied to the generated HTML element.
   final String? className;
+
+  /// Additional HTML attributes for the generated element.
   final Map<String, String?>? attributes;
+
+  /// Global identifier for cross-page inclusion. Widgets with the same
+  /// [globalName] are registered with [EasySEOManager] so they can be
+  /// pulled into generated pages outside this page's widget tree.
   final String? globalName;
+
+  /// Optional JSON-LD structured data object.
   final Map<String, dynamic>? jsonLd;
+
   final List<SEOHtml> _children;
+
+  /// Pre-defined [SEOHtml] child nodes nested inside this wrapper.
   List<SEOHtml> get children => _children;
 
+  /// Override point for subclasses to supply extra HTML attributes that are
+  /// always present on the generated element.
   Map<String, String> get additionalAttributes => {};
 
   static final Map<Type, Color> _highlightColors = {
@@ -50,9 +72,13 @@ abstract class EasySEOBaseWrapper extends StatefulWidget implements EasySEOWrapp
     EasySEOFaqWrapper: const Color(0xFF8BC34A),
   };
 
+  /// Color used for the debug highlight border when [EasySEOManager.showHighlights]
+  /// is enabled, determined by the concrete wrapper type.
   Color get highlightColor => _highlightColors[runtimeType] ?? const Color(0xFF9E9E9E);
 }
 
+/// Base state for [EasySEOBaseWrapper] subclasses. Handles registration of
+/// [EasySEOBaseWrapper.globalName] and renders the debug highlight border.
 abstract class EasySEOBaseWrapperState<T extends EasySEOBaseWrapper> extends State<T> {
   @override
   void initState() {

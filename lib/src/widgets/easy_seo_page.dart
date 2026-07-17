@@ -1,5 +1,7 @@
 part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 
+/// Controller attached to each [EasySEOPage] instance that bridges the page state
+/// and the [EasySEOManager] registry. Provides the public [generate] and [isReady] API.
 class EasySEOPageController {
   FutureOr<EasySEOGenerationResult> Function({SEORenderMode? mode})? _onGenerate;
   bool _isReady = true;
@@ -13,12 +15,14 @@ class EasySEOPageController {
 
   void _setReady(bool ready) => _isReady = ready;
 
-  // Public API
+  /// Triggers HTML generation for the associated [EasySEOPage].
+  /// Returns the generated result or a failure if no generation function is attached.
   FutureOr<EasySEOGenerationResult> generate({SEORenderMode? mode}) async {
     if (_onGenerate == null) return SeoFailure("Controller generate() not attached to an EasySEOPage function!");
     return await _onGenerate!(mode: mode);
   }
 
+  /// Whether the page's async initialization ([EasySEOPage.whenDone]) has completed.
   bool isReady() => _isReady;
 }
 
@@ -50,14 +54,34 @@ class EasySEOPageController {
 /// the active [EasySEOPage] from the current path depth and length.
 /// * [renderMode] - [SEORenderMode] configuration to override the global rendering mode.
 class EasySEOPage extends StatefulWidget {
+  /// The widget tree to render and inspect for SEO content.
   final Widget child;
+
+  /// When `true`, disables SEO generation locally for this page.
   final bool disabled;
+
+  /// Canonical page title — generates `<title>`, `og:title`, `twitter:title`, and `name="title"`.
   final String title;
+
+  /// Optional page description — generates `description`, `og:description`, `twitter:description`.
   final String? description;
+
+  /// Page-level head tag sources to inject into the document `<head>`, merged with globals.
   final List<EasySEOHeadTagSource> headTags;
+
+  /// Global widget names to include in the generated `<body>`. Useful when
+  /// widgets like header, footer, or navigation live outside this page's widget tree
+  /// (e.g., in a `ShellRouter`).
   final List<String> includeGlobals;
+
+  /// Async hook called before HTML generation, e.g. to await data loading.
   final Future<void> Function()? whenDone;
+
+  /// Numeric rank to resolve the active page when multiple [EasySEOPage] widgets
+  /// exist in the tree (e.g., a list page with an overlay detail dialog).
   final int rank;
+
+  /// Overrides the global [SEORenderMode] for this page only.
   final SEORenderMode? renderMode;
 
   const EasySEOPage({super.key,
@@ -104,7 +128,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
     if (EasySEOManager.instance.enableInteractiveMode.value) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        EasySEOManager.instance.showOverlay(context);
+        EasySEOManager.instance._showOverlay(context);
       });
     }
 
@@ -126,11 +150,11 @@ class _EasySEOPageState extends State<EasySEOPage> {
   void dispose() {
     _disposed = true;
     EasySEOManager.instance.enableInteractiveMode.removeListener(_onInteractiveModeChanged);
-    EasySEOManager.instance.hideOverlay();
+    EasySEOManager.instance._hideOverlay();
     // 3. Clean up the registry to allow the previous page to regain authority
     final key = _registrationKey ?? _currentRouteKey;
     if (key != null) {
-      EasySEOManager.instance.unregister(key, _controller);
+      EasySEOManager.instance._unregister(key, _controller);
     }
     super.dispose();
   }
@@ -139,10 +163,10 @@ class _EasySEOPageState extends State<EasySEOPage> {
     if (EasySEOManager.instance.enableInteractiveMode.value) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        EasySEOManager.instance.showOverlay(context);
+        EasySEOManager.instance._showOverlay(context);
       });
     } else {
-      EasySEOManager.instance.hideOverlay();
+      EasySEOManager.instance._hideOverlay();
     }
   }
 
@@ -231,7 +255,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
   }
 
   bool _isActiveController() {
-    return EasySEOManager.instance.activeController == _controller;
+    return EasySEOManager.instance._activeController == _controller;
   }
 
   EasySEOGenerationResult _generateHTML({SEORenderMode? mode}) {
@@ -254,7 +278,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
     final bodyContent = _processor.processWidgetTree(rootElement, widget.includeGlobals, mode: effectiveMode);
 
     // Extract dynamic route URLs from generated HTML content and add them to gathered pages
-    EasySEOManager.instance.gatherFromHtml(bodyContent);
+    EasySEOManager.instance._gatherFromHtml(bodyContent);
 
     // Use page metadata from EasySEO widget
     final metadata = SEOPageMetadata(headTags: _allDistinctHeadTags);
@@ -312,7 +336,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
   }
 
   String _getCurrentPath() {
-    return EasySEOManager.instance.getCurrentPath(context);
+    return EasySEOManager.instance._getCurrentPath(context);
   }
 
   @override
