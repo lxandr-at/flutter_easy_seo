@@ -1,3 +1,6 @@
+## 1.0.2
+- specify platforms
+- fix some warnings
 ## 1.0.1
 - refactor to make some public elements private
 - code doc comments
