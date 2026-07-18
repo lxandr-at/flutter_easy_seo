@@ -1,4 +1,7 @@
-part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'dart:io';
+import 'package:path/path.dart' as p; // Pure Dart package, no Flutter dependency
 
 class EasySEOMockPlatformChannels {
   static void useHeadlessDefaultMocks() {

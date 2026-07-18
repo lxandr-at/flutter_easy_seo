@@ -51,7 +51,7 @@ class EasySEONavWrapper extends EasySEOBaseWrapper {
           modifiedChildren.add(const SEOSpan(
             '›',
             attributes: {'aria-hidden': 'true', 'style': 'margin: 0 8px;'},
-          ));
+          ),);
         }
       }
 

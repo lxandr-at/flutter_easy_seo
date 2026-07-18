@@ -116,7 +116,7 @@ packages:
     source: hosted
     version: "0.13.0"
   meta:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: meta
       sha256: "1741988757a65eb6b36abe716829688cf01910bbf91c34354ff7ec1c3de2b349"
@@ -124,7 +124,7 @@ packages:
     source: hosted
     version: "1.18.0"
   path:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path
       sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"

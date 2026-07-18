@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
 import 'package:web/web.dart' as web;
 import 'easy_seo_file_output_base.dart';
@@ -52,7 +53,9 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
 
     _downloadFile(content, 'sitemap.xml', 'text/xml');
     _sitemapSaved = true;
-    print('Generated sitemap.xml');
+    if (kDebugMode) {
+      print('Generated sitemap.xml');
+    }
   }
 
   void _downloadFile(String content, String fileName, String contentType) {
@@ -68,7 +71,9 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
       anchor.click();
       anchor.remove();
     } catch (e) {
-      print('Error downloading $fileName: $e');
+      if (kDebugMode) {
+        print('Error downloading $fileName: $e');
+      }
     }
   }
 
@@ -83,9 +88,13 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
       // format html for better human readability
       var formattedHtmlContent = formatHtml(htmlContent);
       _downloadFile(formattedHtmlContent, fileName, 'text/html');
-      print('Saved HTML file: $fileName');
+      if (kDebugMode) {
+        print('Saved HTML file: $fileName');
+      }
     } catch (e) {
-      print('Error saving HTML file: $e');
+      if (kDebugMode) {
+        print('Error saving HTML file: $e');
+      }
     }
   }
 
@@ -93,9 +102,13 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
   void saveSitemap(String sitemapContent) {
     try {
       _downloadFile(sitemapContent, 'sitemap.xml', 'text/xml');
-      print('Saved sitemap.xml directly');
+      if (kDebugMode) {
+        print('Saved sitemap.xml directly');
+      }
     } catch (e) {
-      print('Error saving sitemap.xml directly: $e');
+      if (kDebugMode) {
+        print('Error saving sitemap.xml directly: $e');
+      }
     }
   }
 }

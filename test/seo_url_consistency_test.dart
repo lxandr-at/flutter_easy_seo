@@ -112,19 +112,19 @@ void main() {
       expect(
           capturedHead,
           contains(
-              '<link data-easy-seo="link:rel:canonical" rel="canonical" href="https://preisvergleich.lxandr.at/">'));
+              '<link data-easy-seo="link:rel:canonical" rel="canonical" href="https://preisvergleich.lxandr.at/">',),);
       expect(
           capturedHead,
           contains(
-              '<link data-easy-seo="link:alternate:de" rel="alternate" href="https://preisvergleich.lxandr.at/" hreflang="de">'));
+              '<link data-easy-seo="link:alternate:de" rel="alternate" href="https://preisvergleich.lxandr.at/" hreflang="de">',),);
       expect(
           capturedHead,
           contains(
-              '<link data-easy-seo="link:alternate:en" rel="alternate" href="https://preisvergleich.lxandr.at/en" hreflang="en">'));
+              '<link data-easy-seo="link:alternate:en" rel="alternate" href="https://preisvergleich.lxandr.at/en" hreflang="en">',),);
       expect(
           capturedHead,
           contains(
-              '<link data-easy-seo="link:alternate:x-default" rel="alternate" href="https://preisvergleich.lxandr.at/" hreflang="x-default">'));
+              '<link data-easy-seo="link:alternate:x-default" rel="alternate" href="https://preisvergleich.lxandr.at/" hreflang="x-default">',),);
     });
 
     testWidgets('EasySEOPage renders correct canonical and alternates for default language path /de',
@@ -154,19 +154,19 @@ void main() {
       expect(
           capturedHead,
           contains(
-              '<link data-easy-seo="link:rel:canonical" rel="canonical" href="https://preisvergleich.lxandr.at/">'));
+              '<link data-easy-seo="link:rel:canonical" rel="canonical" href="https://preisvergleich.lxandr.at/">',),);
       expect(
           capturedHead,
           contains(
-              '<link data-easy-seo="link:alternate:de" rel="alternate" href="https://preisvergleich.lxandr.at/" hreflang="de">'));
+              '<link data-easy-seo="link:alternate:de" rel="alternate" href="https://preisvergleich.lxandr.at/" hreflang="de">',),);
       expect(
           capturedHead,
           contains(
-              '<link data-easy-seo="link:alternate:en" rel="alternate" href="https://preisvergleich.lxandr.at/en" hreflang="en">'));
+              '<link data-easy-seo="link:alternate:en" rel="alternate" href="https://preisvergleich.lxandr.at/en" hreflang="en">',),);
       expect(
           capturedHead,
           contains(
-              '<link data-easy-seo="link:alternate:x-default" rel="alternate" href="https://preisvergleich.lxandr.at/" hreflang="x-default">'));
+              '<link data-easy-seo="link:alternate:x-default" rel="alternate" href="https://preisvergleich.lxandr.at/" hreflang="x-default">',),);
     });
   });
 
@@ -265,9 +265,9 @@ void main() {
       expect(sitemap, contains('<loc>https://preisvergleich.lxandr.at/</loc>'));
       expect(sitemap, contains('<xhtml:link rel="alternate" hreflang="de" href="https://preisvergleich.lxandr.at/"/>'));
       expect(
-          sitemap, contains('<xhtml:link rel="alternate" hreflang="en" href="https://preisvergleich.lxandr.at/en"/>'));
+          sitemap, contains('<xhtml:link rel="alternate" hreflang="en" href="https://preisvergleich.lxandr.at/en"/>'),);
       expect(sitemap,
-          contains('<xhtml:link rel="alternate" hreflang="x-default" href="https://preisvergleich.lxandr.at/"/>'));
+          contains('<xhtml:link rel="alternate" hreflang="x-default" href="https://preisvergleich.lxandr.at/"/>'),);
     });
   });
 
@@ -305,11 +305,11 @@ void main() {
       expect(
           sitemap,
           contains(
-              '<xhtml:link rel="alternate" hreflang="de" href="https://preisvergleich.lxandr.at/de/compare/999"/>'));
+              '<xhtml:link rel="alternate" hreflang="de" href="https://preisvergleich.lxandr.at/de/compare/999"/>',),);
       expect(
           sitemap,
           contains(
-              '<xhtml:link rel="alternate" hreflang="fr" href="https://preisvergleich.lxandr.at/fr/compare/999"/>'));
+              '<xhtml:link rel="alternate" hreflang="fr" href="https://preisvergleich.lxandr.at/fr/compare/999"/>',),);
     });
 
     test('register() automatically gathers matching paths during walkthrough', () {

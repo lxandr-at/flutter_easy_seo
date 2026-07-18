@@ -1,4 +1,10 @@
-part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easy_seo/flutter_easy_seo.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:meta/meta.dart';
+
+import 'test_mock_defaults.dart'; // Pure Dart package, no Flutter dependency
 
 /// Inject the [initialRoute] into the platform channel BEFORE pumpWidget
 /// This simulates the browser opening with this URL already in the address bar
@@ -53,7 +59,7 @@ Future<void> waitForRoute(
     final routeExists = find.byKey(ValueKey(route)).evaluate().isNotEmpty;
 
     // 2. Core package lifecycle readiness check
-    final seoReady = EasySEOManager.instance._seoPageIsReady();
+    final seoReady = EasySEOManager.instance.seoPageIsReady();
 
     // 3. Evaluate the user-defined hook if it was provided
     if (extraCheck != null) {

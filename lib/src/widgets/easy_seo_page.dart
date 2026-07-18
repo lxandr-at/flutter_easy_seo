@@ -317,7 +317,8 @@ class _EasySEOPageState extends State<EasySEOPage> {
         currentLanguage: currentLang,
         path: currentPath,
         headContent: headContent,
-        bodyContent: bodyContent);
+        bodyContent: bodyContent,
+    );
     // output as file download in the browser if enabled
     if (fileOutputEnabled) {
       _fileHandler.saveHTMLFile(fullHtml);

@@ -1,3 +1,6 @@
+## 1.0.5
+- Moved convenience test mocks and utils to example project. This is a temporary solution to convince pub.dev that this package is suitable for web.
+- Removed unused imports and packages.
 ## 1.0.4
 - revert last change
 ## 1.0.3

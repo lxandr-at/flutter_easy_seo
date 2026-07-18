@@ -7,6 +7,8 @@
 
 ## **We fixed that.** 
 
+**[Live Demo & Package Showcase](#examples-live)** — See a package showcase and a real-world production example running live on the web.
+
 `flutter_easy_seo` is a production-grade rendering engine that flattens your live Flutter widget tree into optimized, semantic, bot-readable HTML and metadata. By bridging your client-side application state with server-side delivery requirements, it gives you full control over how search engine crawlers index your dynamic canvas.
 
 1. [**Initialize, Flag Views as Pages, and Expose Widgets**](#quick-start):
@@ -738,6 +740,8 @@ Future<void> waitUntilReady(
 
 #### Headless Environment Limitations & Mocking
 
+**NOTE:** _The convenience test mocks and utils are in the example project in `/test/test_utils`. You have to copy the code to your own tests. Originally this code was in the main package, but unfortunately pub.dev refuses the web badge when `flutter_test` is a regular dependency._
+
 Certain browser dependencies and platform capabilities used in a Flutter web application are unavailable in a headless widget testing environment. To address this, the `flutter_easy_seo` package provides out-of-the-box mocks and sensible environmental defaults.
 
 Use this wrapper function to initialize your test definitions instead of the standard `testWidgets`:
@@ -773,15 +777,7 @@ Depending on your infrastructure setup, you can persist the generated HTML files
 * **Static Embeds (Small Sites):** For small or static websites where content updates are infrequent, snapshots can be placed directly into Flutter's `web/` folder directory. They will then be included in standard build and deployment workflows.
 * **Dynamic Pipeline Delivery (Large Sites / Web Shops):** For larger sites or e-commerce platforms with frequently changing database records, triggering a complete deployment for every content update is highly impractical. For this scenario, a decoupled automation workflow is recommended:
 
-    ```mermaid
-    graph LR
-        A["Interactive Mode or<br>Widget Tester"] -->|Sends generated HTML| B("Server REST Endpoint")
-        B -->|Writes Static Output| C[("Web Folder / Storage")]
-
-        style A fill:#1351B4,stroke:#fff,stroke-width:2px,color:#fff
-        style B fill:#008060,stroke:#fff,stroke-width:2px,color:#fff
-        style C fill:#4A5568,stroke:#fff,stroke-width:2px,color:#fff
-    ```
+  ![Easy SEO Serving Pipeline](doc/images/serving_pipeline.png)
 
     Regardless of the pipeline strategy you choose, the output generation engine must produce a clean directory tree mapping an `index.html` file to every unique URL path in your application:
 

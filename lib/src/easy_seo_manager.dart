@@ -365,7 +365,7 @@ class EasySEOManager {
     return await controller.generate(mode: mode);
   }
 
-  bool _seoPageIsReady() {
+  bool seoPageIsReady() {
     // TODO sealed bool class
     final controller = _activeController;
     if (controller == null) {

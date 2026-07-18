@@ -401,7 +401,7 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
                                 context,
                                 'Generated sitemap.xml',
                                 sitemap,
-                                'sitemap.xml'
+                                'sitemap.xml',
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
