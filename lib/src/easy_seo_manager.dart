@@ -294,16 +294,12 @@ class EasySEOManager {
 
   final Set<String> _gatheredPages = {};
 
-  EasySEOOnGenerateCallback? _onGenerate;
-  EasySEOOnGenerateCallback? get onGenerate => _onGenerate;
-  set onGenerate(EasySEOOnGenerateCallback? cb) => _onGenerate = cb;
+  EasySEOOnGenerateCallback? onGenerate;
 
   /// Optional provider to get the current path from the context.
   /// Required for GoRouter, auto_route, Beamer — routers that store symbolic
   /// names in `settings.name` instead of the actual URL path.
-  String? Function(BuildContext)? _pathProvider;
-  String? Function(BuildContext)? get pathProvider => _pathProvider;
-  set pathProvider(String? Function(BuildContext)? p) => _pathProvider = p;
+  String? Function(BuildContext)? pathProvider;
 
   final Map<String, BuildContext> _globals = {};
 
@@ -452,8 +448,8 @@ class EasySEOManager {
   /// 3. [URLHelper().getCurrentPath()] — browser URL on web, empty string on native.
   String _getCurrentPath(BuildContext context) {
     // Layer 1: Explicit pathProvider (user-configured, e.g., GoRouter)
-    if (_pathProvider != null) {
-      final path = _pathProvider!(context);
+    if (pathProvider != null) {
+      final path = pathProvider!(context);
       if (path != null && path.isNotEmpty) return path;
     }
 
@@ -496,11 +492,11 @@ class EasySEOManager {
     this.showResultDialog.value = showResultDialog;
     this.showHighlights.value = showHighlights;
     if (renderMode != null) this.renderMode.value = renderMode;
-    this._onGenerate = onGenerate;
-    this._baseUrl = baseUrl;
-    this._supportedLanguages = supportedLanguages;
-    this._headTags = headTags;
-    this._pathProvider = pathProvider;
+    this.onGenerate = onGenerate;
+    _baseUrl = baseUrl;
+    _supportedLanguages = supportedLanguages;
+    _headTags = headTags;
+    this.pathProvider = pathProvider;
 
     // Automatically extract any dynamic patterns containing colons from the pages list
     final List<String> staticPages = [];
@@ -516,7 +512,7 @@ class EasySEOManager {
       }
     }
 
-    this._pages = staticPages;
+    _pages = staticPages;
     _dynamicPathPatterns = extractedDynamicPatterns;
   }
 
@@ -617,7 +613,7 @@ class EasySEOManager {
 
   /// Generate sitemap.xml content
   String generateSitemapContent() {
-    final baseUrl = this._baseUrl;
+    final baseUrl = _baseUrl;
     if (baseUrl == null || baseUrl.isEmpty) return '';
 
     final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;

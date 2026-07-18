@@ -21,7 +21,7 @@ abstract class EasySEOHeadTag implements EasySEOHeadTagSource {
     final String? content = attributes['content'];
 
     if (tagName == 'title') return 'title';
-    if (tagName == 'script') return 'script:${attributes['type'] ?? 'no-type'}:${hashCode}';
+    if (tagName == 'script') return 'script:${attributes['type'] ?? 'no-type'}:$hashCode';
 
     // 1. Handle Multi-value Link tags (rel="alternate")
     if (rel == 'alternate') {
