@@ -3,6 +3,15 @@ description: Generates SEO HTML from widget trees via interactive or automated (
 version: 1.0.1
 homepage: https://github.com/lxandr-at/flutter_easy_seo
 
+# Force pub.dev to render the exact badges you expect
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  windows:
+  web:
+
 environment:
   sdk: ">=3.0.0 <4.0.0"
   flutter: ">=3.0.0"
