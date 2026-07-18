@@ -1,3 +1,7 @@
+## 1.0.4
+- revert last change
+## 1.0.3
+- moved test utils to sub package
 ## 1.0.2
 - specify platforms
 - fix some warnings

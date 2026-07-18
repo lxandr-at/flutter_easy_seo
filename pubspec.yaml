@@ -1,6 +1,6 @@
 name: flutter_easy_seo
 description: Generates SEO HTML from widget trees via interactive or automated (CI) modes to serve as static files to search engine bots. Free for small businesses.
-version: 1.0.2
+version: 1.0.4
 homepage: https://github.com/lxandr-at/flutter_easy_seo
 
 # Force pub.dev to render the exact badges you expect
@@ -19,13 +19,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_test:
-    sdk: flutter
   meta: ^1.18.0
   path: ^1.9.1
   web: ^1.1.1
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   flutter_lints: ^6.0.0
 
 flutter:
