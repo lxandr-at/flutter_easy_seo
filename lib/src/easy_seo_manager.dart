@@ -446,7 +446,7 @@ class EasySEOManager {
   /// 1. [pathProvider] — explicit user-configured delegate (GoRouter, auto_route, Beamer).
   /// 2. [ModalRoute.of(context)?.settings.name] — works for Navigator 1.0 (vanilla, fluro).
   /// 3. [URLHelper().getCurrentPath()] — browser URL on web, empty string on native.
-  String _getCurrentPath(BuildContext context) {
+  String getCurrentPath(BuildContext context) {
     // Layer 1: Explicit pathProvider (user-configured, e.g., GoRouter)
     if (pathProvider != null) {
       final path = pathProvider!(context);

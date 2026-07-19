@@ -456,7 +456,7 @@ class SEOHtml {
     Map<String, String>? resolvedAttributes = attributes != null ? Map.from(attributes!) : null;
 
     if (relativePath != null) {
-      final currentPath = EasySEOManager.instance._getCurrentPath(context);
+      final currentPath = EasySEOManager.instance.getCurrentPath(context);
       final urls = EasySEOManager.instance.resolveSeoUrls(currentPath);
       final baseUrl = urls.canonicalUrl;
       final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;

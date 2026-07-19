@@ -337,7 +337,7 @@ class _EasySEOPageState extends State<EasySEOPage> {
   }
 
   String _getCurrentPath() {
-    return EasySEOManager.instance._getCurrentPath(context);
+    return EasySEOManager.instance.getCurrentPath(context);
   }
 
   @override

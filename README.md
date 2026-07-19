@@ -740,7 +740,7 @@ Future<void> waitUntilReady(
 
 #### Headless Environment Limitations & Mocking
 
-**NOTE:** _The convenience test mocks and utils are in the example project in `/test/test_utils`. You have to copy the code to your own tests. Originally this code was in the main package, but unfortunately pub.dev refuses the web badge when `flutter_test` is a regular dependency._
+**NOTE:** _The convenience test mocks and utils are in a companion package [**`flutter_easy_seo_sync`**](https://pub.dev/packages/flutter_easy_seo_sync)!_
 
 Certain browser dependencies and platform capabilities used in a Flutter web application are unavailable in a headless widget testing environment. To address this, the `flutter_easy_seo` package provides out-of-the-box mocks and sensible environmental defaults.
 

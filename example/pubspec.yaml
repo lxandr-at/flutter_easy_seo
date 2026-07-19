@@ -10,18 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_easy_seo:
-    path: ../
+  flutter_easy_seo: ^1.0.5
   go_router: ^17.3.0
   flutter_riverpod: ^3.3.2
   flutter_web_plugins:
     sdk: flutter
   beamer: ^1.7.0
   auto_route: ^11.1.0
-  sw: ^0.1.5
-  path: ^1.9.1
-  http: ^1.6.0
-  http_parser: ^4.1.2
 
 dev_dependencies:
   flutter_test:
@@ -29,7 +24,12 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   build_runner: ^2.15.0
   auto_route_generator: ^10.5.0
-  meta: ^1.18.0
+  dependency_validator: ^5.0.5
+  sw: ^0.1.5
+  path: ^1.9.1
+  http: ^1.6.0
+  http_parser: ^4.1.2
+  flutter_easy_seo_sync: ^1.0.0
 
 flutter:
   uses-material-design: true

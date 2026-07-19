@@ -2,16 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
+import 'package:flutter_easy_seo_sync/flutter_easy_seo_sync.dart';
 import 'package:flutter_easy_seo_example/app.dart' show App;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as p;
 
-import 'seo_sync_service.dart' show SEOSyncService;
-import 'test_utils/test_functions.dart';
-import 'test_utils/test_mock_defaults.dart';
-
 bool sendToRestApi = false;
+SEOSyncService syncService = SEOSyncService(apiKey: "changeme", apiUrl: "https://localhost/api", appName: "example");
 
 void main() {
   setUpAll(() {
@@ -119,7 +117,7 @@ Future<void> sendAndWait(String fullHtml, String currentLanguage, String path) a
     // that stores the files in your web server so they can be delivered
     // to search bots.
     debugPrint('🚀 [TEST] Sending generated SEO HTML to server for path: $path');
-    await SEOSyncService().sendGeneratedData(
+    await syncService.sendGeneratedData(
       html: fullHtml,
       path: path,
       forceIOClient: true,
@@ -148,7 +146,7 @@ Future<void> generateAndSendSitemap(WidgetTester tester) async {
         //Use a service to send the generated sitemap.xml to a REST endpoint
         // that stores the files in your web server.
         debugPrint('🚀 [TEST] Sending generated sitemap.xml to server!');
-        await SEOSyncService().sendSitemap(
+        await syncService.sendSitemap(
             sitemapXmlContent: sitemapContent,
         );
         await Future.delayed(const Duration(seconds: 1));
