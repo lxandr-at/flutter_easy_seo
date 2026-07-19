@@ -1,6 +1,6 @@
 name: flutter_easy_seo
 description: Generates SEO HTML from widget trees via interactive or automated (CI) modes to serve as static files to search engine bots. Free for small businesses.
-version: 1.0.5
+version: 1.0.6
 homepage: https://github.com/lxandr-at/flutter_easy_seo
 
 environment:

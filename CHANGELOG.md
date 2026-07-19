@@ -1,3 +1,6 @@
+## 1.0.6
+- Moved convenience test mocks and utils and sync client to dedicated package flutter_easy_seo_sync.
+- Code cleanup.
 ## 1.0.5
 - Moved convenience test mocks and utils to example project. This is a temporary solution to convince pub.dev that this package is suitable for web.
 - Removed unused imports and packages.
