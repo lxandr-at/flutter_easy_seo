@@ -1,3 +1,5 @@
+## 1.0.7
+- Update pub.dev package topics and README metadata
 ## 1.0.6
 - Moved convenience test mocks and utils and sync client to dedicated package flutter_easy_seo_sync.
 - Code cleanup.

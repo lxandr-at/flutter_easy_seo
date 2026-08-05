@@ -1,7 +1,22 @@
 name: flutter_easy_seo
-description: Generates SEO HTML from widget trees via interactive or automated (CI) modes to serve as static files to search engine bots. Free for small businesses.
-version: 1.0.6
+description: Generates SEO HTML from widget trees via interactive or automated headless modes (WidgetTester) to serve static files to bots. Free for small businesses.
+version: 1.0.7
 homepage: https://github.com/lxandr-at/flutter_easy_seo
+repository: https://github.com/lxandr-at/flutter_easy_seo
+issue_tracker: https://github.com/lxandr-at/flutter_easy_seo/issues
+
+topics:
+  - seo
+  - web
+  - html
+  - metadata
+  - automation
+
+screenshots:
+  - description: 'Interactive Mode overlay showing visual debugging borders around flagged SEO widgets.'
+    path: doc/images/interactive_mode.png
+  - description: 'Architecture diagram showing static HTML file snapshot generation for search engine bots.'
+    path: doc/images/architecture_overview.png
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -17,5 +32,3 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   dependency_validator: ^5.0.5
-
-flutter:
