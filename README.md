@@ -40,13 +40,22 @@ This package implements a dual-layer strategy to bridge the Flutter-to-SEO gap c
    - **Anti-Cloaking Compliance:** Search engines like Google frequently run undercover audits using stealth, human-like user agents to verify that users see the same content as the bots. Live injection ensures your content remains identical across all testing profiles.
    - **Unknown Crawlers:** It provides a safe fallback for AI crawlers, scrapers, or third-party bots that do not announce themselves as a bot to your server, but still rely on reading a rendered HTML structure after execution.
 
-#### Main features include:
-- Complete SEO-friendly HTML documents from the live widget tree
-- Automatic `sitemap.xml` generation
-- SEO-relevant `<head>` tags and metadata (Twitter, Open Graph, custom meta tags)
-- **Interactive Mode** with UI overlay for debugging and manual generation
-- **Automated Mode** via Flutter Widget Tester for CI and scheduled generation
-- JSON-LD structured data and Microdata support
+### Key Features
+
+* **Pure Dart:** No headless browser or scraping necessary.
+* **Complete SEO-friendly HTML Documents:** Generates full static HTML directly from the live widget tree for SEO-relevant parts.
+* **Automatic `sitemap.xml` Generation:** Keeps your search engine site index up to date out of the box.
+* **Rich Meta Tag Support:** Comprehensive `<head>` metadata including Twitter Cards, Open Graph, and custom tags.
+* **JSON-LD & Microdata:** Native support for structured data schemas.
+* **Dual Execution Modes:**
+  * **Interactive Mode:** In-app UI overlay for debugging and manual HTML generation.
+  * **Automated Mode:** Headless generation via `flutter_test` for CI/CD and automated build pipelines.
+* **Router & Dynamic Route Support:** Out-of-the-box compatibility with `GoRouter`, `Navigator`, parameterized routes (e.g., `/products/:productId`).
+* **Locale Support:** Localized paths (e.g., `/:lang/products`).
+* **Async Data Resolution:** Waits for network requests and dynamic content to load before capturing the snapshot.
+* **Popup & Dialog Support:** Generates standalone SEO HTML pages for modal widgets and dynamic dialogs.
+* **Customizable Output:** Full flexibility to customize output HTML structures.
+* **Live DOM Injection:** Seamlessly updates the live document DOM at runtime.
 
 ## Installation
 
