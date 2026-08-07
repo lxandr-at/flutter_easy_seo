@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_seo/flutter_easy_seo.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../l10n/app_translations.dart';
 import '../routing/nav_adapter.dart';
+
+const _pubDevUrl = 'https://pub.dev/packages/flutter_easy_seo';
+const _pubDevBadgeUrl = 'https://img.shields.io/pub/v/flutter_easy_seo.svg?logo=dart&logoColor=ffffff&style=flat';
 
 class AppHeader extends StatelessWidget {
   final String locale;
@@ -21,6 +25,8 @@ class AppHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                _buildDemoLink(context, t),
+                const SizedBox(height: 2),
                 Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 Text(t['landing.hero.subtitle']!, style: const TextStyle(fontSize: 12)),
               ],
@@ -49,6 +55,37 @@ class AppHeader extends StatelessWidget {
       h1: title,
       p: t['landing.hero.subtitle'],
       globalName: 'app-header',
+    );
+  }
+
+  Widget _buildDemoLink(BuildContext context, Map<String, String> t) {
+    final primary = Theme.of(context).colorScheme.primary;
+    return GestureDetector(
+      onTap: () => launchUrl(Uri.parse(_pubDevUrl)),
+      child: Row(
+        spacing: 8,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Text(
+              t['app.demoLink']!,
+              style: TextStyle(
+                fontSize: 16,
+                color: primary,
+                fontWeight: FontWeight.w700,
+                decoration: TextDecoration.underline,
+                decorationColor: primary,
+              ),
+            ),
+          ),
+          Icon(Icons.open_in_new, size: 14, color: primary),
+        ],
+      ),
+    ).easySeoAnchor(
+      path: _pubDevUrl,
+      text: t['app.demoLink'],
+      globalName: 'app-header-demo-link',
     );
   }
 }

@@ -68,7 +68,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
       key: ValueKey(route),
       title: t['demo.landing.title']!,
       description: t['demo.landing.description'],
-      includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],
+      includeGlobals: ['app-header', 'app-nav', 'app-footer'],
       child: body,
     );
   }

@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as p;
 
+// requires a running REST api service
 bool sendToRestApi = false;
 SEOSyncService syncService = SEOSyncService(apiKey: "changeme", apiUrl: "https://localhost/api", appName: "example");
 
@@ -54,6 +55,9 @@ void main() {
 
     // generate and send sitemap
     await generateAndSendSitemap(tester);
+
+    // generate and send sitemap
+    await generateAndSendLlms(tester);
   });
 }
 
@@ -159,6 +163,41 @@ Future<void> generateAndSendSitemap(WidgetTester tester) async {
         if (!targetDir.existsSync()) targetDir.createSync(recursive: true);
         File(p.join(targetDir.path, 'sitemap.xml')).writeAsStringSync(sitemapContent);
         debugPrint('📁 [TEST] Saved to: ${targetDir.path}${p.separator}sitemap.xml');
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+    });
+  }
+}
+
+Future<void> generateAndSendLlms(WidgetTester tester) async {
+  String llmsText = EasySEOManager.instance.generateLlmsTxtContent();
+  String llmsFullText = EasySEOManager.instance.generateLlmsFullTxtContent();
+  if (llmsText.isNotEmpty || llmsFullText.isNotEmpty) {
+    await tester.runAsync(() async {
+      if (sendToRestApi) {
+        //Use a service to send the generated sitemap.xml to a REST endpoint
+        // that stores the files in your web server.
+        debugPrint('🚀 [TEST] Sending generated llms.txt and llms-full.txt to server!');
+        await syncService.sendLlms(
+          llmsContent: llmsText,
+          llmsFullContent: llmsFullText
+        );
+        await Future.delayed(const Duration(seconds: 1));
+      } else {
+        // --- Snapshot to local filesystem ---
+        final exampleRoot = _exampleRoot();
+        final targetDir = Directory(
+          p.joinAll([exampleRoot, 'web']),
+        );
+        if (!targetDir.existsSync()) targetDir.createSync(recursive: true);
+        if (llmsText.isNotEmpty) {
+          File(p.join(targetDir.path, 'llms.txt')).writeAsStringSync(llmsText);
+          debugPrint('📁 [TEST] Saved to: ${targetDir.path}${p.separator}llms.txt');
+        }
+        if (llmsFullText.isNotEmpty) {
+          File(p.join(targetDir.path, 'llms-full.txt')).writeAsStringSync(llmsFullText);
+          debugPrint('📁 [TEST] Saved to: ${targetDir.path}${p.separator}llms-full.txt');
+        }
         await Future.delayed(const Duration(milliseconds: 100));
       }
     });

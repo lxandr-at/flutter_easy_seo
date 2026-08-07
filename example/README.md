@@ -78,10 +78,9 @@ State (Riverpod)
 
 - `app-header` — `AppHeader`
 - `app-nav` — `AppNavigation`
-- `navigation_breadcrumb` — `Breadcrumb`
 - `app-footer` — `AppFooter`
 
-Each `EasySEOPage` references them via `includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer']`, merging these out-of-tree widgets into the generated HTML automatically.
+Each `EasySEOPage` references them via `includeGlobals: ['app-header', 'app-nav', 'app-footer']`, merging these out-of-tree widgets into the generated HTML automatically. Globals are intended only for persistent shell widgets; page-local components like the `Breadcrumb` are rendered inside each page's own tree instead, so every route generates its own breadcrumb.
 
 ---
 
@@ -118,6 +117,8 @@ EasySEOManager.instance.init(
 | `baseUrl` | Absolute canonical/alternate links |
 | `supportedLanguages` | `hreflang` alternates + sitemap locale entries |
 | `pages` | Static routes + dynamic pattern (`:hotelId`) for auto-discovery |
+| `siteName` | Site name used for the `llms.txt` / `llms-full.txt` header (falls back to the root page title) |
+| `siteDescription` | Site description used for the `llms.txt` / `llms-full.txt` header (falls back to the root page description) |
 | `pathProvider` | Resolves true URL path (required by declarative routers) |
 | `headTags` | Global `<head>` tags — injects `SEOServiceInfo` JSON-LD on every page |
 | `enableInteractiveMode` | Shows the floating debug overlay in the live app |
@@ -133,7 +134,7 @@ return EasySEOPage(
   key: ValueKey(route),
   title: t['demo.landing.title']!,
   description: t['demo.landing.description'],
-  includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],
+  includeGlobals: ['app-header', 'app-nav', 'app-footer'],
   child: body,
 );
 ```
@@ -191,7 +192,7 @@ NavigationBar(...).easySeo(globalName: 'app-nav');
 
 #### Breadcrumb → `<nav aria-label="Breadcrumb">` + JSON-LD `BreadcrumbList`
 
-`lib/widgets/breadcrumb.dart` uses `.easySeoNav(isBreadcrumb: true, globalName: "navigation_breadcrumb")` around the breadcrumb row:
+`lib/widgets/breadcrumb.dart` uses `.easySeoNav(isBreadcrumb: true)` around the breadcrumb row. It is rendered inside each page's own tree (not a global), so every route generates its own breadcrumb:
 
 ```dart
 Row(children: [
@@ -203,7 +204,7 @@ Row(children: [
       text: segments[i].label,
     ),
   ],
-]).easySeoNav(isBreadcrumb: true, globalName: "navigation_breadcrumb");
+]).easySeoNav(isBreadcrumb: true);
 ```
 
 #### Main Content → `<main>`, `<section>`, `<article>`, `<aside>`

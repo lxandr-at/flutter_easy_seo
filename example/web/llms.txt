@@ -1,0 +1,36 @@
+# Flutter Easy SEO Demo | Live Hotel Buchungsplattform
+
+> Live-Demo des flutter_easy_seo Packages. Im interaktiven Modus können Sie die generierte SEO-freundliche HTML-Struktur und die sitemap.xml live in der Vorschau prüfen.
+
+## Routes /de
+
+* [Home](https://fluttereasyseo.lxandr.at/example/)
+* [Hotels in Europa durchsuchen | Flutter Easy SEO Listing Demo](https://fluttereasyseo.lxandr.at/example/de/hotels): Diese Seite demonstriert, wie das Package ein vollständiges, SEO-freundliches HTML-Dokument mit Headern, Footern, Navigationsmenüs und dem zentralen Hauptinhalt aufbaut.
+* [Hotel Alpenglühen | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/1): Sehen Sie, wie flutter_easy_seo einen Flutter-Popup-Dialog als eigenständige, SEO-optimierte HTML-Unterseite rendert, inklusive dynamischem JSON-LD Entity-Schema.
+* [Seehotel Panorama | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/2): Sehen Sie, wie flutter_easy_seo einen Flutter-Popup-Dialog als eigenständige, SEO-optimierte HTML-Unterseite rendert, inklusive dynamischem JSON-LD Entity-Schema.
+* [Gasthof zur Post | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/3): Sehen Sie, wie flutter_easy_seo einen Flutter-Popup-Dialog als eigenständige, SEO-optimierte HTML-Unterseite rendert, inklusive dynamischem JSON-LD Entity-Schema.
+* [Château de la Loire | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/4): Sehen Sie, wie flutter_easy_seo einen Flutter-Popup-Dialog als eigenständige, SEO-optimierte HTML-Unterseite rendert, inklusive dynamischem JSON-LD Entity-Schema.
+* [Boutique Hotel Mitte | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/5): Sehen Sie, wie flutter_easy_seo einen Flutter-Popup-Dialog als eigenständige, SEO-optimierte HTML-Unterseite rendert, inklusive dynamischem JSON-LD Entity-Schema.
+* [Berggasthof Edelweiß | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/6): Sehen Sie, wie flutter_easy_seo einen Flutter-Popup-Dialog als eigenständige, SEO-optimierte HTML-Unterseite rendert, inklusive dynamischem JSON-LD Entity-Schema.
+
+## Routes /en
+
+* [Flutter Easy SEO Demo | Live Hotel Booking Platform](https://fluttereasyseo.lxandr.at/example/en): Live showcase for the flutter_easy_seo package. The Interactive Mode lets you preview the generated SEO-friendly HTML and sitemap.xml.
+* [Browse Hotels in Europe | Flutter Easy SEO Listing Demo](https://fluttereasyseo.lxandr.at/example/en/hotels): This page demonstrates how the package constructs a complete SEO-friendly HTML document with headers, footers, navigation menus, and core main content.
+* [Hotel Alpenglühen | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/1): See how flutter_easy_seo translates a Flutter popup dialog state into a fully indexable HTML route with dynamically hydrated JSON-LD entity schemas.
+* [Seehotel Panorama | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/2): See how flutter_easy_seo translates a Flutter popup dialog state into a fully indexable HTML route with dynamically hydrated JSON-LD entity schemas.
+* [Gasthof zur Post | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/3): See how flutter_easy_seo translates a Flutter popup dialog state into a fully indexable HTML route with dynamically hydrated JSON-LD entity schemas.
+* [Château de la Loire | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/4): See how flutter_easy_seo translates a Flutter popup dialog state into a fully indexable HTML route with dynamically hydrated JSON-LD entity schemas.
+* [Boutique Hotel Mitte | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/5): See how flutter_easy_seo translates a Flutter popup dialog state into a fully indexable HTML route with dynamically hydrated JSON-LD entity schemas.
+* [Berggasthof Edelweiß | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/6): See how flutter_easy_seo translates a Flutter popup dialog state into a fully indexable HTML route with dynamically hydrated JSON-LD entity schemas.
+
+## Routes /fr
+
+* [Démo Flutter Easy SEO | Exemple de Réservation dHôtel](https://fluttereasyseo.lxandr.at/example/fr): Démonstration en direct du package flutter_easy_seo. Le mode interactif vous permet de prévisualiser le sitemap.xml et le code HTML optimisé pour le SEO.
+* [Parcourir les Hôtels en Europe | Démo Listing Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels): Cette page démontre comment le package construit un document HTML complet et optimisé pour le SEO, avec en-têtes, pieds de page, menus de navigation et contenu principal.
+* [Hotel Alpenglühen | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/1): Découvrez comment flutter_easy_seo convertit une boîte de dialogue contextuelle (popup) Flutter en une route HTML indexable avec des schémas dentité JSON-LD dynamiques.
+* [Seehotel Panorama | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/2): Découvrez comment flutter_easy_seo convertit une boîte de dialogue contextuelle (popup) Flutter en une route HTML indexable avec des schémas dentité JSON-LD dynamiques.
+* [Gasthof zur Post | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/3): Découvrez comment flutter_easy_seo convertit une boîte de dialogue contextuelle (popup) Flutter en une route HTML indexable avec des schémas dentité JSON-LD dynamiques.
+* [Château de la Loire | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/4): Découvrez comment flutter_easy_seo convertit une boîte de dialogue contextuelle (popup) Flutter en une route HTML indexable avec des schémas dentité JSON-LD dynamiques.
+* [Boutique Hotel Mitte | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/5): Découvrez comment flutter_easy_seo convertit une boîte de dialogue contextuelle (popup) Flutter en une route HTML indexable avec des schémas dentité JSON-LD dynamiques.
+* [Berggasthof Edelweiß | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/6): Découvrez comment flutter_easy_seo convertit une boîte de dialogue contextuelle (popup) Flutter en une route HTML indexable avec des schémas dentité JSON-LD dynamiques.

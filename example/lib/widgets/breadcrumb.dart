@@ -41,6 +41,6 @@ class Breadcrumb extends ConsumerWidget {
           ),
         ],
       ],
-    ).easySeoNav(isBreadcrumb: true, globalName: "navigation_breadcrumb");
+    ).easySeoNav(isBreadcrumb: true);
   }
 }

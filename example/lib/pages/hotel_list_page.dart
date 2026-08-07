@@ -74,7 +74,7 @@ class _HotelListPageState extends ConsumerState<HotelListPage> {
       rank: 0,
       title: t['demo.hotels.title']!,
       description: t['demo.hotels.description'],
-      includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],
+      includeGlobals: ['app-header', 'app-nav', 'app-footer'],
       whenDone: () async => await ref.read(hotelsProvider.future),
       child: body,
     );

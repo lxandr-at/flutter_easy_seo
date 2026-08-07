@@ -8,6 +8,7 @@ import '../providers/breadcrumb_provider.dart';
 import '../providers/hotel_provider.dart';
 import '../providers/reservation_provider.dart';
 import '../routing/nav_adapter.dart';
+import '../widgets/breadcrumb.dart';
 import '../widgets/calendar.dart';
 import '../widgets/review_list.dart';
 
@@ -26,26 +27,6 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
   DateTime? _checkIn;
   DateTime? _checkOut;
   String _roomType = 'Standard';
-  bool _breadcrumbPushed = false;
-  late final BreadcrumbNotifier _breadcrumbNotifier;
-
-  @override
-  void initState() {
-    super.initState();
-    _breadcrumbNotifier = ref.read(breadcrumbProvider.notifier);
-  }
-
-  @override
-  void dispose() {
-    if (_breadcrumbPushed) {
-      Future.microtask(() {
-        try {
-          _breadcrumbNotifier.pop();
-        } catch (_) {}
-      });
-    }
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +44,6 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
           ],
         ),
       );
-    }
-
-    if (!_breadcrumbPushed) {
-      _breadcrumbPushed = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(breadcrumbProvider.notifier).push(
-          BreadcrumbSegment(label: hotel.name, slug: hotel.id),
-        );
-      });
     }
 
     final stars = '★' * hotel.stars;
@@ -103,7 +75,23 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
       rank: 1,
       title: '${hotel.name} ${t['demo.hotelsdetail.title']}',
       description: t['demo.hotelsdetail.description'],
-      includeGlobals: ['app-header', 'app-nav', 'navigation_breadcrumb', 'app-footer'],
+      includeGlobals: ['app-header', 'app-nav', 'app-footer'],
+      whenDone: () async {
+        // This callback is intended to be used to wait for a page to finish loading before
+        // generating an sEO html page.
+        // Here we use it to set the breadcrumb widget, which does not exist in the
+        // detail popup, so it is still part of generated html content for this page
+        // or fom llms content.
+        final loadedHotel = ref.read(selectedHotelProvider(widget.hotelId));
+        if (loadedHotel == null) return;
+        final segments = [
+          BreadcrumbSegment(label: t['nav.hotels']!, slug: 'hotels'),
+          BreadcrumbSegment(label: loadedHotel.name, slug: loadedHotel.id),
+        ];
+        await Future<void>.delayed(Duration.zero);
+        if (!mounted) return;
+        ref.read(breadcrumbProvider.notifier).set(segments);
+      },
       child: Center(
         child: Card(
           margin: const EdgeInsets.all(24),
@@ -130,6 +118,10 @@ class _HotelDetailPageState extends ConsumerState<HotelDetailPage> {
                       tooltip: t['hotel.close']!,
                     ),
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Breadcrumb(locale: widget.locale),
                 ),
                 Flexible(child: scrollable),
               ],

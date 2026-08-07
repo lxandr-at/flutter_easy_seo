@@ -1,0 +1,753 @@
+# Flutter Easy SEO Demo | Live Hotel Buchungsplattform
+
+> Live-Demo des flutter_easy_seo Packages. Im interaktiven Modus können Sie die generierte SEO-freundliche HTML-Struktur und die sitemap.xml live in der Vorschau prüfen.
+
+---
+
+## [Flutter Easy SEO Demo | Live Hotel Buchungsplattform](https://fluttereasyseo.lxandr.at/example/de)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/de`
+**Locale:** `de`
+
+# Hotel Buchungsplattform
+
+Entdecken Sie exklusive Unterkünfte in den schönsten Regionen Europas und buchen Sie Ihren perfekten Aufenthalt.
+
+[Das ist ein Demo von flutter_easy_seo – sieh dir das Paket auf pub.dev an.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Startseite](https://fluttereasyseo.lxandr.at/example/de)
+# Finden Sie Ihr Traumhotel
+
+Entdecken Sie exklusive Unterkünfte in den schönsten Regionen Europas und buchen Sie Ihren perfekten Aufenthalt.
+
+## Warum uns wählen
+
+Bester Preis – Wir garantieren den günstigsten Tarif für jedes Hotel.
+
+Große Auswahl – Über 500 geprüfte Hotels in ganz Europa.
+
+24/7 Support – Unser Team hilft Ihnen jederzeit bei Fragen.
+
+### Wie kann ich ein Hotel buchen?
+
+Wählen Sie einfach ein Hotel aus der Liste aus, wählen Sie Ihre Wunschdaten und klicken Sie auf "Buchen".
+
+### Kann ich meine Buchung kostenlos stornieren?
+
+Ja, die meisten Buchungen können bis 48 Stunden vor Anreise kostenlos storniert werden.
+
+### Welche Zahlungsmethoden werden akzeptiert?
+
+Wir akzeptieren Kreditkarten (Visa, Mastercard), PayPal und Sofortüberweisung.
+
+### Raw SEO Composition
+
+Paragraph built from SEOHtml subclasses.
+
+---
+
+## [Flutter Easy SEO Demo | Live Hotel Booking Platform](https://fluttereasyseo.lxandr.at/example/en)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/en`
+**Locale:** `en`
+
+# Hotel Booking Platform
+
+Discover exclusive accommodations in Europe's most beautiful regions and book your perfect stay.
+
+[This is a demo of flutter_easy_seo – check out the package on pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Home](https://fluttereasyseo.lxandr.at/example/en)
+# Find Your Dream Hotel
+
+Discover exclusive accommodations in Europe's most beautiful regions and book your perfect stay.
+
+## Why Choose Us
+
+Best Price – We guarantee the lowest rate for every hotel.
+
+Wide Selection – Over 500 curated hotels across Europe.
+
+24/7 Support – Our team is here to help anytime.
+
+### How do I book a hotel?
+
+Simply select a hotel from the list, choose your desired dates, and click "Book Now".
+
+### Can I cancel my booking for free?
+
+Yes, most bookings can be cancelled free of charge up to 48 hours before arrival.
+
+### Which payment methods are accepted?
+
+We accept credit cards (Visa, Mastercard), PayPal, and instant bank transfers.
+
+### Raw SEO Composition
+
+Paragraph built from SEOHtml subclasses.
+
+---
+
+## [Démo Flutter Easy SEO | Exemple de Réservation dHôtel](https://fluttereasyseo.lxandr.at/example/fr)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/fr`
+**Locale:** `fr`
+
+# Plateforme de Réservation Hôtelière
+
+Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
+
+[Ceci est une démo de flutter_easy_seo – consultez le package sur pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Accueil](https://fluttereasyseo.lxandr.at/example/fr)
+# Trouvez Votre Hôtel de Rêve
+
+Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
+
+## Pourquoi Nous Choisir
+
+Meilleur Prix – Nous garantissons le tarif le plus bas pour chaque hôtel.
+
+Grand Choix – Plus de 500 hôtels sélectionnés à travers l'Europe.
+
+Assistance 24/7 – Notre équipe est là pour vous aider à tout moment.
+
+### Comment réserver un hôtel?
+
+Sélectionnez simplement un hôtel dans la liste, choisissez vos dates et cliquez sur "Réserver".
+
+### Puis-je annuler ma réservation gratuitement?
+
+Oui, la plupart des réservations peuvent être annulées gratuitement jusqu'à 48 heures avant l'arrivée.
+
+### Quels modes de paiement sont acceptés?
+
+Nous acceptons les cartes de crédit (Visa, Mastercard), PayPal et les virements bancaires.
+
+### Raw SEO Composition
+
+Paragraph built from SEOHtml subclasses.
+
+---
+
+## [Hotels in Europa durchsuchen | Flutter Easy SEO Listing Demo](https://fluttereasyseo.lxandr.at/example/de/hotels)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/de/hotels`
+**Locale:** `de`
+
+# Hotel Buchungsplattform
+
+Entdecken Sie exklusive Unterkünfte in den schönsten Regionen Europas und buchen Sie Ihren perfekten Aufenthalt.
+
+[Das ist ein Demo von flutter_easy_seo – sieh dir das Paket auf pub.dev an.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+## Hotels
+
+1. [Startseite](https://fluttereasyseo.lxandr.at/example/de)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/de/hotels)
+- Hotel Alpenglühen![Hotel Alpenglühen](https://picsum.photos/seed/1/160/160)[Hotel Alpenglühen](https://fluttereasyseo.lxandr.at/example/de/hotels/1)Zermatt, Schweiz280
+- Seehotel Panorama![Seehotel Panorama](https://picsum.photos/seed/2/160/160)[Seehotel Panorama](https://fluttereasyseo.lxandr.at/example/de/hotels/2)Tegernsee, Deutschland190
+- Gasthof zur Post![Gasthof zur Post](https://picsum.photos/seed/3/160/160)[Gasthof zur Post](https://fluttereasyseo.lxandr.at/example/de/hotels/3)Oberammergau, Deutschland95
+- Château de la Loire![Château de la Loire](https://picsum.photos/seed/4/160/160)[Château de la Loire](https://fluttereasyseo.lxandr.at/example/de/hotels/4)Loiretal, Frankreich350
+- Boutique Hotel Mitte![Boutique Hotel Mitte](https://picsum.photos/seed/5/160/160)[Boutique Hotel Mitte](https://fluttereasyseo.lxandr.at/example/de/hotels/5)Berlin, Deutschland150
+- Berggasthof Edelweiß![Berggasthof Edelweiß](https://picsum.photos/seed/6/160/160)[Berggasthof Edelweiß](https://fluttereasyseo.lxandr.at/example/de/hotels/6)Saalbach, Österreich75
+
+---
+
+## [Browse Hotels in Europe | Flutter Easy SEO Listing Demo](https://fluttereasyseo.lxandr.at/example/en/hotels)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/en/hotels`
+**Locale:** `en`
+
+# Hotel Booking Platform
+
+Discover exclusive accommodations in Europe's most beautiful regions and book your perfect stay.
+
+[This is a demo of flutter_easy_seo – check out the package on pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+## Hotels
+
+1. [Home](https://fluttereasyseo.lxandr.at/example/en)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/en/hotels)
+- Hotel Alpenglühen![Hotel Alpenglühen](https://picsum.photos/seed/1/160/160)[Hotel Alpenglühen](https://fluttereasyseo.lxandr.at/example/en/hotels/1)Zermatt, Schweiz280
+- Seehotel Panorama![Seehotel Panorama](https://picsum.photos/seed/2/160/160)[Seehotel Panorama](https://fluttereasyseo.lxandr.at/example/en/hotels/2)Tegernsee, Deutschland190
+- Gasthof zur Post![Gasthof zur Post](https://picsum.photos/seed/3/160/160)[Gasthof zur Post](https://fluttereasyseo.lxandr.at/example/en/hotels/3)Oberammergau, Deutschland95
+- Château de la Loire![Château de la Loire](https://picsum.photos/seed/4/160/160)[Château de la Loire](https://fluttereasyseo.lxandr.at/example/en/hotels/4)Loiretal, Frankreich350
+- Boutique Hotel Mitte![Boutique Hotel Mitte](https://picsum.photos/seed/5/160/160)[Boutique Hotel Mitte](https://fluttereasyseo.lxandr.at/example/en/hotels/5)Berlin, Deutschland150
+- Berggasthof Edelweiß![Berggasthof Edelweiß](https://picsum.photos/seed/6/160/160)[Berggasthof Edelweiß](https://fluttereasyseo.lxandr.at/example/en/hotels/6)Saalbach, Österreich75
+
+---
+
+## [Parcourir les Hôtels en Europe | Démo Listing Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/fr/hotels`
+**Locale:** `fr`
+
+# Plateforme de Réservation Hôtelière
+
+Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
+
+[Ceci est une démo de flutter_easy_seo – consultez le package sur pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+## Hôtels
+
+1. [Accueil](https://fluttereasyseo.lxandr.at/example/fr)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/fr/hotels)
+- Hotel Alpenglühen![Hotel Alpenglühen](https://picsum.photos/seed/1/160/160)[Hotel Alpenglühen](https://fluttereasyseo.lxandr.at/example/fr/hotels/1)Zermatt, Schweiz280
+- Seehotel Panorama![Seehotel Panorama](https://picsum.photos/seed/2/160/160)[Seehotel Panorama](https://fluttereasyseo.lxandr.at/example/fr/hotels/2)Tegernsee, Deutschland190
+- Gasthof zur Post![Gasthof zur Post](https://picsum.photos/seed/3/160/160)[Gasthof zur Post](https://fluttereasyseo.lxandr.at/example/fr/hotels/3)Oberammergau, Deutschland95
+- Château de la Loire![Château de la Loire](https://picsum.photos/seed/4/160/160)[Château de la Loire](https://fluttereasyseo.lxandr.at/example/fr/hotels/4)Loiretal, Frankreich350
+- Boutique Hotel Mitte![Boutique Hotel Mitte](https://picsum.photos/seed/5/160/160)[Boutique Hotel Mitte](https://fluttereasyseo.lxandr.at/example/fr/hotels/5)Berlin, Deutschland150
+- Berggasthof Edelweiß![Berggasthof Edelweiß](https://picsum.photos/seed/6/160/160)[Berggasthof Edelweiß](https://fluttereasyseo.lxandr.at/example/fr/hotels/6)Saalbach, Österreich75
+
+---
+
+## [Hotel Alpenglühen | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/1)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/de/hotels/1`
+**Locale:** `de`
+
+# Hotel Buchungsplattform
+
+Entdecken Sie exklusive Unterkünfte in den schönsten Regionen Europas und buchen Sie Ihren perfekten Aufenthalt.
+
+[Das ist ein Demo von flutter_easy_seo – sieh dir das Paket auf pub.dev an.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Startseite](https://fluttereasyseo.lxandr.at/example/de)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/de/hotels)
+1. [Hotel Alpenglühen](https://fluttereasyseo.lxandr.at/example/de/hotels/1)
+# Hotel Alpenglühen
+
+Ein luxuriöses 5-Sterne Hotel eingebettet in die atemberaubende Berglandschaft der Alpen. Genießen Sie exzellenten Service, feinste Küche und einen unvergesslichen Ausblick.
+
+Kostenloses WLAN
+
+Schwimmbad
+
+Spa & Wellness
+
+Parkplatz
+
+---
+
+## [Hotel Alpenglühen | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/1)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/en/hotels/1`
+**Locale:** `en`
+
+# Hotel Booking Platform
+
+Discover exclusive accommodations in Europe's most beautiful regions and book your perfect stay.
+
+[This is a demo of flutter_easy_seo – check out the package on pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Home](https://fluttereasyseo.lxandr.at/example/en)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/en/hotels)
+1. [Hotel Alpenglühen](https://fluttereasyseo.lxandr.at/example/en/hotels/1)
+# Hotel Alpenglühen
+
+Ein luxuriöses 5-Sterne Hotel eingebettet in die atemberaubende Berglandschaft der Alpen. Genießen Sie exzellenten Service, feinste Küche und einen unvergesslichen Ausblick.
+
+Free WiFi
+
+Swimming Pool
+
+Spa & Wellness
+
+Parking
+
+---
+
+## [Hotel Alpenglühen | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/1)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/fr/hotels/1`
+**Locale:** `fr`
+
+# Plateforme de Réservation Hôtelière
+
+Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
+
+[Ceci est une démo de flutter_easy_seo – consultez le package sur pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Accueil](https://fluttereasyseo.lxandr.at/example/fr)
+1. [Hôtels](https://fluttereasyseo.lxandr.at/example/fr/hotels)
+1. [Hotel Alpenglühen](https://fluttereasyseo.lxandr.at/example/fr/hotels/1)
+# Hotel Alpenglühen
+
+Ein luxuriöses 5-Sterne Hotel eingebettet in die atemberaubende Berglandschaft der Alpen. Genießen Sie exzellenten Service, feinste Küche und einen unvergesslichen Ausblick.
+
+WiFi Gratuit
+
+Piscine
+
+Spa & Bien-être
+
+Parking
+
+---
+
+## [Seehotel Panorama | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/2)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/de/hotels/2`
+**Locale:** `de`
+
+# Hotel Buchungsplattform
+
+Entdecken Sie exklusive Unterkünfte in den schönsten Regionen Europas und buchen Sie Ihren perfekten Aufenthalt.
+
+[Das ist ein Demo von flutter_easy_seo – sieh dir das Paket auf pub.dev an.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Startseite](https://fluttereasyseo.lxandr.at/example/de)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/de/hotels)
+1. [Seehotel Panorama](https://fluttereasyseo.lxandr.at/example/de/hotels/2)
+# Seehotel Panorama
+
+Direkt am malerischen See gelegen, bietet das Seehotel Panorama Erholung pur. Genießen Sie den Wellnessbereich und die regionale Küche.
+
+Kostenloses WLAN
+
+Schwimmbad
+
+Spa & Wellness
+
+Parkplatz
+
+---
+
+## [Seehotel Panorama | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/2)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/en/hotels/2`
+**Locale:** `en`
+
+# Hotel Booking Platform
+
+Discover exclusive accommodations in Europe's most beautiful regions and book your perfect stay.
+
+[This is a demo of flutter_easy_seo – check out the package on pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Home](https://fluttereasyseo.lxandr.at/example/en)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/en/hotels)
+1. [Seehotel Panorama](https://fluttereasyseo.lxandr.at/example/en/hotels/2)
+# Seehotel Panorama
+
+Direkt am malerischen See gelegen, bietet das Seehotel Panorama Erholung pur. Genießen Sie den Wellnessbereich und die regionale Küche.
+
+Free WiFi
+
+Swimming Pool
+
+Spa & Wellness
+
+Parking
+
+---
+
+## [Seehotel Panorama | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/2)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/fr/hotels/2`
+**Locale:** `fr`
+
+# Plateforme de Réservation Hôtelière
+
+Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
+
+[Ceci est une démo de flutter_easy_seo – consultez le package sur pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Accueil](https://fluttereasyseo.lxandr.at/example/fr)
+1. [Hôtels](https://fluttereasyseo.lxandr.at/example/fr/hotels)
+1. [Seehotel Panorama](https://fluttereasyseo.lxandr.at/example/fr/hotels/2)
+# Seehotel Panorama
+
+Direkt am malerischen See gelegen, bietet das Seehotel Panorama Erholung pur. Genießen Sie den Wellnessbereich und die regionale Küche.
+
+WiFi Gratuit
+
+Piscine
+
+Spa & Bien-être
+
+Parking
+
+---
+
+## [Gasthof zur Post | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/3)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/de/hotels/3`
+**Locale:** `de`
+
+# Hotel Buchungsplattform
+
+Entdecken Sie exklusive Unterkünfte in den schönsten Regionen Europas und buchen Sie Ihren perfekten Aufenthalt.
+
+[Das ist ein Demo von flutter_easy_seo – sieh dir das Paket auf pub.dev an.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Startseite](https://fluttereasyseo.lxandr.at/example/de)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/de/hotels)
+1. [Gasthof zur Post](https://fluttereasyseo.lxandr.at/example/de/hotels/3)
+# Gasthof zur Post
+
+Ein traditioneller bayerischer Gasthof mit Charme und Gemütlichkeit. Herzliche Gastfreundschaft und hausgemachte Spezialitäten erwartet Sie.
+
+Kostenloses WLAN
+
+Schwimmbad
+
+Spa & Wellness
+
+Parkplatz
+
+---
+
+## [Gasthof zur Post | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/3)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/en/hotels/3`
+**Locale:** `en`
+
+# Hotel Booking Platform
+
+Discover exclusive accommodations in Europe's most beautiful regions and book your perfect stay.
+
+[This is a demo of flutter_easy_seo – check out the package on pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Home](https://fluttereasyseo.lxandr.at/example/en)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/en/hotels)
+1. [Gasthof zur Post](https://fluttereasyseo.lxandr.at/example/en/hotels/3)
+# Gasthof zur Post
+
+Ein traditioneller bayerischer Gasthof mit Charme und Gemütlichkeit. Herzliche Gastfreundschaft und hausgemachte Spezialitäten erwartet Sie.
+
+Free WiFi
+
+Swimming Pool
+
+Spa & Wellness
+
+Parking
+
+---
+
+## [Gasthof zur Post | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/3)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/fr/hotels/3`
+**Locale:** `fr`
+
+# Plateforme de Réservation Hôtelière
+
+Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
+
+[Ceci est une démo de flutter_easy_seo – consultez le package sur pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Accueil](https://fluttereasyseo.lxandr.at/example/fr)
+1. [Hôtels](https://fluttereasyseo.lxandr.at/example/fr/hotels)
+1. [Gasthof zur Post](https://fluttereasyseo.lxandr.at/example/fr/hotels/3)
+# Gasthof zur Post
+
+Ein traditioneller bayerischer Gasthof mit Charme und Gemütlichkeit. Herzliche Gastfreundschaft und hausgemachte Spezialitäten erwartet Sie.
+
+WiFi Gratuit
+
+Piscine
+
+Spa & Bien-être
+
+Parking
+
+---
+
+## [Château de la Loire | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/4)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/de/hotels/4`
+**Locale:** `de`
+
+# Hotel Buchungsplattform
+
+Entdecken Sie exklusive Unterkünfte in den schönsten Regionen Europas und buchen Sie Ihren perfekten Aufenthalt.
+
+[Das ist ein Demo von flutter_easy_seo – sieh dir das Paket auf pub.dev an.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Startseite](https://fluttereasyseo.lxandr.at/example/de)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/de/hotels)
+1. [Château de la Loire](https://fluttereasyseo.lxandr.at/example/de/hotels/4)
+# Château de la Loire
+
+Ein erlesenes Château-Hotel im Herzen des Loire-Tals. Historische Architektur trifft auf modernen Luxus in einer der schönsten Regionen Frankreichs.
+
+Kostenloses WLAN
+
+Schwimmbad
+
+Spa & Wellness
+
+Parkplatz
+
+---
+
+## [Château de la Loire | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/4)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/en/hotels/4`
+**Locale:** `en`
+
+# Hotel Booking Platform
+
+Discover exclusive accommodations in Europe's most beautiful regions and book your perfect stay.
+
+[This is a demo of flutter_easy_seo – check out the package on pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Home](https://fluttereasyseo.lxandr.at/example/en)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/en/hotels)
+1. [Château de la Loire](https://fluttereasyseo.lxandr.at/example/en/hotels/4)
+# Château de la Loire
+
+Ein erlesenes Château-Hotel im Herzen des Loire-Tals. Historische Architektur trifft auf modernen Luxus in einer der schönsten Regionen Frankreichs.
+
+Free WiFi
+
+Swimming Pool
+
+Spa & Wellness
+
+Parking
+
+---
+
+## [Château de la Loire | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/4)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/fr/hotels/4`
+**Locale:** `fr`
+
+# Plateforme de Réservation Hôtelière
+
+Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
+
+[Ceci est une démo de flutter_easy_seo – consultez le package sur pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Accueil](https://fluttereasyseo.lxandr.at/example/fr)
+1. [Hôtels](https://fluttereasyseo.lxandr.at/example/fr/hotels)
+1. [Château de la Loire](https://fluttereasyseo.lxandr.at/example/fr/hotels/4)
+# Château de la Loire
+
+Ein erlesenes Château-Hotel im Herzen des Loire-Tals. Historische Architektur trifft auf modernen Luxus in einer der schönsten Regionen Frankreichs.
+
+WiFi Gratuit
+
+Piscine
+
+Spa & Bien-être
+
+Parking
+
+---
+
+## [Boutique Hotel Mitte | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/5)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/de/hotels/5`
+**Locale:** `de`
+
+# Hotel Buchungsplattform
+
+Entdecken Sie exklusive Unterkünfte in den schönsten Regionen Europas und buchen Sie Ihren perfekten Aufenthalt.
+
+[Das ist ein Demo von flutter_easy_seo – sieh dir das Paket auf pub.dev an.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Startseite](https://fluttereasyseo.lxandr.at/example/de)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/de/hotels)
+1. [Boutique Hotel Mitte](https://fluttereasyseo.lxandr.at/example/de/hotels/5)
+# Boutique Hotel Mitte
+
+Ein stilvolles Boutique-Hotel im Herzen der Stadt. Perfekt für Städtereisende mit Sinn für Design und Komfort.
+
+Kostenloses WLAN
+
+Schwimmbad
+
+Spa & Wellness
+
+Parkplatz
+
+---
+
+## [Boutique Hotel Mitte | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/5)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/en/hotels/5`
+**Locale:** `en`
+
+# Hotel Booking Platform
+
+Discover exclusive accommodations in Europe's most beautiful regions and book your perfect stay.
+
+[This is a demo of flutter_easy_seo – check out the package on pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Home](https://fluttereasyseo.lxandr.at/example/en)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/en/hotels)
+1. [Boutique Hotel Mitte](https://fluttereasyseo.lxandr.at/example/en/hotels/5)
+# Boutique Hotel Mitte
+
+Ein stilvolles Boutique-Hotel im Herzen der Stadt. Perfekt für Städtereisende mit Sinn für Design und Komfort.
+
+Free WiFi
+
+Swimming Pool
+
+Spa & Wellness
+
+Parking
+
+---
+
+## [Boutique Hotel Mitte | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/5)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/fr/hotels/5`
+**Locale:** `fr`
+
+# Plateforme de Réservation Hôtelière
+
+Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
+
+[Ceci est une démo de flutter_easy_seo – consultez le package sur pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Accueil](https://fluttereasyseo.lxandr.at/example/fr)
+1. [Hôtels](https://fluttereasyseo.lxandr.at/example/fr/hotels)
+1. [Boutique Hotel Mitte](https://fluttereasyseo.lxandr.at/example/fr/hotels/5)
+# Boutique Hotel Mitte
+
+Ein stilvolles Boutique-Hotel im Herzen der Stadt. Perfekt für Städtereisende mit Sinn für Design und Komfort.
+
+WiFi Gratuit
+
+Piscine
+
+Spa & Bien-être
+
+Parking
+
+---
+
+## [Berggasthof Edelweiß | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/de/hotels/6)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/de/hotels/6`
+**Locale:** `de`
+
+# Hotel Buchungsplattform
+
+Entdecken Sie exklusive Unterkünfte in den schönsten Regionen Europas und buchen Sie Ihren perfekten Aufenthalt.
+
+[Das ist ein Demo von flutter_easy_seo – sieh dir das Paket auf pub.dev an.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Startseite](https://fluttereasyseo.lxandr.at/example/de)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/de/hotels)
+1. [Berggasthof Edelweiß](https://fluttereasyseo.lxandr.at/example/de/hotels/6)
+# Berggasthof Edelweiß
+
+Ein uriger Berggasthof auf 1.800 Metern Höhe. Ideal für Wanderer und Naturliebhaber, die Ruhe und Ursprünglichkeit suchen.
+
+Kostenloses WLAN
+
+Schwimmbad
+
+Spa & Wellness
+
+Parkplatz
+
+---
+
+## [Berggasthof Edelweiß | Dynamic Entity - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/en/hotels/6)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/en/hotels/6`
+**Locale:** `en`
+
+# Hotel Booking Platform
+
+Discover exclusive accommodations in Europe's most beautiful regions and book your perfect stay.
+
+[This is a demo of flutter_easy_seo – check out the package on pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Home](https://fluttereasyseo.lxandr.at/example/en)
+1. [Hotels](https://fluttereasyseo.lxandr.at/example/en/hotels)
+1. [Berggasthof Edelweiß](https://fluttereasyseo.lxandr.at/example/en/hotels/6)
+# Berggasthof Edelweiß
+
+Ein uriger Berggasthof auf 1.800 Metern Höhe. Ideal für Wanderer und Naturliebhaber, die Ruhe und Ursprünglichkeit suchen.
+
+Free WiFi
+
+Swimming Pool
+
+Spa & Wellness
+
+Parking
+
+---
+
+## [Berggasthof Edelweiß | Entité Dynamique - Flutter Easy SEO](https://fluttereasyseo.lxandr.at/example/fr/hotels/6)
+
+**URL:** `https://fluttereasyseo.lxandr.at/example/fr/hotels/6`
+**Locale:** `fr`
+
+# Plateforme de Réservation Hôtelière
+
+Découvrez des hébergements exclusifs dans les plus belles régions d'Europe et réservez votre séjour parfait.
+
+[Ceci est une démo de flutter_easy_seo – consultez le package sur pub.dev.](https://pub.dev/packages/flutter_easy_seo)
+
+
+
+1. [Accueil](https://fluttereasyseo.lxandr.at/example/fr)
+1. [Hôtels](https://fluttereasyseo.lxandr.at/example/fr/hotels)
+1. [Berggasthof Edelweiß](https://fluttereasyseo.lxandr.at/example/fr/hotels/6)
+# Berggasthof Edelweiß
+
+Ein uriger Berggasthof auf 1.800 Metern Höhe. Ideal für Wanderer und Naturliebhaber, die Ruhe und Ursprünglichkeit suchen.
+
+WiFi Gratuit
+
+Piscine
+
+Spa & Bien-être
+
+Parking
