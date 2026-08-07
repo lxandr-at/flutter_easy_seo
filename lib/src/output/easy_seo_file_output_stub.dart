@@ -19,4 +19,18 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
       print('saveSitemap is only supported on Web');
     }
   }
+
+  @override
+  void saveLlmsTxt(String content) {
+    if (kDebugMode) {
+      print('saveLlmsTxt is only supported on Web');
+    }
+  }
+
+  @override
+  void saveLlmsFullTxt(String content) {
+    if (kDebugMode) {
+      print('saveLlmsFullTxt is only supported on Web');
+    }
+  }
 }

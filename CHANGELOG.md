@@ -1,3 +1,9 @@
+## 1.0.8
+- Automatic `llms.txt`/`llms-full.txt` generation for AI crawlers and LLM clients (index + full page Markdown dumps, same route set as the sitemap).
+- New `siteName`/`siteDescription` configuration options for the llms.txt header (with automatic root-page fallback).
+- Interactive Mode: new "Generate LLMs" button and llms.txt / llms-full.txt download support.
+- Changes to example project: Generate `llms.txt`/`llms-full.txt` in seo_generation_test.dart, Link to project, fix breadcrumb bug.
+- Updated Readme.md.
 ## 1.0.7
 - Update pub.dev package topics and README metadata
 ## 1.0.6

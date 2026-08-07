@@ -14,6 +14,9 @@ class EasySEOFigureWrapper extends EasySEOBaseWrapper {
   final String? _caption;
 
   @override
+  String get seoWidgetName => 'EasySEOFigureWrapper';
+
+  @override
   SEOHtml toSEOHtml({
     required List<SEOHtml> children,
     required List<SEONavItem> navItems,

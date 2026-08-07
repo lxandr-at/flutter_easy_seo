@@ -45,6 +45,7 @@ This package implements a dual-layer strategy to bridge the Flutter-to-SEO gap c
 * **Pure Dart:** No headless browser or scraping necessary.
 * **Complete SEO-friendly HTML Documents:** Generates full static HTML directly from the live widget tree for SEO-relevant parts.
 * **Automatic `sitemap.xml` Generation:** Keeps your search engine site index up to date out of the box.
+* **Automatic `llms.txt` / `llms-full.txt` Generation:** Produces AI-friendly Markdown indexes and full page dumps of your site for LLM clients (see [llms.txt generation](#llmstxt--llms-fulltxt-generation)).
 * **Rich Meta Tag Support:** Comprehensive `<head>` metadata including Twitter Cards, Open Graph, and custom tags.
 * **JSON-LD & Microdata:** Native support for structured data schemas.
 * **Dual Execution Modes:**
@@ -63,7 +64,7 @@ Add `flutter_easy_seo` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_easy_seo: ^1.0.0
+  flutter_easy_seo: ^1.0.7
 ```
 or
 ```bash
@@ -154,7 +155,7 @@ The architecture consists of 4 main parts:
 - **EasySEOManager:** Singleton for orchestration and configuration.
 - **EasySEOPage:** Wraps (part of) a widget tree to generate an SEO-friendly HTML version.
 - **Widget wrappers, HTML helpers, etc.:** Create specific HTML, JSON-LD and microdata output.
-- **File generation:** Generate HTML and sitemap.xml files either interactively or automatically with a widget tester.
+- **File generation:** Generate HTML, sitemap.xml, and llms.txt / llms-full.txt files either interactively or automatically with a widget tester.
 
 ![Easy SEO Architecture Overview](doc/images/architecture_overview.png)
 
@@ -176,6 +177,8 @@ Call `EasySEOManager.instance.init(...)` in your `main()` function to configure 
 | `baseUrl` | The root domain URL for absolute canonical/alternate links. Falls back to the current browser URL on web. |
 | `supportedLanguages` | Language codes for prefix-routing (e.g. `['en', 'de']`). The first entry is the default language. Used for `hreflang` alternate links and sitemap generation. |
 | `pages` | Static and dynamic route patterns for the sitemap. Dynamic routes (e.g. `products/:id`) auto-collect matching URLs from generated HTML. |
+| `siteName` | Optional site name used for the `llms.txt` / `llms-full.txt` header. When omitted, falls back to the main (root) page title, the first generated page title, or the `baseUrl` host. |
+| `siteDescription` | Optional site description used for the `llms.txt` / `llms-full.txt` header. When omitted, falls back to the main (root) page description. |
 | `headTags` | Global `<meta>`, `<link>`, and `<script>` tags injected into the document `<head>` on every page. |
 | `pathProvider` | Delegate to retrieve the current active path. **Required** for GoRouter, auto_route, and Beamer — see [pathProvider section](#providing-a-pathprovider-for-declarative-routers). |
 
@@ -386,7 +389,6 @@ Row(
     )
   ]
 ).easySeoNav(
-  globalName: "breadcrumb_navigation", 
   isBreadcrumb: true
 );
 ```
@@ -841,6 +843,57 @@ When deploying to an **Apache-2.0** environment, you can implement this conditio
   # (Your standard Flutter web routing rules continue here...)
 </IfModule>
 ```
+
+## llms.txt & llms-full.txt Generation
+
+`llms.txt` is an emerging standard that helps LLM crawlers (ChatGPT, Claude, Gemini) efficiently index your site's structure and content without HTML noise. As `EasySEOPage` instances generate pages, `EasySEOManager` automatically tracks titles, descriptions, locales, and Markdown body content to generate machine-readable site exports.
+
+### Available Methods
+
+- **`EasySEOManager.instance.generateLlmsTxtContent()`**  
+  Generates a lightweight site index (`/llms.txt`) featuring an H1 site title, a blockquote summary, and structured page links grouped by language route (`## Routes /<lang>`).
+  
+- **`EasySEOManager.instance.generateLlmsFullTxtContent()`**  
+  Generates a concatenated full-text document (`/llms-full.txt`) containing the clean Markdown body of every page. Each page entry is delimited by horizontal rules (`---`) and explicit `URL` / `Locale` metadata fields to facilitate vector chunking and RAG indexing.
+
+> Site title and description are configured via `siteName` and `siteDescription` in `EasySEOManager`, falling back to the root (`/`) page metadata if omitted.
+
+### Output Examples
+
+**`/llms.txt` Index:**
+```markdown
+# My Site
+
+> A short description of my site.
+
+## Routes /de
+
+* [Startseite](https://mysite.com/): Willkommen auf meiner Seite
+* [Produkte](https://mysite.com/de/products): Alle unsere Produkte
+
+## Routes /en
+
+* [Home](https://mysite.com/en): Welcome to my site
+* [Products](https://mysite.com/en/products): All our products
+```
+
+**`/llms-full.txt` Full Export:**
+```markdown
+---
+
+## [Startseite](https://mysite.com/)
+
+**URL:** `https://mysite.com/`
+**Locale:** `de`
+
+# Mein Site H1
+... [Extracted Clean Body Content] ...
+```
+
+### Usage
+
+Files are automatically written alongside `sitemap.xml` when `enableFileOutput` is enabled, or generated interactively using the **Generate LLMs** button in debug/admin views.
+
 ## Examples (Live)
 
 ### Package `/example` 
@@ -854,6 +907,7 @@ This example features a mocked hotel reservation web app that demonstrates sever
 - **Interactive Mode:** Allows you to preview and download generated SEO HTML content, providing a visual presentation of the page elements currently flagged for SEO output using distinct colored borders.
 - **Locale Support:** Native support for locales within the route structure, which are automatically factored into the `sitemap.xml` file generation.
 - **Dynamic Routes:** Automatically detects any anchor URL in generated pages that matches a configured dynamic route pattern, dynamically appending it to the `sitemap.xml`.
+- **llms.txt Support:** Automatically generates `llms.txt` / `llms-full.txt` Markdown files (index + full page dumps) for AI crawlers and LLM clients, covering the exact same route set as the sitemap.
 
 These are the direct links to the demo pages:
 - Landing Page (`https://fluttereasyseo.lxandr.at/example/en`):

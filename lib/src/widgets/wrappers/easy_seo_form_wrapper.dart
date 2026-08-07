@@ -11,6 +11,9 @@ class EasySEOFormWrapper extends EasySEOBaseWrapper {
   });
 
   @override
+  String get seoWidgetName => 'EasySEOFormWrapper';
+
+  @override
   SEOHtml toSEOHtml({
     required List<SEOHtml> children,
     required List<SEONavItem> navItems,

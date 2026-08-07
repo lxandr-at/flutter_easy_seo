@@ -30,4 +30,6 @@ mixin EasySEOFileOutputBase {
   String getSanitizedPath();
   void saveHTMLFile(String htmlContent);
   void saveSitemap(String sitemapContent);
+  void saveLlmsTxt(String content);
+  void saveLlmsFullTxt(String content);
 }

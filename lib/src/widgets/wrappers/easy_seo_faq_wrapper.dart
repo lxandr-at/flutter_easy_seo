@@ -3,6 +3,9 @@ part of 'package:flutter_easy_seo/flutter_easy_seo.dart';
 class EasySEOFaqWrapper extends EasySEOBaseWrapper {
   final List<EasySEOFaqItem> items;
 
+  @override
+  String get seoWidgetName => 'EasySEOFaqWrapper';
+
   const EasySEOFaqWrapper({
     super.key,
     required super.child,

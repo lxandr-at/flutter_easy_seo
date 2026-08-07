@@ -23,6 +23,9 @@ class EasySeoNavAnchorWrapper extends EasySEOLinkWrapper {
   });
 
   @override
+  String get seoWidgetName => 'EasySeoNavAnchorWrapper';
+
+  @override
   SEOHtml toSEOHtml({
     required List<SEOHtml> children,
     required List<SEONavItem> navItems,

@@ -16,6 +16,9 @@ class EasySEOTimeWrapper extends EasySEOBaseWrapper {
   final String? text;
 
   @override
+  String get seoWidgetName => 'EasySEOTimeWrapper';
+
+  @override
   Map<String, String> get additionalAttributes => {
     'datetime': _dateTime.toIso8601String(),
   };

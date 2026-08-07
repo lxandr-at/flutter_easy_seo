@@ -25,6 +25,7 @@ part 'src/easy_seo_manager.dart';
 part 'src/widgets/easy_seo_page.dart';
 part 'src/widgets/interactive_overlay/seo_widgets.dart';
 part 'src/widgets/interactive_overlay/seo_preview_dialog.dart';
+part 'src/widgets/interactive_overlay/seo_llms_dialog.dart';
 part 'src/widgets/interactive_overlay/seo_interactive_overlay.dart';
 part 'src/widgets/wrappers/easy_seo_base_wrapper.dart';
 part 'src/widgets/wrappers/easy_seo_text_wrapper.dart';

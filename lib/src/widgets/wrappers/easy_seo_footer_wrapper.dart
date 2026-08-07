@@ -11,6 +11,9 @@ class EasySEOFooterWrapper extends EasySEOBaseWrapper {
   });
 
   @override
+  String get seoWidgetName => 'EasySEOFooterWrapper';
+
+  @override
   SEOHtml toSEOHtml({
     required List<SEOHtml> children,
     required List<SEONavItem> navItems,

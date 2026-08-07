@@ -81,6 +81,164 @@ class SEOHtml {
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Markdown rendering (for llms.txt / llms-full.txt)
+  // ---------------------------------------------------------------------------
+
+  /// Converts this [SEOHtml] tree into CommonMark Markdown.
+  ///
+  /// Semantic elements are mapped as follows:
+  /// * `h1`–`h6` → ATX headings (`#`–`######`)
+  /// * `p` → plain paragraph text
+  /// * `a` → `[text](href)`
+  /// * `img` → `![alt](src)`
+  /// * `ul` / `ol` / `li` → nested lists (`-` / `1.` items)
+  /// * `br` → newline
+  /// * `script`, `meta`, and other non-content elements → skipped
+  /// * remaining structural elements (`div`, `section`, `nav`, ...) → recurse
+  ///
+  /// Useful for generating `llms-full.txt` content from the same tree that
+  /// produced the page's HTML.
+  String toMarkdown() {
+    final buffer = StringBuffer();
+    _writeMarkdown(buffer);
+    return buffer.toString().trimRight();
+  }
+
+  void _writeMarkdown(StringBuffer buffer, {int listDepth = -1, String? listMarker}) {
+    if (tag.isEmpty) {
+      final text = content?.trim();
+      if (text != null && text.isNotEmpty) {
+        _writeMarkdownLine(buffer, text, listDepth);
+      }
+      for (final child in children) {
+        child._writeMarkdown(buffer, listDepth: listDepth, listMarker: listMarker);
+      }
+      return;
+    }
+
+    switch (tag) {
+      case 'script':
+      case 'meta':
+      case 'link':
+      case 'noscript':
+        return;
+      case 'img': {
+        final src = attributes?['src'];
+        if (src != null && src.isNotEmpty) {
+          final alt = attributes?['alt'] ?? '';
+          _writeMarkdownBlock(buffer, '![$alt]($src)');
+        }
+        return;
+      }
+      case 'br':
+        buffer.write('\n');
+        return;
+      case 'ul':
+      case 'ol': {
+        final marker = tag == 'ul' ? '-' : '1.';
+        for (final child in children) {
+          if (child.tag == 'li') {
+            child._writeMarkdown(buffer, listDepth: listDepth + 1, listMarker: marker);
+          }
+        }
+        return;
+      }
+      case 'li': {
+        final text = _markdownInline().trim();
+        if (text.isNotEmpty) {
+          _writeMarkdownLine(buffer, '$listMarker $text', listDepth);
+        }
+        // Nested lists are rendered one level deeper; other children were
+        // already consumed into the item line by _markdownInline().
+        for (final child in children) {
+          if (child.tag == 'ul' || child.tag == 'ol') {
+            child._writeMarkdown(buffer, listDepth: listDepth, listMarker: listMarker);
+          }
+        }
+        return;
+      }
+      case 'p': {
+        final text = _markdownInline().trim();
+        if (text.isNotEmpty) {
+          _writeMarkdownBlock(buffer, text);
+        }
+        return;
+      }
+      case 'a': {
+        final text = _markdownInline().trim();
+        final href = attributes?['href'];
+        if (text.isNotEmpty && href != null && href.isNotEmpty) {
+          _writeMarkdownBlock(buffer, '[$text]($href)');
+        } else if (text.isNotEmpty) {
+          _writeMarkdownBlock(buffer, text);
+        }
+        return;
+      }
+      default:
+        break;
+    }
+
+    final hMatch = RegExp(r'^h([1-6])$').firstMatch(tag);
+    if (hMatch != null) {
+      final text = _markdownInline().trim();
+      if (text.isNotEmpty) {
+        final level = int.parse(hMatch.group(1)!);
+        _writeMarkdownBlock(buffer, '${'#' * level} $text');
+      }
+      return;
+    }
+
+    for (final child in children) {
+      child._writeMarkdown(buffer, listDepth: listDepth, listMarker: listMarker);
+    }
+  }
+
+  /// Renders the visible content of this node and its children as a single
+  /// line of Markdown, converting links to `[text](href)` and images to
+  /// `![alt](src)`.
+  String _markdownInline() {
+    final buffer = StringBuffer();
+    if (content != null && content!.trim().isNotEmpty) {
+      buffer.write(content!.trim());
+    }
+    for (final child in children) {
+      switch (child.tag) {
+        case 'a': {
+          final text = child._markdownInline().trim();
+          final href = child.attributes?['href'];
+          if (text.isNotEmpty && href != null && href.isNotEmpty) {
+            buffer.write('[$text]($href)');
+          } else if (text.isNotEmpty) {
+            buffer.write(text);
+          }
+          break;
+        }
+        case 'img': {
+          final src = child.attributes?['src'];
+          if (src != null && src.isNotEmpty) {
+            final alt = child.attributes?['alt'] ?? '';
+            buffer.write('![$alt]($src)');
+          }
+          break;
+        }
+        default:
+          buffer.write(child._markdownInline());
+      }
+    }
+    return buffer.toString();
+  }
+
+  void _writeMarkdownLine(StringBuffer buffer, String text, int listDepth) {
+    final indent = listDepth < 0 ? '' : '  ' * listDepth;
+    buffer.writeln('$indent$text');
+  }
+
+  void _writeMarkdownBlock(StringBuffer buffer, String text) {
+    buffer.writeln(text);
+    buffer.writeln();
+  }
+
   String _renderHtml({int indentLevel = 0}) {
     final indent = '  ' * indentLevel;
     if (tag.isEmpty) {

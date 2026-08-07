@@ -14,6 +14,9 @@ class EasySEOContainerWrapper extends EasySEOBaseWrapper {
   final String _tag;
 
   @override
+  String get seoWidgetName => 'EasySEOContainerWrapper';
+
+  @override
   SEOHtml toSEOHtml({
     required List<SEOHtml> children,
     required List<SEONavItem> navItems,

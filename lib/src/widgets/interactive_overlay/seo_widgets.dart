@@ -157,10 +157,15 @@ class _SeoDialogActions extends StatelessWidget {
             ),
             onPressed: () {
               final fileHandler = EasySEOFileOutput();
-              if (fileName == 'sitemap.xml') {
-                fileHandler.saveSitemap(content);
-              } else {
-                fileHandler.saveHTMLFile(content);
+              switch (fileName) {
+                case 'sitemap.xml':
+                  fileHandler.saveSitemap(content);
+                case 'llms.txt':
+                  fileHandler.saveLlmsTxt(content);
+                case 'llms-full.txt':
+                  fileHandler.saveLlmsFullTxt(content);
+                default:
+                  fileHandler.saveHTMLFile(content);
               }
               _SeoSnackbar.show(context,
                 message: 'File download triggered!',

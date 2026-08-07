@@ -123,7 +123,13 @@ class SeoRouteKey implements Comparable<SeoRouteKey> {
 /// * [pages] - Set of static and dynamic routes to build the sitemap.
 /// These router are automatically combined with the list of [supportedLanguages] (e.g. [['de']] and [['/products']] results in '/de/products'.
 /// A route is considered dynamic when it contains a pattern like 'products/:id'. All links in generated html content that match such a dynamic route is
-/// collected in a Set that can be retrieved by [getAllRoutes] for processing in a widget tester. All static and dynamic routes are added to the sitemap.xml.
+///   collected in a Set that can be retrieved by [getAllRoutes] for processing in a widget tester. All static and dynamic routes are added to the sitemap.xml.
+/// * [siteName] - Optional site name used as the H1 of `llms.txt` / `llms-full.txt` and the llms.txt
+///   site header. When omitted it is derived from the main (root) page title, the first generated
+///   page title, or the [baseUrl] host.
+/// * [siteDescription] - Optional site description used as the blockquote of `llms.txt` /
+///   `llms-full.txt`. When omitted it is derived from the main (root) page description or the first
+///   generated page description.
 /// * [headTags] - Global default meta, link, and script tags injected into the document head. For example:
 /// ```dart
 /// headTags: [[
@@ -294,6 +300,31 @@ class EasySEOManager {
 
   final Set<String> _gatheredPages = {};
 
+  String? _siteName;
+
+  /// The site-wide name used as the H1 in generated `llms.txt`.
+  ///
+  /// Optional — when omitted it is derived from the main (root) page's title
+  /// at generation time, falling back to the first generated page's title and
+  /// finally to the [baseUrl] host.
+  String? get siteName => _siteName;
+
+  String? _siteDescription;
+
+  /// The site-wide description used as the blockquote in generated `llms.txt`.
+  ///
+  /// Optional — when omitted it is derived from the main (root) page's
+  /// description at generation time, falling back to the first generated page's
+  /// description.
+  String? get siteDescription => _siteDescription;
+
+  /// Captured metadata for every page that has been generated, keyed by its
+  /// normalized route (e.g. `/`, `/de/products`).
+  ///
+  /// Populated by [registerGeneratedPage] during [EasySEOPage] generation and
+  /// consumed by [generateLlmsTxtContent] / [generateLlmsFullTxtContent].
+  final Map<String, _GeneratedPage> _generatedPages = {};
+
   EasySEOOnGenerateCallback? onGenerate;
 
   /// Optional provider to get the current path from the context.
@@ -306,9 +337,11 @@ class EasySEOManager {
   /// Named global widget contexts for cross-page inclusion.
   ///
   /// Widgets with a [EasySEOBaseWrapper.globalName] register their
-  /// [BuildContext] here during [State.initState]. When generating a page,
-  /// the manager can pull these globals into the output even though they
-  /// are rendered outside the current page's widget tree.
+  /// [BuildContext] here while mounted ([State.initState] and
+  /// [State.didUpdateWidget]) and remove it on dispose, so stale entries
+  /// never survive an unmounted widget. When generating a page, the manager
+  /// can pull these globals into the output even though they are rendered
+  /// outside the current page's widget tree.
   Map<String, BuildContext> get globals => _globals;
 
   // ------ EasySEO widget registry ----------
@@ -375,14 +408,50 @@ class EasySEOManager {
     return controller.isReady();
   }
 
-  /// Clears the registry, gathered pages, and interactive-minimized state.
+  /// Clears the registry, gathered pages, generated-page metadata, and
+  /// interactive-minimized state.
   ///
   /// Called between test cases to reset the manager to a clean state.
   @visibleForTesting
   void clear() {
     _stack.clear();
     _gatheredPages.clear();
+    _generatedPages.clear();
+    _globals.clear();
     _interactiveMinimized = false;
+  }
+
+  /// Registers the metadata of a generated page for `llms.txt` generation.
+  ///
+  /// Called by [EasySEOPage] during generation (alongside the route gathering
+  /// done by [_gatherFromHtml]). The page is stored under its normalized route
+  /// (e.g. `/`, `/de/products`) so [generateLlmsTxtContent] and
+  /// [generateLlmsFullTxtContent] can look up titles, descriptions, and
+  /// Markdown content after all pages have been generated.
+  void registerGeneratedPage({
+    required String path,
+    required String title,
+    String? description,
+    String? markdown,
+  }) {
+    _generatedPages[_normalizeRoute(path)] = _GeneratedPage(
+      title: title,
+      description: description,
+      markdown: markdown,
+    );
+  }
+
+  /// Normalizes a route path into the canonical form used by [getAllRoutes]
+  /// (leading `/`, no trailing slash, `/` preserved for the root).
+  static String _normalizeRoute(String path) {
+    var route = path.trim();
+    if (route.isNotEmpty && !route.startsWith('/')) {
+      route = '/$route';
+    }
+    while (route.length > 1 && route.endsWith('/')) {
+      route = route.substring(0, route.length - 1);
+    }
+    return route.isEmpty ? '/' : route;
   }
 
   /// Checks whether [pagePath] matches any registered dynamic path pattern.
@@ -467,6 +536,12 @@ class EasySEOManager {
   // ------ EasySEO widget registry ----------
 
   /// Initialize the settings.
+  ///
+  /// Configure the [baseUrl], [supportedLanguages], [pages], [headTags] and the optional
+  /// [siteName]/[siteDescription] used by `llms.txt` / `llms-full.txt` generation
+  /// (see [generateLlmsTxtContent]). Pages generated via [EasySEOPage] register their
+  /// title/description/markdown automatically, so the llms files can be produced at any time.
+  ///
   /// You can call this via EasySEOConfig.instance.init(...)
   void init({
     bool enabled = true,
@@ -483,6 +558,8 @@ class EasySEOManager {
     List<String> pages = const [],
     List<EasySEOHeadTagSource> headTags = const [],
     String? Function(BuildContext)? pathProvider,
+    String? siteName,
+    String? siteDescription,
   }) {
     this.enabled.value = enabled;
     this.enableFileOutput.value = enableFileOutput;
@@ -497,6 +574,8 @@ class EasySEOManager {
     _supportedLanguages = supportedLanguages;
     _headTags = headTags;
     this.pathProvider = pathProvider;
+    _siteName = siteName;
+    _siteDescription = siteDescription;
 
     // Automatically extract any dynamic patterns containing colons from the pages list
     final List<String> staticPages = [];
@@ -687,6 +766,206 @@ class EasySEOManager {
     return sitemap.toString();
   }
 
+  /// Generates the `llms.txt` content for this site.
+  ///
+  /// Produces a Markdown index optimized for LLM clients: an H1 site name, a
+  /// blockquote site description, and one `* [Title](absolute-url): description`
+  /// entry per route (the same route set used by [generateSitemapContent]).
+  ///
+  /// Entries are grouped into `## Routes /<lang>` sections by language
+  /// ([supportedLanguages]). Routes without a language prefix (the default
+  /// language root) belong to the first entry of [supportedLanguages]. When no
+  /// languages are configured, all entries are listed under a single
+  /// `## Pages` section.
+  ///
+  /// Page titles and descriptions are taken from the pages registered via
+  /// [registerGeneratedPage]; routes that were never generated fall back to a
+  /// humanized version of their path. The site name/description come from the
+  /// [siteName]/[siteDescription] config, or are derived from the main (root)
+  /// page when omitted.
+  String generateLlmsTxtContent() {
+    final buffer = StringBuffer();
+    buffer.writeln('# $effectiveSiteName');
+    buffer.writeln();
+
+    final description = effectiveSiteDescription;
+    if (description.isNotEmpty) {
+      buffer.writeln('> $description');
+      buffer.writeln();
+    }
+
+    final routes = getAllRoutes();
+    final languages = _supportedLanguages;
+    if (languages.isEmpty) {
+      _writeLlmsSection(buffer, 'Pages', routes);
+      return buffer.toString().trimRight();
+    }
+
+    // Group routes by their detected language. Unprefixed routes (the
+    // default-language root) belong to the first supported language.
+    final routesByLang = <String?, List<String>>{};
+    for (final route in routes) {
+      routesByLang.putIfAbsent(parsePath(route).detectedLang, () => []).add(route);
+    }
+    final defaultLang = languages.first;
+    final defaultRoutes = routesByLang[null] ?? const [];
+
+    for (final lang in languages) {
+      final langRoutes = [
+        if (lang == defaultLang) ...defaultRoutes,
+        ...?routesByLang[lang],
+      ];
+      if (langRoutes.isEmpty) continue;
+      _writeLlmsSection(buffer, 'Routes /$lang', langRoutes);
+    }
+    return buffer.toString().trimRight();
+  }
+
+  void _writeLlmsSection(StringBuffer buffer, String title, List<String> routes) {
+    buffer.writeln('## $title');
+    buffer.writeln();
+    for (final route in routes) {
+      final page = _generatedPages[_normalizeRoute(route)];
+      final entryTitle = page?.title ?? _humanizePath(route);
+      final url = formatFullUrl(route);
+      final pageDescription = page?.description;
+      if (pageDescription != null && pageDescription.isNotEmpty) {
+        buffer.writeln('* [$entryTitle]($url): $pageDescription');
+      } else {
+        buffer.writeln('* [$entryTitle]($url)');
+      }
+    }
+    buffer.writeln();
+  }
+
+  /// Generates the `llms-full.txt` content for this site.
+  ///
+  /// Concatenates the full Markdown of every page registered via
+  /// [registerGeneratedPage] into a single document, headed by the site name
+  /// and description. Pages without captured Markdown are skipped.
+  ///
+  /// Each page entry is delimited by a Markdown horizontal rule (`---`), a
+  /// linked `## [Title](url)` heading, and explicit machine-readable metadata
+  /// lines (`**URL:**` and `**Locale:**`) so LLM tokenizers and RAG chunkers
+  /// can reliably detect document boundaries. The locale is derived from the
+  /// route's language prefix ([parsePath]); unprefixed routes (the
+  /// default-language root) fall back to the first entry of
+  /// [supportedLanguages]. When no languages are configured the `**Locale:**`
+  /// line is omitted.
+  String generateLlmsFullTxtContent() {
+    final buffer = StringBuffer();
+    buffer.writeln('# $effectiveSiteName');
+    buffer.writeln();
+
+    final description = effectiveSiteDescription;
+    if (description.isNotEmpty) {
+      buffer.writeln('> $description');
+      buffer.writeln();
+    }
+
+    final defaultLang = _supportedLanguages.firstOrNull;
+    for (final entry in _generatedPages.entries) {
+      final markdown = entry.value.markdown;
+      if (markdown == null || markdown.trim().isEmpty) continue;
+
+      final route = entry.key;
+      final url = formatFullUrl(route);
+      final locale = parsePath(route).detectedLang ?? defaultLang;
+
+      buffer.writeln('---');
+      buffer.writeln();
+      buffer.writeln('## [${entry.value.title}]($url)');
+      buffer.writeln();
+      buffer.writeln('**URL:** `$url`');
+      if (locale != null && locale.isNotEmpty) {
+        buffer.writeln('**Locale:** `$locale`');
+      }
+      buffer.writeln();
+      buffer.writeln(markdown.trim());
+      buffer.writeln();
+    }
+    return buffer.toString().trimRight();
+  }
+
+  /// The effective site name used in llms.txt headers.
+  ///
+  /// Resolution order: explicit [siteName] config → main (root) page title →
+  /// first generated page title → [baseUrl] host → `'My Site'`.
+  String get effectiveSiteName {
+    final configured = _siteName;
+    if (configured != null && configured.isNotEmpty) return configured;
+
+    final rootPage = _rootGeneratedPage();
+    if (rootPage != null && rootPage.title.isNotEmpty) return rootPage.title;
+
+    if (_generatedPages.isNotEmpty) {
+      final first = _generatedPages.values.first;
+      if (first.title.isNotEmpty) return first.title;
+    }
+
+    final base = _baseUrl;
+    if (base != null && base.isNotEmpty) {
+      final host = Uri.tryParse(base)?.host;
+      if (host != null && host.isNotEmpty) return host;
+    }
+    return 'My Site';
+  }
+
+  /// The effective site description used in llms.txt headers.
+  ///
+  /// Resolution order: explicit [siteDescription] config → main (root) page
+  /// description → first generated page description → `''`.
+  String get effectiveSiteDescription {
+    final configured = _siteDescription;
+    if (configured != null && configured.isNotEmpty) return configured;
+
+    final rootPage = _rootGeneratedPage();
+    if (rootPage != null && rootPage.description != null) {
+      return rootPage.description!;
+    }
+
+    if (_generatedPages.isNotEmpty) {
+      final first = _generatedPages.values.first;
+      if (first.description != null) return first.description!;
+    }
+    return '';
+  }
+
+  /// Returns the metadata of the main (root) page if it has been generated.
+  _GeneratedPage? _rootGeneratedPage() {
+    for (final route in rootRouteCandidates) {
+      final page = _generatedPages[route];
+      if (page != null) return page;
+    }
+    return null;
+  }
+
+  /// Candidate normalized routes for the root page (`/`, or the first
+  /// language prefix e.g. `/en`).
+  List<String> get rootRouteCandidates {
+    final candidates = <String>['/'];
+    final firstLang = _supportedLanguages.firstOrNull;
+    if (firstLang != null && firstLang.isNotEmpty) {
+      candidates.add('/$firstLang');
+    }
+    return candidates;
+  }
+
+  /// Converts a route path into a human-readable title fallback
+  /// (e.g. `/de/products` → `Products`).
+  String _humanizePath(String route) {
+    final segment = route
+        .split('/')
+        .where((s) => s.isNotEmpty && !_supportedLanguages.contains(s))
+        .lastOrNull;
+    if (segment == null) return 'Home';
+    return segment
+        .split(RegExp(r'[-_]+'))
+        .where((w) => w.isNotEmpty)
+        .map((w) => w[0].toUpperCase() + w.substring(1))
+        .join(' ');
+  }
+
   /// Returns the effective base URL without trailing slash (falls back to PlatformHelper if empty)
   String _getEffectiveCleanBaseUrl() {
     String? bUrl = _baseUrl;
@@ -767,6 +1046,20 @@ class EasySEOUrls {
     required this.canonicalUrl,
     required this.alternateUrls,
     this.xDefaultUrl,
+  });
+}
+
+/// Captured metadata for a single generated page, used to build `llms.txt`
+/// and `llms-full.txt` after all pages have been generated.
+class _GeneratedPage {
+  final String title;
+  final String? description;
+  final String? markdown;
+
+  const _GeneratedPage({
+    required this.title,
+    this.description,
+    this.markdown,
   });
 }
 

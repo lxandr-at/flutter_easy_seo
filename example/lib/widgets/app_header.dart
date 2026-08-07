@@ -5,7 +5,6 @@ import '../l10n/app_translations.dart';
 import '../routing/nav_adapter.dart';
 
 const _pubDevUrl = 'https://pub.dev/packages/flutter_easy_seo';
-const _pubDevBadgeUrl = 'https://img.shields.io/pub/v/flutter_easy_seo.svg?logo=dart&logoColor=ffffff&style=flat';
 
 class AppHeader extends StatelessWidget {
   final String locale;

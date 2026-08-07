@@ -4,6 +4,9 @@ class EasySEOLinkWrapper extends EasySEOBaseWrapper {
   final String path;
   final String? text;
 
+  @override
+  String get seoWidgetName => 'EasySEOLinkWrapper';
+
   const EasySEOLinkWrapper({
     super.key,
     required super.child,

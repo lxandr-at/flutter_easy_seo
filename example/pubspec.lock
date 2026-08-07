@@ -241,17 +241,19 @@ packages:
   flutter_easy_seo:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
-    version: "1.0.8"
+      name: flutter_easy_seo
+      sha256: bcc1ee1f9f89b2cb0ce5dc04ea9b376c79c95ebfe8f2d7e7bcd23d6cde07c808
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.7"
   flutter_easy_seo_sync:
     dependency: "direct dev"
     description:
-      path: "../../flutter_easy_seo_sync"
-      relative: true
-    source: path
-    version: "1.0.0"
+      name: flutter_easy_seo_sync
+      sha256: f46cc26ad5eb8f16efa7972e8b02abdd689f26feed9ad84c581675e072fe6063
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   flutter_lints:
     dependency: "direct dev"
     description:

@@ -22,6 +22,9 @@ class EasySEONavWrapper extends EasySEOBaseWrapper {
   /// `SiteNavigationElement` JSON-LD.
   final bool isBreadcrumb;
 
+  @override
+  String get seoWidgetName => 'EasySEONavWrapper';
+
   const EasySEONavWrapper({
     super.key,
     required super.child,

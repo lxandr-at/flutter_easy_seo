@@ -89,6 +89,23 @@ class SEOWidgetTreeProcessor {
   ///
   /// **Returns** A complete body-level HTML string with all wrappers resolved.
   String processWidgetTree(Element rootElement, List<String> includeGlobals, {SEORenderMode mode = SEORenderMode.microdataAndJsonLd}) {
+    return _buildResults(rootElement, includeGlobals)
+        .map((r) => r.html.toHtmlString(mode: mode))
+        .join();
+  }
+
+  /// Like [processWidgetTree] but returns the resolved [SEOHtml] trees instead
+  /// of a rendered string.
+  ///
+  /// Useful for consumers that need the structured content rather than HTML,
+  /// e.g. generating Markdown via [SEOHtml.toMarkdown] for `llms-full.txt`.
+  List<SEOHtml> processWidgetTrees(Element rootElement, List<String> includeGlobals) {
+    return _buildResults(rootElement, includeGlobals)
+        .map((r) => r.html)
+        .toList();
+  }
+
+  List<_BuildResult> _buildResults(Element rootElement, List<String> includeGlobals) {
     final rootResults = <_BuildResult>[];
 
     for (final name in includeGlobals) {
@@ -104,7 +121,7 @@ class SEOWidgetTreeProcessor {
 
     rootResults.sort((a, b) => a.order.compareTo(b.order));
 
-    return rootResults.map((r) => r.html.toHtmlString(mode: mode)).join();
+    return rootResults;
   }
 
   _BuildResult _buildSeoHtml(Element element) {

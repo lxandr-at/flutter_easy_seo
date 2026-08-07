@@ -131,6 +131,45 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
     Overlay.of(context).insertAll([entry], above: panelEntry);
   }
 
+  void _showLlmsDialog(
+    BuildContext context,
+    String title,
+    String llmsTxt,
+    String llmsFullTxt,
+  ) {
+    final panelEntry = EasySEOManager.instance._panelOverlayEntry;
+    if (panelEntry == null) return;
+
+    OverlayEntry? entry;
+    entry = OverlayEntry(
+      builder: (_) => PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) entry?.remove();
+        },
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () => entry?.remove(),
+                child: Container(color: Colors.black54),
+              ),
+            ),
+            Center(
+              child: _SeoLlmsDialog(
+                title: title,
+                llmsTxt: llmsTxt,
+                llmsFullTxt: llmsFullTxt,
+                onClose: () => entry?.remove(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    Overlay.of(context).insertAll([entry], above: panelEntry);
+  }
+
   Widget _buildMinimized(BuildContext context) {
     return Tooltip(
       message: 'Expand EasySEO Overlay',
@@ -406,6 +445,38 @@ class _EasySEOInteractiveOverlayState extends State<EasySEOInteractiveOverlay> {
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Sitemap generated successfully!')),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                      _buildButton(
+                        context: context,
+                        label: 'Generate LLMs',
+                        icon: Icons.auto_awesome,
+                        onPressed: () {
+                          final llmsTxt = EasySEOManager.instance.generateLlmsTxtContent();
+                          final llmsFullTxt = EasySEOManager.instance.generateLlmsFullTxtContent();
+                          if (llmsTxt.isEmpty && llmsFullTxt.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('llms.txt and llms-full.txt are empty. Generate pages first!')),
+                            );
+                          } else {
+                            final fileHandler = EasySEOFileOutput();
+                            if (manager.enableFileOutput.value) {
+                              fileHandler.saveLlmsTxt(llmsTxt);
+                              fileHandler.saveLlmsFullTxt(llmsFullTxt);
+                            }
+                            if (manager.showResultDialog.value) {
+                              _showLlmsDialog(
+                                context,
+                                'Generated LLMs Files',
+                                llmsTxt,
+                                llmsFullTxt,
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('LLMs files generated successfully!')),
                               );
                             }
                           }

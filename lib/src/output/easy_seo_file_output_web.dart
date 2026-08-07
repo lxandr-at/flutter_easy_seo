@@ -44,6 +44,7 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
   }
 
   static bool _sitemapSaved = false;
+  static bool _llmsSaved = false;
 
   void saveSitemapFile() {
     if (_sitemapSaved) return;
@@ -55,6 +56,25 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
     _sitemapSaved = true;
     if (kDebugMode) {
       print('Generated sitemap.xml');
+    }
+  }
+
+  /// Automatically generates and downloads `llms.txt` and `llms-full.txt`
+  /// once per session (like [saveSitemapFile]).
+  void saveLlmsFiles() {
+    if (_llmsSaved) return;
+
+    final llmsTxt = EasySEOManager.instance.generateLlmsTxtContent();
+    if (llmsTxt.isNotEmpty) {
+      _downloadFile(llmsTxt, 'llms.txt', 'text/markdown');
+    }
+    final llmsFull = EasySEOManager.instance.generateLlmsFullTxtContent();
+    if (llmsFull.isNotEmpty) {
+      _downloadFile(llmsFull, 'llms-full.txt', 'text/markdown');
+    }
+    _llmsSaved = true;
+    if (kDebugMode) {
+      print('Generated llms.txt / llms-full.txt');
     }
   }
 
@@ -80,8 +100,9 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
   /// Save HTML content to a file (web: auto-download using data URL)
   @override
   void saveHTMLFile(String htmlContent) {
-    // Automatically generate sitemap once per session if file output is enabled
+    // Automatically generate sitemap and llms files once per session if file output is enabled
     saveSitemapFile();
+    saveLlmsFiles();
 
     final fileName = getSanitizedPath();
     try {
@@ -108,6 +129,34 @@ class EasySEOFileOutput with EasySEOFileOutputBase {
     } catch (e) {
       if (kDebugMode) {
         print('Error saving sitemap.xml directly: $e');
+      }
+    }
+  }
+
+  @override
+  void saveLlmsTxt(String content) {
+    try {
+      _downloadFile(content, 'llms.txt', 'text/markdown');
+      if (kDebugMode) {
+        print('Saved llms.txt directly');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error saving llms.txt directly: $e');
+      }
+    }
+  }
+
+  @override
+  void saveLlmsFullTxt(String content) {
+    try {
+      _downloadFile(content, 'llms-full.txt', 'text/markdown');
+      if (kDebugMode) {
+        print('Saved llms-full.txt directly');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error saving llms-full.txt directly: $e');
       }
     }
   }

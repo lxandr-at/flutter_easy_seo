@@ -357,4 +357,246 @@ void main() {
       expect(sitemap, isNot(contains(':productId')));
     });
   });
+
+  group('llms.txt Generation', () {
+    test('generateLlmsTxtContent uses explicit siteName/siteDescription and page metadata', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de', 'en'],
+        pages: ['/'],
+        siteName: 'Preisvergleich',
+        siteDescription: 'Compare prices across shops.',
+      );
+      manager.registerGeneratedPage(
+        path: '/',
+        title: 'Homepage',
+        description: 'Home page description',
+      );
+
+      final content = manager.generateLlmsTxtContent();
+      expect(content, startsWith('# Preisvergleich'));
+      expect(content, contains('> Compare prices across shops.'));
+      expect(content, contains('## Routes /de'));
+      expect(content, contains('## Routes /en'));
+      expect(content, isNot(contains('## Pages')));
+      expect(content, contains('* [Homepage](https://preisvergleich.lxandr.at/): Home page description'));
+      expect(content, contains('https://preisvergleich.lxandr.at/en'));
+    });
+
+    test('siteName/siteDescription fall back to the root page when omitted', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de'],
+        pages: ['/'],
+      );
+      manager.registerGeneratedPage(
+        path: '/',
+        title: 'My Root Title',
+        description: 'My Root Description',
+      );
+
+      expect(manager.effectiveSiteName, equals('My Root Title'));
+      expect(manager.effectiveSiteDescription, equals('My Root Description'));
+
+      final content = manager.generateLlmsTxtContent();
+      expect(content, contains('# My Root Title'));
+      expect(content, contains('> My Root Description'));
+    });
+
+    test('root page lookup also accepts the first-language prefix route', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de', 'en'],
+        pages: ['/'],
+      );
+      manager.registerGeneratedPage(
+        path: '/de',
+        title: 'Deutsche Startseite',
+        description: 'Deutsch',
+      );
+
+      expect(manager.effectiveSiteName, equals('Deutsche Startseite'));
+      expect(manager.effectiveSiteDescription, equals('Deutsch'));
+    });
+
+    test('effectiveSiteName falls back to the baseUrl host when no page is registered', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://example.com',
+        supportedLanguages: [],
+        pages: [],
+      );
+
+      expect(manager.effectiveSiteName, equals('example.com'));
+      expect(manager.effectiveSiteDescription, equals(''));
+    });
+
+    test('unregistered routes fall back to a humanized title and still produce absolute URLs', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de', 'en'],
+        pages: ['/', 'products'],
+      );
+
+      final content = manager.generateLlmsTxtContent();
+      expect(content, contains('* [Products](https://preisvergleich.lxandr.at/de/products)'));
+      expect(content, contains('* [Products](https://preisvergleich.lxandr.at/en/products)'));
+      expect(content, isNot(contains(':productId')));
+    });
+
+    test('registerGeneratedPage normalizes paths without a leading slash', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de'],
+        pages: ['/', 'products'],
+      );
+      manager.registerGeneratedPage(
+        path: 'de/products',
+        title: 'Products Page',
+        description: 'All products',
+      );
+
+      final content = manager.generateLlmsTxtContent();
+      expect(content, contains('* [Products Page](https://preisvergleich.lxandr.at/de/products): All products'));
+    });
+
+    test('generateLlmsFullTxtContent concatenates captured markdown and skips empty pages', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de'],
+        pages: ['/', 'products'],
+      );
+      manager.registerGeneratedPage(
+        path: '/',
+        title: 'Homepage',
+        description: 'Home',
+        markdown: '# Hello\n\nWorld',
+      );
+      manager.registerGeneratedPage(
+        path: '/de/products',
+        title: 'Products',
+        description: 'Prod',
+        markdown: '',
+      );
+
+      final content = manager.generateLlmsFullTxtContent();
+      expect(content, startsWith('# Homepage'));
+      expect(content, contains('## [Homepage](https://preisvergleich.lxandr.at/)'));
+      expect(content, contains('**URL:** `https://preisvergleich.lxandr.at/`'));
+      expect(content, contains('**Locale:** `de`'));
+      expect(content, contains('# Hello'));
+      expect(content, isNot(contains('## [Products]')));
+    });
+
+    test('llms-full entries are delimited by --- and carry URL and Locale metadata', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de', 'en'],
+        pages: ['/', 'products', 'about'],
+      );
+      manager.registerGeneratedPage(
+        path: '/',
+        title: 'Homepage',
+        description: 'Home',
+        markdown: '# Hello\n\nWorld',
+      );
+      manager.registerGeneratedPage(
+        path: '/de/products',
+        title: 'Products',
+        description: 'Prod',
+        markdown: '# Produkte\n\nListe',
+      );
+      manager.registerGeneratedPage(
+        path: '/en/about',
+        title: 'About',
+        description: 'About us',
+        markdown: '# About\n\nInfo',
+      );
+
+      final content = manager.generateLlmsFullTxtContent();
+
+      // Unprefixed root falls back to the default language.
+      expect(content, contains('## [Homepage](https://preisvergleich.lxandr.at/)'));
+      expect(content, contains('**URL:** `https://preisvergleich.lxandr.at/`'));
+      expect(content, contains('**Locale:** `de`'));
+
+      // Prefixed routes report their own language.
+      expect(content, contains('## [Products](https://preisvergleich.lxandr.at/de/products)'));
+      expect(content, contains('**URL:** `https://preisvergleich.lxandr.at/de/products`'));
+      expect(content, contains('**Locale:** `de`'));
+
+      expect(content, contains('## [About](https://preisvergleich.lxandr.at/en/about)'));
+      expect(content, contains('**URL:** `https://preisvergleich.lxandr.at/en/about`'));
+      expect(content, contains('**Locale:** `en`'));
+
+      // One separator before every entry, never inside the body.
+      expect(content.split('---').length - 1, equals(3));
+    });
+
+    test('llms.txt route set matches the sitemap route set', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de', 'en'],
+        pages: ['/'],
+      );
+      manager.registerGeneratedPage(path: '/', title: 'Homepage');
+
+      final llms = manager.generateLlmsTxtContent();
+      final sitemap = manager.generateSitemapContent();
+      for (final route in manager.getAllRoutes()) {
+        final url = manager.formatFullUrl(route);
+        expect(llms, contains(url));
+        expect(sitemap, contains(url));
+      }
+    });
+
+    test('groups entries into per-language sections and assigns the root to the default language', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: ['de', 'en'],
+        pages: ['/', '/hotels/:hotelId'],
+      );
+      manager.addGatheredPage('/de/hotels/1');
+
+      final content = manager.generateLlmsTxtContent();
+      expect(content, contains('## Routes /de'));
+      expect(content, contains('## Routes /en'));
+      expect(content, isNot(contains('## Pages')));
+
+      // The unprefixed root '/' belongs to the German (default) section:
+      // its entry sits after the /de header and before the /en header.
+      final deIndex = content.indexOf('## Routes /de');
+      final rootIndex = content.indexOf('* [Home](https://preisvergleich.lxandr.at/)');
+      final enIndex = content.indexOf('## Routes /en');
+      expect(rootIndex, greaterThan(deIndex));
+      expect(rootIndex, lessThan(enIndex));
+
+      // Localized dynamic routes appear under their own language sections.
+      expect(content, contains('* [1](https://preisvergleich.lxandr.at/de/hotels/1)'));
+      expect(content, contains('* [1](https://preisvergleich.lxandr.at/en/hotels/1)'));
+    });
+
+    test('emits a single ## Pages section when no languages are configured', () {
+      final manager = EasySEOManager.instance;
+      manager.init(
+        baseUrl: 'https://preisvergleich.lxandr.at',
+        supportedLanguages: [],
+        pages: ['/', 'about'],
+      );
+
+      final content = manager.generateLlmsTxtContent();
+      expect(content, contains('## Pages'));
+      expect(content, contains('* [Home](https://preisvergleich.lxandr.at/)'));
+      expect(content, contains('* [About](https://preisvergleich.lxandr.at/about)'));
+    });
+  });
 }

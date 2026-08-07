@@ -4,6 +4,9 @@ class EasySEOImageWrapper extends EasySEOBaseWrapper {
   final String? alt;
   final String? src;
 
+  @override
+  String get seoWidgetName => 'EasySEOImageWrapper';
+
   const EasySEOImageWrapper({
     super.key,
     required super.child,

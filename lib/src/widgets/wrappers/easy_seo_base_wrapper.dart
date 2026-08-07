@@ -51,6 +51,13 @@ abstract class EasySEOBaseWrapper extends StatefulWidget implements EasySEOWrapp
   /// always present on the generated element.
   Map<String, String> get additionalAttributes => {};
 
+  /// Stable human-readable name shown by the interactive-mode hover tooltip.
+  ///
+  /// Subclasses override this with a hardcoded literal because runtime type
+  /// names are stripped/minified in release builds (e.g. `minified:Class1234`),
+  /// while string literals are always preserved.
+  String get seoWidgetName => 'EasySEO wrapper';
+
   static final Map<Type, Color> _highlightColors = {
     EasySEOHeaderWrapper: const Color(0xFFFF9800),
     EasySEOContainerWrapper: const Color(0xFF009688),
@@ -91,9 +98,28 @@ abstract class EasySEOBaseWrapperState<T extends EasySEOBaseWrapper> extends Sta
   @override
   void didUpdateWidget(T oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.globalName != null) {
-      EasySEOManager.instance.globals[widget.globalName!] = context;
+    final oldName = oldWidget.globalName;
+    final newName = widget.globalName;
+    if (oldName != null && newName == null) {
+      final globals = EasySEOManager.instance.globals;
+      if (globals[oldName] == context) {
+        globals.remove(oldName);
+      }
+    } else if (newName != null) {
+      EasySEOManager.instance.globals[newName] = context;
     }
+  }
+
+  @override
+  void dispose() {
+    final name = widget.globalName;
+    if (name != null) {
+      final globals = EasySEOManager.instance.globals;
+      if (globals[name] == context) {
+        globals.remove(name);
+      }
+    }
+    super.dispose();
   }
 
   @override
@@ -103,7 +129,7 @@ abstract class EasySEOBaseWrapperState<T extends EasySEOBaseWrapper> extends Sta
       builder: (context, show, child) {
         if (!show) return child!;
         return Tooltip(
-          message: widget.runtimeType.toString(),
+          message: widget.seoWidgetName,
           waitDuration: const Duration(seconds: 1),
           child: DecoratedBox(
             decoration: BoxDecoration(

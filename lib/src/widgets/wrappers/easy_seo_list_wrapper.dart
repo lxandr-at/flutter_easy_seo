@@ -10,6 +10,9 @@ class EasySEOListWrapper extends EasySEOBaseWrapper {
     super.children,
   });
 
+  @override
+  String get seoWidgetName => 'EasySEOListWrapper';
+
   static List<SEOHtml> _unwrap(List<SEOHtml> items) {
     final result = <SEOHtml>[];
     for (final item in items) {

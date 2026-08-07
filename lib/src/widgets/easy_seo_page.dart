@@ -42,7 +42,9 @@ class EasySEOPageController {
 /// * [includeGlobals] - Widgets with these [EasySEOBaseWrapper.globalName] ids are added to the `<body>` tag. Widgets like header, footer
 /// or navigation may be outside of the widget tree of the [child] widget. For example, when using a [ShellRouter] only the main
 /// content is wrapped in an EasySEOPage widget. Header, footer and navigation are outside and get a [EasySEOBaseWrapper.globalName] id. When
-/// added to the [includeGlobals] list, these widget are also contained in the generated SEO html page.
+/// added to the [includeGlobals] list, these widget are also contained in the generated SEO html page. Globals are meant for persistent
+/// shell widgets that live outside the page subtree; they are unregistered automatically when the widget is disposed. Page-local
+/// components (e.g. a breadcrumb that changes per page) should be rendered inside the page's own tree instead of being registered as a global.
 /// * [whenDone] - An optional async callback hook executed before HTML page generation to ensure all async state (e.g., loading data) is resolved.
 /// For example, waiting for a Riverpod provider that loads product data for a products overview page could look like this:
 /// ```dart
@@ -275,7 +277,8 @@ class _EasySEOPageState extends State<EasySEOPage> {
     }
 
     final effectiveMode = mode ?? widget.renderMode ?? EasySEOManager.instance.renderMode.value;
-    final bodyContent = _processor.processWidgetTree(rootElement, widget.includeGlobals, mode: effectiveMode);
+    final trees = _processor.processWidgetTrees(rootElement, widget.includeGlobals);
+    final bodyContent = trees.map((t) => t.toHtmlString(mode: effectiveMode)).join();
 
     // Extract dynamic route URLs from generated HTML content and add them to gathered pages
     EasySEOManager.instance._gatherFromHtml(bodyContent);
@@ -284,13 +287,21 @@ class _EasySEOPageState extends State<EasySEOPage> {
     final metadata = SEOPageMetadata(headTags: _allDistinctHeadTags);
     final headContent = metadata.generateMetadata();
 
+    // Register the generated page for llms.txt / llms-full.txt output
+    final currentPath = _getCurrentPath();
+    EasySEOManager.instance.registerGeneratedPage(
+      path: currentPath,
+      title: widget.title,
+      description: widget.description,
+      markdown: trees.map((t) => t.toMarkdown()).join('\n\n'),
+    );
+
     if (EasySEOManager.instance.enableLiveOutput.value) {
       _liveHandler.injectToHead(headContent);
       _liveHandler.injectToBody(bodyContent);
     }
 
     // Detect language from path for the <html> tag
-    final currentPath = _getCurrentPath();
     final segments = currentPath.split('/');
     final supportedLanguages = EasySEOManager.instance.supportedLanguages;
     String currentLang = 'de'; // Default
