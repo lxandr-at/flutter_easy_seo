@@ -1,6 +1,7 @@
 # flutter_easy_seo
-⚖️ **License:** Free for solo developers & micro-startups. Teams of 6+ or organizations making greater than $1M revenue require a commercial tier (including GitHub access of server side projects complementing this package). See [License Details](#%EF%B8%8F-license--commercial-usage).
-
+**License & Easy Server Setup:** 
+- [`flutter_easy_seo`](https://pub.dev/packages/flutter_easy_seo) and [`flutter_easy_seo_sync`](https://pub.dev/packages/flutter_easy_seo_sync) are now 100% open-source ([Apache 2.0](./LICENSE)). 
+- For low-maintenance server setups, see [**Turnkey Backend & Infrastructure**](#️-turnkey-backend--infrastructure).
 
 ### *“At this time, Flutter is not suitable for static websites with text-rich flow-based content... application output doesn't align with what search engines need to properly index.”*
 — [**Official Flutter Documentation**](https://docs.flutter.dev/platform-integration/web/faq)
@@ -935,25 +936,24 @@ Besides the `/example` of the package, you can also take a look at a real world 
 
     ![Indexed Package Live Example](doc/images/real_world_listing.png)
 
-## ⚖️ License & Commercial Usage
+## 🛠️ Turnkey Backend & Infrastructure
 
-This package is distributed under a custom **Source-Available Small Business License**. 
+[`flutter_easy_seo`](https://pub.dev/packages/flutter_easy_seo) and [`flutter_easy_seo_sync`](https://pub.dev/packages/flutter_easy_seo_sync) are 100% open-source software released under the [Apache 2.0 License](./LICENSE). 
 
-* **Indie Devs & Micro-Startups (5 or fewer people AND less than $1M revenue):** 🟢 **100% FREE** for unlimited projects.
-* **Growing Studios & Enterprises:** 🔴 A commercial license is required. 
+Need a low-maintenance server setup? We offer official [👉**turnkey infrastructure stacks on Polar**][polar-checkout]:
 
-👉 [**Get a Commercial License instantly on Polar**][polar-checkout]
+* **⚡ Sync API ($79):**
+  Includes access to GitHub `flutter_easy_seo_api`: 
+  
+  A FastAPI-based service designed to receive and store dynamically generated SEO HTML pages from a Flutter application using the flutter_easy_seo package. See [README.md](https://gist.github.com/BearAndBunny/bee86a706db69b60e3cc367930045b93)
 
-### Available Tiers:
-* 💼 **Studio Tier (\$79)** — For teams of **6 to 15 people** (unlimited projects).
-  -  Includes access to GitHub `flutter_easy_seo_api`: <br>A FastAPI-based service designed to receive and store dynamically generated SEO HTML pages from a Flutter application using the flutter_easy_seo package. See [README.md](https://gist.github.com/BearAndBunny/bee86a706db69b60e3cc367930045b93)
+* **🐳 Docker Caddy Server ($249):**
+  Includes access to GitHub `flutter_easy_seo_server`: 
+  
+  A turnkey Docker deployment stack that pairs Caddy 2 (automatic HTTPS, edge caching, bot detection) with `flutter_easy_seo_api` service to receive SEO-friendly HTML files. See [README.md](https://gist.github.com/BearAndBunny/3ee01e8202489e42385e2ae8544c5a2e)
 
-* 🚀 **Enterprise Tier (\$249)** — For teams of **16+ people OR organizations making greater than $1M annual revenue** (unlimited projects).
-  -  Includes access to GitHub `flutter_easy_seo_api`: <br>A FastAPI-based service designed to receive and store dynamically generated SEO HTML pages from a Flutter application using the flutter_easy_seo package. See [README.md](https://gist.github.com/BearAndBunny/bee86a706db69b60e3cc367930045b93)
-  -  Includes access to GitHub `flutter_easy_seo_server`: <br>A turnkey Docker deployment stack that pairs Caddy 2 (automatic HTTPS, edge caching, bot detection) with `flutter_easy_seo_api` service to receive SEO-friendly HTML files. See [README.md](https://gist.github.com/BearAndBunny/3ee01e8202489e42385e2ae8544c5a2e)
+*Both grant instant, automated access to a unique license key (`FEZSEO-...`) and legal waiver clearance via Polar.*
 
-*Both tiers grant instant, automated access to your unique license key (`FEZSEO-...`) and legal waiver clearance via Polar.*
-
-*For full legal terms, see the [LICENSE](./LICENSE) file.*
+Our commercial server stacks are provided under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/), with commercial production grants delivered upon purchase.
 
 [polar-checkout]: https://buy.polar.sh/polar_cl_3NZTxVvvvGSm8Qd4tJurWo5FTnSjW5AkHB8pb1iXgak

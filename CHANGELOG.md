@@ -1,3 +1,7 @@
+## 1.1.0
+- **License:** Relicensed to Apache 2.0.
+- **Infrastructure:** Paid turnkey server stacks are now decoupled from the package and managed via Polar.
+- Updated Readme.md.
 ## 1.0.8
 - Automatic `llms.txt`/`llms-full.txt` generation for AI crawlers and LLM clients (index + full page Markdown dumps, same route set as the sitemap).
 - New `siteName`/`siteDescription` configuration options for the llms.txt header (with automatic root-page fallback).
